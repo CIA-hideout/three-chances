@@ -1,5 +1,5 @@
 #include "threechances.h"
-#include <string>
+#include <iostream>
 
 //=============================================================================
 // Constructor
@@ -20,17 +20,29 @@ ThreeChances::~ThreeChances() {
 void ThreeChances::initialize(HWND hwnd) {
 	Game::initialize(hwnd); // throws GameError
 
-	// map texture
 	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
-	// map
+	if (!malePlayerTexture.initialize(graphics, MALE_PLAYER_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male texture"));
+
 	if (!map.initialize(graphics, 0, 0, 0, &mapTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
-	map.setScale(SCALE);
-	map.setX(-(TILE_SIZE * 2));
-	map.setY(-(TILE_SIZE * 25));
+	if (!malePlayer.initialize(graphics, TILE_SIZE, TILE_SIZE, 3, &malePlayerTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
+
+	// Set map to default scale and starting position
+	map.setScale((float)SCALE);
+	map.setX(-(TILE_SIZE * SCALE * 2));
+	map.setY(-(TILE_SIZE * SCALE * 25));
+
+	malePlayer.setScale((float)SCALE);
+	malePlayer.setX(TILE_SIZE * SCALE * 3);
+	malePlayer.setY(TILE_SIZE * SCALE * 3);
+	
+	// Set initial male position, should follow grid later
+	//std::cout << 
 
 	return;
 }
@@ -41,19 +53,19 @@ void ThreeChances::initialize(HWND hwnd) {
 void ThreeChances::update() {
 	if (input->wasKeyPressed(RIGHT_KEY)) {
 		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH)
-			map.setX(map.getX() - TILE_SIZE);
+			map.setX(map.getX() - TILE_SIZE * SCALE);
 	}
 	if (input->wasKeyPressed(LEFT_KEY)) {
 		if (map.getX() < 0)
-			map.setX(map.getX() + TILE_SIZE);
+			map.setX(map.getX() + TILE_SIZE * SCALE);
 	}
 	if (input->wasKeyPressed(UP_KEY)) {
 		if (map.getY() < 0)
-			map.setY(map.getY() + TILE_SIZE);
+			map.setY(map.getY() + TILE_SIZE * SCALE);
 	}
 	if (input->wasKeyPressed(DOWN_KEY)) {
 		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT)
-			map.setY(map.getY() - TILE_SIZE);
+			map.setY(map.getY() - TILE_SIZE * SCALE);
 	}
 }
 
@@ -74,6 +86,7 @@ void ThreeChances::render() {
 	graphics->spriteBegin();                // begin drawing sprites
 
 	map.draw();								// add the map to the scene
+	malePlayer.draw();
 
 	graphics->spriteEnd();                  // end drawing sprites
 }
@@ -84,6 +97,7 @@ void ThreeChances::render() {
 //=============================================================================
 void ThreeChances::releaseAll() {
 	mapTexture.onLostDevice();
+	malePlayerTexture.onLostDevice();
 
 	Game::releaseAll();
 	return;
@@ -95,6 +109,7 @@ void ThreeChances::releaseAll() {
 //=============================================================================
 void ThreeChances::resetAll() {
 	mapTexture.onResetDevice();
+	malePlayerTexture.onResetDevice();
 
 	Game::resetAll();
 	return;

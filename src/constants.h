@@ -18,21 +18,22 @@
 // Safely call onResetDevice
 #define SAFE_ON_RESET_DEVICE(ptr) { if (ptr) { (ptr)->onResetDevice(); } }
 // Color which should be transparent
-#define TRANSCOLOR SETCOLOR_ARGB(0,255,0,255)
+//#define TRANSCOLOR SETCOLOR_ARGB(0,255,0,255)
+#define TRANSCOLOR D3DCOLOR_XRGB(255,0,255)
 
 //-----------------------------------------------
 // Constants
 //-----------------------------------------------
-const float SCALE = 2.0f;
-const float TILE_SIZE = 32 * SCALE;
-const float VIEW_RANGE = 7;
+const int SCALE = 2;
+const int TILE_SIZE = 32;
+const int VIEW_RANGE = 7;		// number of tiles in a vertical or horizontal row
 
 // Window
 const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";
 const bool FULLSCREEN = false;
-const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE;
-const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE;
+const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE * SCALE;
+const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE;
 
 // Game
 const double PI = 3.14159265;
@@ -53,5 +54,6 @@ const UCHAR DOWN_KEY = VK_DOWN;
 // Sprites
 const char MAP_1_IMAGE[] = "sprites\\level1.png";
 const char MAP_2_IMAGE[] = "sprites\\level2.png";
+const char MALE_PLAYER_IMAGE[] = "sprites\\male-player.png";
 
 #endif

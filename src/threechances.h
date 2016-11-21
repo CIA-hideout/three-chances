@@ -10,7 +10,9 @@ class ThreeChances : public Game {
 private:
 	// Game items
 	TextureManager mapTexture;
+	TextureManager malePlayerTexture;
 	Image		   map;
+	Image		   malePlayer;
 
 public:
 	// Constructor
