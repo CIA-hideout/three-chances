@@ -56,4 +56,9 @@ const char MAP_1_IMAGE[] = "sprites\\level1.png";
 const char MAP_2_IMAGE[] = "sprites\\level2.png";
 const char MALE_PLAYER_IMAGE[] = "sprites\\male-player.png";
 
+const int PLAYER_START_FRAME = 0;
+const int PLAYER_END_FRAME = 2;
+const float PLAYER_ANIMATION_DELAY = 0.3f;
+const int PLAYER_COLS = 3;
+
 #endif

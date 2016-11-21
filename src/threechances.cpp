@@ -4,7 +4,12 @@
 //=============================================================================
 // Constructor
 //=============================================================================
-ThreeChances::ThreeChances() {}
+ThreeChances::ThreeChances() {
+	keysPressed["LEFT"] = false;
+	keysPressed["RIGHT"] = false;
+	keysPressed["UP"] = false;
+	keysPressed["DOWN"] = false;
+}
 
 //=============================================================================
 // Destructor
@@ -42,31 +47,78 @@ void ThreeChances::initialize(HWND hwnd) {
 	malePlayer.setY(TILE_SIZE * SCALE * 3);
 	
 	// Set initial male position, should follow grid later
-	//std::cout << 
-
+	//std::cout <<
+	malePlayer.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
+	malePlayer.setCurrentFrame(PLAYER_START_FRAME);				// starting frame
+	malePlayer.setFrameDelay(PLAYER_ANIMATION_DELAY);
+	
 	return;
 }
 
 //=============================================================================
 // Update all game items
 //=============================================================================
+void cleanKeys(Input *input, std::map<std::string, bool> *keysPressed) {
+	if (!input->isKeyDown(LEFT_KEY)) 
+		(*keysPressed)["LEFT"] = false;
+	if (!input->isKeyDown(RIGHT_KEY)) 
+		(*keysPressed)["RIGHT"] = false;
+	if (!input->isKeyDown(UP_KEY)) 
+		(*keysPressed)["UP"] = false;
+	if (!input->isKeyDown(DOWN_KEY))
+		(*keysPressed)["DOWN"] = false;
+}
+
+//std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
+//	if ((*keysPressed)["LEFT"])
+//		return "LEFT";
+//	if ((*keysPressed)["RIGHT"])
+//		return "RIGHT";
+//	if ((*keysPressed)["UP"])
+//		return "UP";
+//	if ((*keysPressed)["DOWN"])
+//		return "DOWN";
+//	return "";
+//}
+
 void ThreeChances::update() {
-	if (input->wasKeyPressed(RIGHT_KEY)) {
+	// make the map move at a certain velocity, trigger player animation at that time
+	// switch the sprites and align them
+
+	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
+		keysPressed["LEFT"] = true;
+		lastKeyPressed = "LEFT";
+		if (map.getX() < 0)
+			map.setX(map.getX() + TILE_SIZE * SCALE);
+
+	}
+
+	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
+		keysPressed["RIGHT"] = true;
+		lastKeyPressed = "RIGHT";
 		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH)
 			map.setX(map.getX() - TILE_SIZE * SCALE);
 	}
-	if (input->wasKeyPressed(LEFT_KEY)) {
-		if (map.getX() < 0)
-			map.setX(map.getX() + TILE_SIZE * SCALE);
-	}
-	if (input->wasKeyPressed(UP_KEY)) {
+
+	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
+		keysPressed["UP"] = true;
+		lastKeyPressed = "UP";
 		if (map.getY() < 0)
 			map.setY(map.getY() + TILE_SIZE * SCALE);
 	}
-	if (input->wasKeyPressed(DOWN_KEY)) {
+
+	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
+		keysPressed["DOWN"] = true;
+		lastKeyPressed = "DOWN";
 		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT)
 			map.setY(map.getY() - TILE_SIZE * SCALE);
 	}
+
+
+
+	cleanKeys(input, &keysPressed);
+	//std::cout << findKeyDown(&keysPressed);
+	malePlayer.update(frameTime, lastKeyPressed);
 }
 
 //=============================================================================

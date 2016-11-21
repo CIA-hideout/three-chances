@@ -2,6 +2,7 @@
 #define _THREECHANCES_H
 #define _WIN32_LEAN_AND_MEAN
 
+#include <map>
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
@@ -13,7 +14,9 @@ private:
 	TextureManager malePlayerTexture;
 	Image		   map;
 	Image		   malePlayer;
-
+	std::map<std::string, bool> keysPressed;
+	std::string	   lastKeyPressed;
+	
 public:
 	// Constructor
 	ThreeChances();
