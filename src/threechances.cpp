@@ -24,6 +24,61 @@ ThreeChances::~ThreeChances() {
 void ThreeChances::initialize(HWND hwnd) {
 	Game::initialize(hwnd); // throws GameError
 
+	// initialize map class
+	level = new Map;
+
+	velocity = 100.0f;
+
+	// Legend
+	// 0 - border
+	// 1 - 1st floor path
+	// 2 - 2nd floor path
+	// 3 - stairs
+	// 4 - water
+	// 5 - obstacle
+	// 6 - blockage
+
+	std::vector<std::vector<int>> layout = {
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0 },
+		{ 0, 0, 0, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 5, 0, 0, 0 },
+		{ 0, 0, 0, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 6, 6, 6, 6, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 6, 6, 6, 6, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 5, 5, 5, 5, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 5, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 5, 5, 2, 2, 5, 4, 4, 4, 4, 1, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
+		{ 0, 0, 0, 1, 5, 2, 2, 5, 4, 4, 4, 4, 1, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
+		{ 0, 0, 0, 1, 5, 3, 3, 5, 4, 4, 4, 4, 1, 1, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 1, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 1, 4, 4, 1, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 5, 2, 2, 5, 1, 1, 1, 1, 1, 5, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 5, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 5, 1, 4, 4, 4, 4, 1, 1, 1, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 1, 1, 1, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 5, 1, 4, 4, 4, 4, 4, 1, 1, 1, 5, 5, 5, 5, 5, 3, 3, 5, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 5, 5, 1, 1, 1, 4, 4, 4, 4, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 5, 1, 1, 1, 1, 4, 4, 4, 4, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+	};
+
+	std::vector<int> startTile = { 5, 28 };
+	std::vector<int> endTile = { 16, 4 };
+
+	level->initialize(layout, startTile, endTile);
+
+	// map texture
 	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
@@ -44,24 +99,27 @@ void ThreeChances::initialize(HWND hwnd) {
 	playerMale.setScale((float)SCALE);
 	playerMale.setX(TILE_SIZE * SCALE * 3);
 	playerMale.setY(TILE_SIZE * SCALE * 3);
-	
+
 	// Set initial male position, should follow grid later
 	playerMale.setLoop(false);
 	playerMale.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
 	playerMale.setFrameDelay(PLAYER_ANIMATION_DELAY);
 	playerMale.setCurrentFrame(3);
+
+	map.setScale(SCALE);
+	map.setX(-(TILE_SIZE * SCALE * (startTile[0] - 3)));
+	map.setY(-(TILE_SIZE * SCALE * (startTile[1] - 3)));
+
+	std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
 	return;
 }
 
-//=============================================================================
-// Update all game items
-//=============================================================================
 void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
-	if (!input->isKeyDown(LEFT_KEY)) 
+	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)["LEFT"] = false;
-	if (!input->isKeyDown(RIGHT_KEY)) 
+	if (!input->isKeyDown(RIGHT_KEY))
 		(*keysPressed)["RIGHT"] = false;
-	if (!input->isKeyDown(UP_KEY)) 
+	if (!input->isKeyDown(UP_KEY))
 		(*keysPressed)["UP"] = false;
 	if (!input->isKeyDown(DOWN_KEY))
 		(*keysPressed)["DOWN"] = false;
@@ -102,6 +160,9 @@ void rotatePlayer(Image *player, std::string direction) {
 	player->setSpriteDataRect(sampleRect);
 }
 
+//=============================================================================
+// Update all game items
+//=============================================================================
 void ThreeChances::update() {
 	// make the map move at a certain velocity, trigger player animation at that time
 	// switch the sprites and align them
@@ -110,8 +171,11 @@ void ThreeChances::update() {
 		keysPressed["LEFT"] = true;
 		lastKeyPressed = "LEFT";
 
-		if (map.getX() < 0)
+		if (map.getX() < 0) {
 			map.setX(map.getX() + TILE_SIZE * SCALE);
+			level->moveCurrentTile(LEFT);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
@@ -120,8 +184,11 @@ void ThreeChances::update() {
 		keysPressed["RIGHT"] = true;
 		lastKeyPressed = "RIGHT";
 
-		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH)
+		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
 			map.setX(map.getX() - TILE_SIZE * SCALE);
+			level->moveCurrentTile(RIGHT);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
@@ -130,8 +197,11 @@ void ThreeChances::update() {
 		keysPressed["UP"] = true;
 		lastKeyPressed = "UP";
 
-		if (map.getY() < 0)
+		if (map.getY() < 0) {
 			map.setY(map.getY() + TILE_SIZE * SCALE);
+			level->moveCurrentTile(UP);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
@@ -140,12 +210,15 @@ void ThreeChances::update() {
 		keysPressed["DOWN"] = true;
 		lastKeyPressed = "DOWN";
 
-		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT)
+		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
 			map.setY(map.getY() - TILE_SIZE * SCALE);
+			level->moveCurrentTile(DOWN);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
-	
+
 	resetKeysPressedMap(input, &keysPressed);
 	playerMale.update(frameTime);
 }

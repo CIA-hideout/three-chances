@@ -84,6 +84,7 @@
     <ClInclude Include="src\graphics.h" />
     <ClInclude Include="src\image.h" />
     <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\map.h" />
     <ClInclude Include="src\threechances.h" />
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>
@@ -93,6 +94,7 @@
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\map.cpp" />
     <ClCompile Include="src\threechances.cpp" />
     <ClCompile Include="src\textureManager.cpp" />
     <ClCompile Include="src\winmain.cpp" />

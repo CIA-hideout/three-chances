@@ -19,14 +19,14 @@
 #define SAFE_ON_RESET_DEVICE(ptr) { if (ptr) { (ptr)->onResetDevice(); } }
 // Color which should be transparent
 //#define TRANSCOLOR SETCOLOR_ARGB(0,255,0,255)
-#define TRANSCOLOR D3DCOLOR_XRGB(255,0,255)
+#define TRANSCOLOR D3DCOLOR_XRGB(255, 0, 255)
 
 //-----------------------------------------------
 // Constants
 //-----------------------------------------------
 const int SCALE = 2;
 const int TILE_SIZE = 32;
-const int VIEW_RANGE = 7;		// number of tiles in a vertical or horizontal row
+const int VIEW_RANGE = 7;
 
 // Window
 const char CLASS_NAME[] = "ThreeChances";
@@ -60,5 +60,11 @@ const int PLAYER_START_FRAME = 0;
 const int PLAYER_END_FRAME = 3;
 const float PLAYER_ANIMATION_DELAY = 0.25f;
 const int PLAYER_COLS = 4;
+
+// Direction to integer
+const int LEFT = 0;
+const int RIGHT = 1;
+const int UP = 2;
+const int DOWN = 3;
 
 #endif
