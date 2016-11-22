@@ -3,6 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <string>
+#include <iostream>
+
 #include "textureManager.h"
 #include "constants.h"
 
@@ -50,8 +52,6 @@ public:
 
 	// Update the animation. frameTime is used to regulate the speed.
 	virtual void update(float frameTime);
-
-	virtual void update(float frameTime, std::string direction);
 
 	// Return reference to SpriteData structure.
 	const virtual SpriteData& getSpriteInfo() { return spriteData; }
@@ -139,8 +139,6 @@ public:
 	// Set spriteData.rect to draw currentFrame
 	virtual void setRect();
 
-	virtual void setRect(std::string direction);
-
 	// Set spriteData.rect to r.
 	virtual void setSpriteDataRect(RECT r) { spriteData.rect = r; }
 
@@ -157,11 +155,6 @@ public:
 	virtual void setTextureManager(TextureManager *textureM) {
 		textureManager = textureM;
 	}
-
-
-	// TESTING WITH ROTATIONS
-	//virtual void turnLeft();
-	//virtual void turnRight();
 };
 
 #endif

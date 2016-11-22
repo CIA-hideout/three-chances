@@ -89,12 +89,13 @@ void Image::draw(SpriteData sd, COLOR_ARGB color) {
 		graphics->drawSprite(sd, color);			// use color as filter
 }
 
-void Image::update(float frameTime, std::string direction) {
+void Image::update(float frameTime) {
 	if (endFrame - startFrame > 0) {				// if animated sprite
 		animTimer += frameTime;						// total elapsed time
 		if (animTimer > frameDelay) {
 			animTimer -= frameDelay;
 			currentFrame++;
+			// Check if animation loop has ended
 			if (currentFrame < startFrame || currentFrame > endFrame) {
 				if (loop == true)					// if looping animation
 					currentFrame = startFrame;
@@ -104,17 +105,9 @@ void Image::update(float frameTime, std::string direction) {
 				}
 			}
 			// set spriteData.rect
-			if (direction == "")
-				// this is used if the sprite has no rotation but requires animation
-				setRect();
-			else
-				setRect(direction);
+			setRect();
 		}
 	}
-}
-
-void Image::update(float frameTime) {
-	update(frameTime, "");
 }
 
 void Image::setCurrentFrame(int c) {
@@ -126,33 +119,14 @@ void Image::setCurrentFrame(int c) {
 }
 
 inline void Image::setRect() {
-	// configure spriteData.rect to draw currentFrame
-	spriteData.rect.left = (currentFrame % cols) * spriteData.width;
-	// right edge + 1
+	//// configure spriteData.rect to draw currentFrame
+	//spriteData.rect.left = (currentFrame % cols) * spriteData.width;
+	//// right edge + 1
+	//spriteData.rect.right = spriteData.rect.left + spriteData.width;
+	//spriteData.rect.top = (currentFrame / cols) * spriteData.height;
+	//// bottom edge + 1
+	//spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
+
+	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
-	spriteData.rect.top = (currentFrame / cols) * spriteData.height;
-	// bottom edge + 1
-	spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
-}
-
-inline void Image::setRect(std::string direction) {
-	if (direction == "LEFT") {
-		spriteData.rect.top = 1 * spriteData.height;
-	}
-
-	if (direction == "RIGHT") {
-		spriteData.rect.top = 3 * spriteData.height;
-	}
-
-	if (direction == "UP") {
-		spriteData.rect.top = 2 * spriteData.height;
-
-	}
-
-	if (direction == "DOWN") {
-		spriteData.rect.top = 0 * spriteData.height;
-	}
-
-	spriteData.rect.right = spriteData.rect.left + spriteData.width;
-	spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
 }

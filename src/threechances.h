@@ -3,6 +3,8 @@
 #define _WIN32_LEAN_AND_MEAN
 
 #include <map>
+#include <iostream>
+
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
@@ -11,9 +13,9 @@ class ThreeChances : public Game {
 private:
 	// Game items
 	TextureManager mapTexture;
-	TextureManager malePlayerTexture;
+	TextureManager playerMaleTexture;
 	Image		   map;
-	Image		   malePlayer;
+	Image		   playerMale;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
 	

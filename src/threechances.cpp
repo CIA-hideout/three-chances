@@ -1,5 +1,4 @@
 #include "threechances.h"
-#include <iostream>
 
 //=============================================================================
 // Constructor
@@ -28,13 +27,13 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
-	if (!malePlayerTexture.initialize(graphics, MALE_PLAYER_IMAGE))
+	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male texture"));
 
 	if (!map.initialize(graphics, 0, 0, 0, &mapTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
-	if (!malePlayer.initialize(graphics, TILE_SIZE, TILE_SIZE, 3, &malePlayerTexture))
+	if (!playerMale.initialize(graphics, TILE_SIZE, TILE_SIZE, 3, &playerMaleTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
 	// Set map to default scale and starting position
@@ -42,23 +41,22 @@ void ThreeChances::initialize(HWND hwnd) {
 	map.setX(-(TILE_SIZE * SCALE * 2));
 	map.setY(-(TILE_SIZE * SCALE * 25));
 
-	malePlayer.setScale((float)SCALE);
-	malePlayer.setX(TILE_SIZE * SCALE * 3);
-	malePlayer.setY(TILE_SIZE * SCALE * 3);
+	playerMale.setScale((float)SCALE);
+	playerMale.setX(TILE_SIZE * SCALE * 3);
+	playerMale.setY(TILE_SIZE * SCALE * 3);
 	
 	// Set initial male position, should follow grid later
-	//std::cout <<
-	malePlayer.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
-	malePlayer.setCurrentFrame(PLAYER_START_FRAME);				// starting frame
-	malePlayer.setFrameDelay(PLAYER_ANIMATION_DELAY);
-	
+	playerMale.setLoop(false);
+	playerMale.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
+	playerMale.setFrameDelay(PLAYER_ANIMATION_DELAY);
+	playerMale.setCurrentFrame(3);
 	return;
 }
 
 //=============================================================================
 // Update all game items
 //=============================================================================
-void cleanKeys(Input *input, std::map<std::string, bool> *keysPressed) {
+void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY)) 
 		(*keysPressed)["LEFT"] = false;
 	if (!input->isKeyDown(RIGHT_KEY)) 
@@ -69,17 +67,40 @@ void cleanKeys(Input *input, std::map<std::string, bool> *keysPressed) {
 		(*keysPressed)["DOWN"] = false;
 }
 
-//std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
-//	if ((*keysPressed)["LEFT"])
-//		return "LEFT";
-//	if ((*keysPressed)["RIGHT"])
-//		return "RIGHT";
-//	if ((*keysPressed)["UP"])
-//		return "UP";
-//	if ((*keysPressed)["DOWN"])
-//		return "DOWN";
-//	return "";
-//}
+std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
+	if ((*keysPressed)["LEFT"])
+		return "LEFT";
+	if ((*keysPressed)["RIGHT"])
+		return "RIGHT";
+	if ((*keysPressed)["UP"])
+		return "UP";
+	if ((*keysPressed)["DOWN"])
+		return "DOWN";
+	return "";
+}
+
+void rotatePlayer(Image *player, std::string direction) {
+	RECT sampleRect = player->getSpriteDataRect();
+
+	if (direction != "") {
+		sampleRect.left = 0;
+		sampleRect.right = TILE_SIZE;
+
+		if (direction == "LEFT")
+			sampleRect.top = 32;
+		if (direction == "RIGHT")
+			sampleRect.top = 96;
+		if (direction == "UP")
+			sampleRect.top = 64;
+		if (direction == "DOWN")
+			sampleRect.top = 0;
+
+		sampleRect.bottom = sampleRect.top + TILE_SIZE;
+		player->setCurrentFrame(0);		// restart the fucking animation
+	}
+
+	player->setSpriteDataRect(sampleRect);
+}
 
 void ThreeChances::update() {
 	// make the map move at a certain velocity, trigger player animation at that time
@@ -88,37 +109,45 @@ void ThreeChances::update() {
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
 		keysPressed["LEFT"] = true;
 		lastKeyPressed = "LEFT";
+
 		if (map.getX() < 0)
 			map.setX(map.getX() + TILE_SIZE * SCALE);
 
+		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
 		keysPressed["RIGHT"] = true;
 		lastKeyPressed = "RIGHT";
+
 		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH)
 			map.setX(map.getX() - TILE_SIZE * SCALE);
+
+		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
 		keysPressed["UP"] = true;
 		lastKeyPressed = "UP";
+
 		if (map.getY() < 0)
 			map.setY(map.getY() + TILE_SIZE * SCALE);
+
+		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
 		keysPressed["DOWN"] = true;
 		lastKeyPressed = "DOWN";
+
 		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT)
 			map.setY(map.getY() - TILE_SIZE * SCALE);
+
+		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
-
-
-
-	cleanKeys(input, &keysPressed);
-	//std::cout << findKeyDown(&keysPressed);
-	malePlayer.update(frameTime, lastKeyPressed);
+	
+	resetKeysPressedMap(input, &keysPressed);
+	playerMale.update(frameTime);
 }
 
 //=============================================================================
@@ -138,7 +167,7 @@ void ThreeChances::render() {
 	graphics->spriteBegin();                // begin drawing sprites
 
 	map.draw();								// add the map to the scene
-	malePlayer.draw();
+	playerMale.draw();
 
 	graphics->spriteEnd();                  // end drawing sprites
 }
@@ -149,7 +178,7 @@ void ThreeChances::render() {
 //=============================================================================
 void ThreeChances::releaseAll() {
 	mapTexture.onLostDevice();
-	malePlayerTexture.onLostDevice();
+	playerMaleTexture.onLostDevice();
 
 	Game::releaseAll();
 	return;
@@ -161,7 +190,7 @@ void ThreeChances::releaseAll() {
 //=============================================================================
 void ThreeChances::resetAll() {
 	mapTexture.onResetDevice();
-	malePlayerTexture.onResetDevice();
+	playerMaleTexture.onResetDevice();
 
 	Game::resetAll();
 	return;
