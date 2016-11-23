@@ -23,6 +23,4 @@ void Entity::update(float frameTime) {
 	Image::update(frameTime);
 }
 
-void Entity::ai(float frameTime, Entity &ent) {
-
-}
+void Entity::ai(float frameTime, Entity &ent) {}

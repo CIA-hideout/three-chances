@@ -9,7 +9,7 @@
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
-#include "map.h"
+#include "stage.h"
 
 class ThreeChances : public Game {
 private:
@@ -20,8 +20,7 @@ private:
 	Image		   playerMale;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
-	Map*		   level;
-	float		   velocity;
+	Stage*		   stage;
 
 public:
 	// Constructor

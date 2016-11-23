@@ -6,8 +6,7 @@
 #include "image.h"
 #include "game.h"
 
-namespace entityNS
-{
+namespace entityNS {
 	enum ABILITY_TYPE { TRAVEL_WATER, TRAVEL_LAVA, TRAVEL_WALL, BURNS_PLAYER, SHOOTS_FIRE };
 }
 
@@ -47,7 +46,7 @@ public:
 	// setters
 	void setHealth(float h) { health = h; }
 	void setDamage(float d) { damage = d; }
-	void setAtkRange(int atkR) { atkRange = atkR; }
+	void setAtkRange(int ar) { atkRange = ar; }
 	void setMoves(int m) { moves = m; }
 	void setLevel(std::vector<int> l) { levels = l; }
 	void setAbilities(std::vector<entityNS::ABILITY_TYPE> a) { abilities = a; }

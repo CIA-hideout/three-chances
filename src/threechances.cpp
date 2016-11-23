@@ -25,9 +25,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	Game::initialize(hwnd); // throws GameError
 
 	// initialize map class
-	level = new Map;
-
-	velocity = 100.0f;
+	stage = new Stage;
 
 	// Legend
 	// 0 - border
@@ -76,7 +74,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	std::vector<int> startTile = { 5, 28 };
 	std::vector<int> endTile = { 16, 4 };
 
-	level->initialize(layout, startTile, endTile);
+	stage->initialize(layout, startTile, endTile);
 
 	// map texture
 	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
@@ -110,7 +108,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	map.setX(-(TILE_SIZE * SCALE * (startTile[0] - 3)));
 	map.setY(-(TILE_SIZE * SCALE * (startTile[1] - 3)));
 
-	std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+	std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
 	return;
 }
 
@@ -154,7 +152,7 @@ void rotatePlayer(Image *player, std::string direction) {
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		player->setCurrentFrame(0);		// restart the fucking animation
+		player->setCurrentFrame(0);
 	}
 
 	player->setSpriteDataRect(sampleRect);
@@ -173,8 +171,8 @@ void ThreeChances::update() {
 
 		if (map.getX() < 0) {
 			map.setX(map.getX() + TILE_SIZE * SCALE);
-			level->moveCurrentTile(LEFT);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+			stage->moveCurrentTile(LEFT);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
@@ -186,8 +184,8 @@ void ThreeChances::update() {
 
 		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
 			map.setX(map.getX() - TILE_SIZE * SCALE);
-			level->moveCurrentTile(RIGHT);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+			stage->moveCurrentTile(RIGHT);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
@@ -199,8 +197,8 @@ void ThreeChances::update() {
 
 		if (map.getY() < 0) {
 			map.setY(map.getY() + TILE_SIZE * SCALE);
-			level->moveCurrentTile(UP);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+			stage->moveCurrentTile(UP);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
@@ -212,8 +210,8 @@ void ThreeChances::update() {
 
 		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
 			map.setY(map.getY() - TILE_SIZE * SCALE);
-			level->moveCurrentTile(DOWN);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << level->getCurrentTileType() << std::endl;
+			stage->moveCurrentTile(DOWN);
+			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));

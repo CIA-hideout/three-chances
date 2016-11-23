@@ -1,19 +1,19 @@
-#include "map.h"
+#include "stage.h"
 
 //=============================================================================
 // Constructor
 //=============================================================================
-Map::Map() {}
+Stage::Stage() {}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Map::~Map() {}
+Stage::~Stage() {}
 
 //=============================================================================
 // Initializes the map
 //=============================================================================
-bool Map::initialize(std::vector<std::vector<int>> mLayout, std::vector<int> mStartTile, std::vector<int> mEndTile) {
+bool Stage::initialize(std::vector<std::vector<int>> mLayout, std::vector<int> mStartTile, std::vector<int> mEndTile) {
 	layout = mLayout;
 	startTile = mStartTile;
 	endTile = mEndTile;
@@ -25,7 +25,7 @@ bool Map::initialize(std::vector<std::vector<int>> mLayout, std::vector<int> mSt
 //=============================================================================
 // Logs entire map layout
 //=============================================================================
-void Map::logLayout() {
+void Stage::logLayout() {
 	for (int i = 0; i < layout.size(); i++) {
 		for (int j = 0; j < layout[i].size(); j++) {
 			std::cout << layout[i][j] << " ";
@@ -38,7 +38,7 @@ void Map::logLayout() {
 //=============================================================================
 // Returns tile at specified coordinates
 //=============================================================================
-int Map::getTileAtCoordinate(std::vector<int>mCoordinate) {
+int Stage::getTileAtCoordinate(std::vector<int>mCoordinate) {
 	// Y coordinate has to be first because of how the 2D array is structured
 	return layout[mCoordinate[1]][mCoordinate[0]];
 }
@@ -46,15 +46,15 @@ int Map::getTileAtCoordinate(std::vector<int>mCoordinate) {
 //=============================================================================
 // Returns value of tile at current coordinates
 //=============================================================================
-int Map::getCurrentTileValue() {
+int Stage::getCurrentTileValue() {
 	return layout[currentTile[1]][currentTile[0]];
 }
 
 //=============================================================================
 // Returns type of tile at current coordinates
 //=============================================================================
-std::string Map::getCurrentTileType() {
-	int value = Map::getCurrentTileValue();
+std::string Stage::getCurrentTileType() {
+	int value = getCurrentTileValue();
 	std::string tileType = "";
 
 	switch (value) {
@@ -87,7 +87,7 @@ std::string Map::getCurrentTileType() {
 //=============================================================================
 // Updates currentTile to specified coordinates
 //=============================================================================
-bool Map::setCurrentTile(std::vector<int> mCurrentTile) {
+bool Stage::setCurrentTile(std::vector<int> mCurrentTile) {
 	currentTile = mCurrentTile; 
 	return true;
 }
@@ -95,7 +95,7 @@ bool Map::setCurrentTile(std::vector<int> mCurrentTile) {
 //=============================================================================
 // Shifts current tile by 1 tile in specified direction
 //=============================================================================
-bool Map::moveCurrentTile(int direction) {
+bool Stage::moveCurrentTile(int direction) {
 	switch (direction) {
 	case LEFT:
 		currentTile = { currentTile[0] - 1, currentTile[1] };
