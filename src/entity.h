@@ -55,6 +55,10 @@ public:
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM, EntityData ed);
 	virtual void update(float frameTime);
-	virtual void ai(float frameTime, Entity &ent);
+	virtual void rotateEntity(std::string direction);
+	virtual void startAttackAnimation();
+	virtual void startWalkAnimation();
+	//virtual void ai(float frameTime, Entity &ent);
+	//virtual void setRect();
 };
 #endif

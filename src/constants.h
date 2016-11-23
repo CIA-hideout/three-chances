@@ -51,20 +51,29 @@ const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR DOWN_KEY = VK_DOWN;
 
+// Direction to integer
+const int LEFT = 0;
+const int RIGHT = 1;
+const int UP = 2;
+const int DOWN = 3;
+
 // Sprites
 const char MAP_1_IMAGE[] = "sprites\\level1 (w Grid).png";
 const char MAP_2_IMAGE[] = "sprites\\level2.png";
 const char PLAYER_MALE_IMAGE[] = "sprites\\male-player.png";
+const char DUCK_IMAGE[] = "sprites\\psyduck.png";
 
 const int PLAYER_START_FRAME = 0;
 const int PLAYER_END_FRAME = 3;
 const float PLAYER_ANIMATION_DELAY = 0.25f;
 const int PLAYER_COLS = 4;
 
-// Direction to integer
-const int LEFT = 0;
-const int RIGHT = 1;
-const int UP = 2;
-const int DOWN = 3;
+const int DUCK_STANDING_FRAME = 2;
+const int DUCK_WALK_START_FRAME = 1;
+const int DUCK_WALK_END_FRAME = 3;
+const int DUCK_ATK_START_FRAME = 4;
+const int DUCK_ATK_END_FRAME = 7;
+const float DUCK_ANIMATION_DELAY = 0.25f;
+const int DUCK_COLS = 8;
 
 #endif

@@ -12,13 +12,19 @@
 #include "image.h"
 #include "stage.h"
 
+#include "monsterConstants.h"
+#include "Duck.h"
+
 class ThreeChances : public Game {
 private:
 	// Game items
 	TextureManager mapTexture;
 	TextureManager playerMaleTexture;
+	TextureManager duckTexture;
+
 	Image		   map;
 	Image		   playerMale;
+	Duck		   duck;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
 	Stage*		   stage;

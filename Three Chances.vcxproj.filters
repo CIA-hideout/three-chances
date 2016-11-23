@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Header Files\constants">
+      <UniqueIdentifier>{d38da9df-d22f-43f7-9712-cd9f30716180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\monsters">
+      <UniqueIdentifier>{731cbb55-73fa-4e62-b39b-de4ff3437786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\monsters">
+      <UniqueIdentifier>{f190e5a3-71b4-474f-93a2-67fe933e9480}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -47,6 +53,14 @@
     </ClInclude>
     <ClInclude Include="src\stageLayouts.h">
       <Filter>Header Files</Filter>
+    <ClInclude Include="src\duck.h">
+      <Filter>Header Files\monsters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monsterConstants.h">
+      <Filter>Header Files\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\constants.h">
+      <Filter>Header Files\constants</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +90,8 @@
     </ClCompile>
     <ClCompile Include="src\stage.cpp">
       <Filter>Source Files</Filter>
+    <ClCompile Include="src\duck.cpp">
+      <Filter>Source Files\monsters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

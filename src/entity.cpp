@@ -24,3 +24,30 @@ void Entity::update(float frameTime) {
 }
 
 void Entity::ai(float frameTime, Entity &ent) {}
+
+void Entity::rotateEntity(std::string direction) {
+	RECT sampleRect = this->getSpriteDataRect();
+
+	if (direction != "") {
+		sampleRect.left = 0;
+		sampleRect.right = TILE_SIZE;
+
+		if (direction == "LEFT")
+			sampleRect.top = 64;
+		if (direction == "RIGHT")
+			sampleRect.top = 96;
+		if (direction == "UP")
+			sampleRect.top = 32;
+		if (direction == "DOWN")
+			sampleRect.top = 0;
+
+		sampleRect.bottom = sampleRect.top + TILE_SIZE;
+		//this->setCurrentFrame(0);
+	}
+
+	this->setSpriteDataRect(sampleRect);
+}
+
+void Entity::startWalkAnimation() {}
+
+void Entity::startAttackAnimation() {}
