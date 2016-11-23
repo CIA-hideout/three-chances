@@ -95,6 +95,7 @@ void Image::update(float frameTime) {
 		if (animTimer > frameDelay) {
 			animTimer -= frameDelay;
 			currentFrame++;
+			// Check if animation loop has ended
 			if (currentFrame < startFrame || currentFrame > endFrame) {
 				if (loop == true)					// if looping animation
 					currentFrame = startFrame;
@@ -103,7 +104,8 @@ void Image::update(float frameTime) {
 					animComplete = true;
 				}
 			}
-			setRect();								// set spriteData.rect
+			// set spriteData.rect
+			setRect();
 		}
 	}
 }
@@ -117,11 +119,14 @@ void Image::setCurrentFrame(int c) {
 }
 
 inline void Image::setRect() {
-	// configure spriteData.rect to draw currentFrame
-	spriteData.rect.left = (currentFrame % cols) * spriteData.width;
-	// right edge + 1
+	//// configure spriteData.rect to draw currentFrame
+	//spriteData.rect.left = (currentFrame % cols) * spriteData.width;
+	//// right edge + 1
+	//spriteData.rect.right = spriteData.rect.left + spriteData.width;
+	//spriteData.rect.top = (currentFrame / cols) * spriteData.height;
+	//// bottom edge + 1
+	//spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
+
+	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
-	spriteData.rect.top = (currentFrame / cols) * spriteData.height;
-	// bottom edge + 1
-	spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
 }
