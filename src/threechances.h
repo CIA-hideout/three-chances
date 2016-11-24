@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdio.h>
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"

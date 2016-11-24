@@ -13,11 +13,15 @@ Stage::~Stage() {}
 //=============================================================================
 // Initializes the map
 //=============================================================================
-bool Stage::initialize(std::vector<std::vector<int>> mLayout, std::vector<int> mStartTile, std::vector<int> mEndTile) {
-	layout = mLayout;
-	startTile = mStartTile;
-	endTile = mEndTile;
-	currentTile = mStartTile;
+bool Stage::initialize(int stageNo) {
+	switch (stageNo) {
+	case 1:
+		layout = STAGE_1_LAYOUT;
+		startTile = STAGE_1_START_TILE;
+		endTile = STAGE_1_END_TILE;
+		currentTile = STAGE_1_START_TILE;
+		break;
+	}
 
 	return true;
 }
@@ -26,28 +30,28 @@ bool Stage::initialize(std::vector<std::vector<int>> mLayout, std::vector<int> m
 // Logs entire map layout
 //=============================================================================
 void Stage::logLayout() {
-	for (int i = 0; i < layout.size(); i++) {
-		for (int j = 0; j < layout[i].size(); j++) {
-			std::cout << layout[i][j] << " ";
+	for (size_t i = 0; i < layout.size(); ++i) {
+		for (size_t j = 0; j < layout[i].size(); ++j) {
+			printf("%d ", layout[i][j]);
 		}
 
-		std::cout << std::endl;
+		printf("\n");
 	}
 }
 
 //=============================================================================
 // Returns tile at specified coordinates
 //=============================================================================
-int Stage::getTileAtCoordinate(std::vector<int>mCoordinate) {
+int Stage::getTileValueAtCoordinates(Coordinates coordinates) {
 	// Y coordinate has to be first because of how the 2D array is structured
-	return layout[mCoordinate[1]][mCoordinate[0]];
+	return layout[coordinates.y][coordinates.x];
 }
 
 //=============================================================================
 // Returns value of tile at current coordinates
 //=============================================================================
 int Stage::getCurrentTileValue() {
-	return layout[currentTile[1]][currentTile[0]];
+	return layout[currentTile.y][currentTile.x];
 }
 
 //=============================================================================
@@ -85,29 +89,21 @@ std::string Stage::getCurrentTileType() {
 }
 
 //=============================================================================
-// Updates currentTile to specified coordinates
-//=============================================================================
-bool Stage::setCurrentTile(std::vector<int> mCurrentTile) {
-	currentTile = mCurrentTile; 
-	return true;
-}
-
-//=============================================================================
 // Shifts current tile by 1 tile in specified direction
 //=============================================================================
 bool Stage::moveCurrentTile(int direction) {
 	switch (direction) {
 	case LEFT:
-		currentTile = { currentTile[0] - 1, currentTile[1] };
+		currentTile = { currentTile.x - 1, currentTile.y };
 		break;
 	case RIGHT:
-		currentTile = { currentTile[0] + 1, currentTile[1] };
+		currentTile = { currentTile.x + 1, currentTile.y };
 		break;
 	case UP:
-		currentTile = { currentTile[0], currentTile[1] - 1 };
+		currentTile = { currentTile.x, currentTile.y - 1 };
 		break;
 	case DOWN:
-		currentTile = { currentTile[0], currentTile[1] + 1 };
+		currentTile = { currentTile.x, currentTile.y + 1 };
 		break;
 	}
 

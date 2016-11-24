@@ -85,6 +85,7 @@
     <ClInclude Include="src\image.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\stage.h" />
+    <ClInclude Include="src\stageLayouts.h" />
     <ClInclude Include="src\threechances.h" />
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>

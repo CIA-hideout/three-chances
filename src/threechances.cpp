@@ -26,55 +26,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	// initialize map class
 	stage = new Stage;
-
-	// Legend
-	// 0 - border
-	// 1 - 1st floor path
-	// 2 - 2nd floor path
-	// 3 - stairs
-	// 4 - water
-	// 5 - obstacle
-	// 6 - blockage
-
-	std::vector<std::vector<int>> layout = {
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0 },
-		{ 0, 0, 0, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 5, 0, 0, 0 },
-		{ 0, 0, 0, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 6, 6, 6, 6, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 6, 6, 6, 6, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 5, 5, 5, 5, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 5, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 4, 5, 2, 2, 5, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 5, 5, 2, 2, 5, 4, 4, 4, 4, 1, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
-		{ 0, 0, 0, 1, 5, 2, 2, 5, 4, 4, 4, 4, 1, 4, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
-		{ 0, 0, 0, 1, 5, 3, 3, 5, 4, 4, 4, 4, 1, 1, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 1, 4, 4, 4, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 1, 4, 4, 1, 5, 2, 2, 5, 1, 1, 1, 5, 5, 5, 5, 5, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 5, 2, 2, 5, 1, 1, 1, 1, 1, 5, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 5, 2, 2, 5, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 5, 1, 4, 4, 4, 4, 1, 1, 1, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 1, 1, 1, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 5, 1, 4, 4, 4, 4, 4, 1, 1, 1, 5, 5, 5, 5, 5, 3, 3, 5, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 5, 5, 1, 1, 1, 4, 4, 4, 4, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 5, 1, 1, 1, 1, 4, 4, 4, 4, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0 },
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-	};
-
-	std::vector<int> startTile = { 5, 28 };
-	std::vector<int> endTile = { 16, 4 };
-
-	stage->initialize(layout, startTile, endTile);
+	stage->initialize(1);
 
 	// map texture
 	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
@@ -89,11 +41,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!playerMale.initialize(graphics, TILE_SIZE, TILE_SIZE, 3, &playerMaleTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
-	// Set map to default scale and starting position
-	map.setScale((float)SCALE);
-	map.setX(-(TILE_SIZE * SCALE * 2));
-	map.setY(-(TILE_SIZE * SCALE * 25));
-
 	playerMale.setScale((float)SCALE);
 	playerMale.setX(TILE_SIZE * SCALE * 3);
 	playerMale.setY(TILE_SIZE * SCALE * 3);
@@ -104,11 +51,13 @@ void ThreeChances::initialize(HWND hwnd) {
 	playerMale.setFrameDelay(PLAYER_ANIMATION_DELAY);
 	playerMale.setCurrentFrame(3);
 
-	map.setScale(SCALE);
-	map.setX(-(TILE_SIZE * SCALE * (startTile[0] - 3)));
-	map.setY(-(TILE_SIZE * SCALE * (startTile[1] - 3)));
+	map.setScale((float)SCALE);
+	map.setX(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().x - 3)));
+	map.setY(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().y - 3)));
 
-	std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
+	stage->logLayout();
+
+	printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 	return;
 }
 
@@ -172,7 +121,7 @@ void ThreeChances::update() {
 		if (map.getX() < 0) {
 			map.setX(map.getX() + TILE_SIZE * SCALE);
 			stage->moveCurrentTile(LEFT);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
@@ -185,7 +134,7 @@ void ThreeChances::update() {
 		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
 			map.setX(map.getX() - TILE_SIZE * SCALE);
 			stage->moveCurrentTile(RIGHT);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
@@ -198,7 +147,7 @@ void ThreeChances::update() {
 		if (map.getY() < 0) {
 			map.setY(map.getY() + TILE_SIZE * SCALE);
 			stage->moveCurrentTile(UP);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
@@ -211,7 +160,7 @@ void ThreeChances::update() {
 		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
 			map.setY(map.getY() - TILE_SIZE * SCALE);
 			stage->moveCurrentTile(DOWN);
-			std::cout << "X: " << map.getX() << " Y: " << map.getY() << " Tile: " << stage->getCurrentTileType() << std::endl;
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));

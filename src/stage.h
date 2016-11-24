@@ -6,13 +6,15 @@
 #include <string>
 #include <vector>
 #include "constants.h"
+#include "stageLayouts.h"
 
 class Stage {
 private:
 	std::vector<std::vector<int>> layout;	// 2D array representing stage layout
-	std::vector<int> startTile;				// Coordinates of start tile
-	std::vector<int> endTile;				// Coordinates of end tile
-	std::vector<int> currentTile;			// Coordinates of current tile
+	Coordinates startTile;					// Coordinates of start tile
+	Coordinates endTile;					// Coordinates of end tile
+	Coordinates currentTile;				// Coordinates of current tile
+	int stageNo;							// Stage number
 
 public:
 	// Constructor
@@ -21,17 +23,29 @@ public:
 	// Destructor
 	virtual ~Stage();
 
-	bool initialize(std::vector<std::vector<int>> layout, std::vector<int> startTile, std::vector<int> endTile);
+	bool initialize(int stageNo);
+
+	// Getters
+	std::vector<std::vector<int>> getLayout() { return layout; }
+	Coordinates getStartTile() { return startTile; }
+	Coordinates getEndTile() { return endTile; }
+	Coordinates getCurrentTile() { return currentTile; }
+	int getStageNo() { return stageNo; }
+
+	// Setters
+	void setLayout(std::vector<std::vector<int>> l) { layout = l; }
+	void setStartTile(Coordinates st) { startTile = st; }
+	void setEndTile(Coordinates et) { endTile = et; }
+	void setCurrentTile(Coordinates ct) { currentTile = ct; }
+	void setStageNo(int sn) { stageNo = sn; }
 
 	void logLayout();
-	
-	int getTileAtCoordinate(std::vector<int> coordinate);
+
+	int getTileValueAtCoordinates(Coordinates coordinates);
 
 	int getCurrentTileValue();
 
 	std::string getCurrentTileType();
-
-	bool setCurrentTile(std::vector<int> currentTile);
 
 	bool moveCurrentTile(int direction);
 };
