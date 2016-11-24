@@ -4,10 +4,13 @@
 
 #include <map>
 #include <iostream>
-
+#include <string>
+#include <vector>
+#include <stdio.h>
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
+#include "stage.h"
 
 class ThreeChances : public Game {
 private:
@@ -18,7 +21,8 @@ private:
 	Image		   playerMale;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
-	
+	Stage*		   stage;
+
 public:
 	// Constructor
 	ThreeChances();

@@ -24,6 +24,11 @@ ThreeChances::~ThreeChances() {
 void ThreeChances::initialize(HWND hwnd) {
 	Game::initialize(hwnd); // throws GameError
 
+	// initialize map class
+	stage = new Stage;
+	stage->initialize(1);
+
+	// map texture
 	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
@@ -36,32 +41,32 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!playerMale.initialize(graphics, TILE_SIZE, TILE_SIZE, 3, &playerMaleTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
-	// Set map to default scale and starting position
-	map.setScale((float)SCALE);
-	map.setX(-(TILE_SIZE * SCALE * 2));
-	map.setY(-(TILE_SIZE * SCALE * 25));
-
 	playerMale.setScale((float)SCALE);
 	playerMale.setX(TILE_SIZE * SCALE * 3);
 	playerMale.setY(TILE_SIZE * SCALE * 3);
-	
+
 	// Set initial male position, should follow grid later
 	playerMale.setLoop(false);
 	playerMale.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
 	playerMale.setFrameDelay(PLAYER_ANIMATION_DELAY);
 	playerMale.setCurrentFrame(3);
+
+	map.setScale((float)SCALE);
+	map.setX(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().x - 3)));
+	map.setY(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().y - 3)));
+
+	stage->logLayout();
+
+	printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 	return;
 }
 
-//=============================================================================
-// Update all game items
-//=============================================================================
 void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
-	if (!input->isKeyDown(LEFT_KEY)) 
+	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)["LEFT"] = false;
-	if (!input->isKeyDown(RIGHT_KEY)) 
+	if (!input->isKeyDown(RIGHT_KEY))
 		(*keysPressed)["RIGHT"] = false;
-	if (!input->isKeyDown(UP_KEY)) 
+	if (!input->isKeyDown(UP_KEY))
 		(*keysPressed)["UP"] = false;
 	if (!input->isKeyDown(DOWN_KEY))
 		(*keysPressed)["DOWN"] = false;
@@ -96,12 +101,15 @@ void rotatePlayer(Image *player, std::string direction) {
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		player->setCurrentFrame(0);		// restart the fucking animation
+		player->setCurrentFrame(0);
 	}
 
 	player->setSpriteDataRect(sampleRect);
 }
 
+//=============================================================================
+// Update all game items
+//=============================================================================
 void ThreeChances::update() {
 	// make the map move at a certain velocity, trigger player animation at that time
 	// switch the sprites and align them
@@ -110,8 +118,11 @@ void ThreeChances::update() {
 		keysPressed["LEFT"] = true;
 		lastKeyPressed = "LEFT";
 
-		if (map.getX() < 0)
+		if (map.getX() < 0) {
 			map.setX(map.getX() + TILE_SIZE * SCALE);
+			stage->moveCurrentTile(LEFT);
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
@@ -120,8 +131,11 @@ void ThreeChances::update() {
 		keysPressed["RIGHT"] = true;
 		lastKeyPressed = "RIGHT";
 
-		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH)
+		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
 			map.setX(map.getX() - TILE_SIZE * SCALE);
+			stage->moveCurrentTile(RIGHT);
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
@@ -130,8 +144,11 @@ void ThreeChances::update() {
 		keysPressed["UP"] = true;
 		lastKeyPressed = "UP";
 
-		if (map.getY() < 0)
+		if (map.getY() < 0) {
 			map.setY(map.getY() + TILE_SIZE * SCALE);
+			stage->moveCurrentTile(UP);
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
@@ -140,12 +157,15 @@ void ThreeChances::update() {
 		keysPressed["DOWN"] = true;
 		lastKeyPressed = "DOWN";
 
-		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT)
+		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
 			map.setY(map.getY() - TILE_SIZE * SCALE);
+			stage->moveCurrentTile(DOWN);
+			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+		}
 
 		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
-	
+
 	resetKeysPressedMap(input, &keysPressed);
 	playerMale.update(frameTime);
 }
