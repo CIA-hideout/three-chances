@@ -87,7 +87,8 @@
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\stage.h" />
     <ClInclude Include="src\stageLayouts.h" />
-    <ClInclude Include="src\monsterConstants.h" />
+    <ClInclude Include="src\entityConstants.h" />
+    <ClInclude Include="src\player.h" />
     <ClInclude Include="src\threechances.h" />
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>
@@ -99,6 +100,7 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\stage.cpp" />
+    <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\threechances.cpp" />
     <ClCompile Include="src\textureManager.cpp" />
     <ClCompile Include="src\winmain.cpp" />

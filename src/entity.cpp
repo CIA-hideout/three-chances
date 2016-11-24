@@ -42,10 +42,14 @@ void Entity::rotateEntity(std::string direction) {
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		//this->setCurrentFrame(0);
 	}
 
 	this->setSpriteDataRect(sampleRect);
+}
+
+void Entity::setRect() {
+	spriteData.rect.left = currentFrame * spriteData.width;
+	spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }
 
 void Entity::startWalkAnimation() {}

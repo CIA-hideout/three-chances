@@ -41,7 +41,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!map.initialize(graphics, 0, 0, 0, &mapTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
-	if (!playerMale.initialize(graphics, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture))
+	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
 	if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
@@ -52,19 +52,13 @@ void ThreeChances::initialize(HWND hwnd) {
 	map.setX(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().x - 3)));
 	map.setY(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().y - 3)));
 
-	playerMale.setScale((float)SCALE);
-	playerMale.setX(TILE_SIZE * SCALE * 3);
-	playerMale.setY(TILE_SIZE * SCALE * 3);
+	player.setScale((float)SCALE);
+	player.setX(TILE_SIZE * SCALE * 3);
+	player.setY(TILE_SIZE * SCALE * 3);
 
 	duck.setScale((float)SCALE);
 	duck.setX(TILE_SIZE * SCALE * 3);
 	duck.setY(TILE_SIZE * SCALE * 2);
-	
-	// Set initial male position, should follow grid later
-	playerMale.setLoop(false);
-	playerMale.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
-	playerMale.setFrameDelay(PLAYER_ANIMATION_DELAY);
-	playerMale.setCurrentFrame(3);
 
 	stage->logLayout();
 
@@ -95,29 +89,6 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 	return "";
 }
 
-void rotatePlayer(Image *player, std::string direction) {
-	RECT sampleRect = player->getSpriteDataRect();
-
-	if (direction != "") {
-		sampleRect.left = 0;
-		sampleRect.right = TILE_SIZE;
-
-		if (direction == "LEFT")
-			sampleRect.top = 32;
-		if (direction == "RIGHT")
-			sampleRect.top = 96;
-		if (direction == "UP")
-			sampleRect.top = 64;
-		if (direction == "DOWN")
-			sampleRect.top = 0;
-
-		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		player->setCurrentFrame(0);
-	}
-
-	player->setSpriteDataRect(sampleRect);
-}
-
 //=============================================================================
 // Update all game items
 //=============================================================================
@@ -135,9 +106,7 @@ void ThreeChances::update() {
 			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
-		duck.rotateEntity("LEFT");
-		duck.startAttackAnimation();
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
+		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
@@ -150,9 +119,7 @@ void ThreeChances::update() {
 			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
-		duck.rotateEntity("RIGHT");
-		duck.startWalkAnimation();
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
+		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
@@ -165,9 +132,7 @@ void ThreeChances::update() {
 			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
-		duck.rotateEntity("UP");
-		duck.startAttackAnimation();
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
+		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
@@ -180,13 +145,11 @@ void ThreeChances::update() {
 			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 		}
 
-		duck.rotateEntity("DOWN");
-		duck.startWalkAnimation();
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
+		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	resetKeysPressedMap(input, &keysPressed);
-	playerMale.update(frameTime);
+	player.update(frameTime);
 	duck.update(frameTime);
 }
 
@@ -207,7 +170,7 @@ void ThreeChances::render() {
 	graphics->spriteBegin();                // begin drawing sprites
 
 	map.draw();								// add the map to the scene
-	playerMale.draw();
+	player.draw();
 	duck.draw();
 
 	graphics->spriteEnd();                  // end drawing sprites

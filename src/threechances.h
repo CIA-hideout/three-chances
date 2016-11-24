@@ -7,13 +7,16 @@
 #include <string>
 #include <vector>
 #include <stdio.h>
+
 #include "game.h"
-#include "textureManager.h"
 #include "image.h"
 #include "stage.h"
+#include "entityConstants.h"
+#include "textureManager.h"
+#include "image.h"
 
-#include "monsterConstants.h"
-#include "Duck.h"
+#include "player.h"
+#include "duck.h"
 
 class ThreeChances : public Game {
 private:
@@ -23,7 +26,7 @@ private:
 	TextureManager duckTexture;
 
 	Image		   map;
-	Image		   playerMale;
+	Player		   player;
 	Duck		   duck;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;

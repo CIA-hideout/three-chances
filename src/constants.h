@@ -63,8 +63,9 @@ const char MAP_2_IMAGE[] = "sprites\\level2.png";
 const char PLAYER_MALE_IMAGE[] = "sprites\\male-player.png";
 const char DUCK_IMAGE[] = "sprites\\psyduck.png";
 
-const int PLAYER_START_FRAME = 0;
-const int PLAYER_END_FRAME = 3;
+const int PLAYER_STANDING_FRAME = 3;
+const int PLAYER_WALK_START_FRAME = 0;
+const int PLAYER_WALK_END_FRAME = 3;
 const float PLAYER_ANIMATION_DELAY = 0.25f;
 const int PLAYER_COLS = 4;
 

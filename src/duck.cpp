@@ -10,7 +10,7 @@ Duck::~Duck() {}
 void Duck::update(float frameTime) {
 	Entity::update(frameTime);
 
-	if (this->animComplete) {
+	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
 		this->setCurrentFrame(DUCK_STANDING_FRAME);
@@ -18,11 +18,6 @@ void Duck::update(float frameTime) {
 }
 
 void Duck::ai(float frameTime, Entity &ent) {
-}
-
-void Duck::setRect() {
-	spriteData.rect.left = currentFrame * spriteData.width;
-	spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }
 
 void Duck::startWalkAnimation() {

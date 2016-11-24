@@ -10,9 +10,7 @@ public:
 
 	void update(float frameTime);
 	void ai(float frameTime, Entity &ent);
-	void setRect();
 	void startAttackAnimation();
 	void startWalkAnimation();
 };
-
 #endif

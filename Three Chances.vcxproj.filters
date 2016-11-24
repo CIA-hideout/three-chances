@@ -53,13 +53,17 @@
     </ClInclude>
     <ClInclude Include="src\stageLayouts.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\duck.h">
       <Filter>Header Files\monsters</Filter>
     </ClInclude>
-    <ClInclude Include="src\monsterConstants.h">
+    <ClInclude Include="src\constants.h">
       <Filter>Header Files\constants</Filter>
     </ClInclude>
-    <ClInclude Include="src\constants.h">
+    <ClInclude Include="src\player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entityConstants.h">
       <Filter>Header Files\constants</Filter>
     </ClInclude>
   </ItemGroup>
@@ -90,8 +94,12 @@
     </ClCompile>
     <ClCompile Include="src\stage.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\duck.cpp">
       <Filter>Source Files\monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\player.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
