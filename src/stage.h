@@ -48,6 +48,7 @@ public:
 
 	std::string getCurrentTileType();
 
+	bool isValidMove(int direction);
 	bool moveCurrentTile(int direction);
 };
 

@@ -48,9 +48,6 @@
     <ClInclude Include="src\stage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\stageLayouts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\duck.h">
       <Filter>Header Files\monsters</Filter>
     </ClInclude>
@@ -68,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="src\board.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stageLayouts.h">
+      <Filter>Header Files\constants</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

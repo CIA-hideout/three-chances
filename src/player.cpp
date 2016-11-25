@@ -7,23 +7,23 @@ Player::Player() : Entity() {
 
 Player::~Player() {}
 
-void Player::update(float frameTime, Input *input, std::map<std::string, bool> *keysPressed) {
-	Entity::update(frameTime);
+void Player::update(float frameTime, Stage *stage, Input *input, 
+	std::map<std::string, bool> *keysPressed) {
 
 	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-		this->rotateEntity("LEFT");
+		this->rotateEntity("LEFT", stage->isValidMove(LEFT));
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-		this->rotateEntity("RIGHT");
+		this->rotateEntity("RIGHT", stage->isValidMove(RIGHT));
 	}
 
 	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-		this->rotateEntity("UP");
+		this->rotateEntity("UP", stage->isValidMove(UP));
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-		this->rotateEntity("DOWN");
+		this->rotateEntity("DOWN", stage->isValidMove(DOWN));
 	}
 
 	if (this->getAnimationComplete()) {
@@ -31,9 +31,11 @@ void Player::update(float frameTime, Input *input, std::map<std::string, bool> *
 		this->setFrames(0, 0);
 		this->setCurrentFrame(PLAYER_STANDING_FRAME);
 	}
+
+	Entity::update(frameTime);
 }
 
-void Player::rotateEntity(std::string direction) {
+void Player::rotateEntity(std::string direction, bool moveValid) {
 	RECT sampleRect = this->getSpriteDataRect();
 
 	if (direction != "") {
@@ -50,12 +52,14 @@ void Player::rotateEntity(std::string direction) {
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		startWalkAnimation();
+
+		if (moveValid) {
+			startWalkAnimation();
+		}
 	}
 
 	this->setSpriteDataRect(sampleRect);
 }
-
 
 void Player::startWalkAnimation() {
 	this->setFrames(PLAYER_WALK_START_FRAME, PLAYER_WALK_END_FRAME);

@@ -48,15 +48,12 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
 	// Set map to default scale and starting position
-	map.setScale((float)SCALE);
 	map.setX(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().x - 3)));
 	map.setY(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().y - 3)));
 
-	player.setScale((float)SCALE);
 	player.setX(TILE_SIZE * SCALE * 3);
 	player.setY(TILE_SIZE * SCALE * 3);
 
-	duck.setScale((float)SCALE);
 	duck.setX(TILE_SIZE * SCALE * 3);
 	duck.setY(TILE_SIZE * SCALE * 2);
 
@@ -90,9 +87,11 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 // Update all game items
 //=============================================================================
 void ThreeChances::update() {
-	map.update(stage, input, &keysPressed);
-	player.update(frameTime, input, &keysPressed);
+	// map will update last as player has to check 
+	// if next move is valid so as to play walking animation
+	player.update(frameTime, stage, input, &keysPressed);
 	duck.update(frameTime);
+	map.update(stage, input, &keysPressed);
 
 	// Prevent long key press
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {

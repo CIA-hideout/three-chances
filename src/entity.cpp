@@ -12,6 +12,7 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	moves = ed.moves;
 	levels = ed.levels;
 	abilities = ed.abilities;
+	spriteData.scale = (float)SCALE;
 
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }
@@ -49,7 +50,3 @@ void Entity::setRect() {
 	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }
-
-void Entity::startWalkAnimation() {}
-
-void Entity::startAttackAnimation() {}

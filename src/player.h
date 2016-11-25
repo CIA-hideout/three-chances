@@ -6,14 +6,15 @@
 
 #include "input.h"
 #include "entity.h"
+#include "stage.h"
 
 class Player : public Entity {
 public:
 	Player();
 	~Player();
 
-	void update(float frameTime, Input *input, std::map<std::string, bool> *keysPressed);
-	void rotateEntity(std::string direction);
+	void update(float frameTime, Stage *stage, Input *input, std::map<std::string, bool> *keysPressed);
+	void rotateEntity(std::string direction, bool moveValid);
 	void startAttackAnimation();
 	void startWalkAnimation();
 };

@@ -1,6 +1,31 @@
 #include "stage.h"
 
 //=============================================================================
+// Helpers
+//=============================================================================
+bool isObstacle(int prevTileValue, int tileValue) {
+	return
+		(prevTileValue == 1 && tileValue == 2) ||
+		(prevTileValue == 2 && tileValue == 1) ||
+		tileValue == 0 || tileValue == 3 || 
+		tileValue == 4 || tileValue == 5 || 
+		tileValue == 6;
+}
+
+bool isPath(int prevTileValue, int tileValue) {
+	bool valid = false;
+
+	if (prevTileValue == 1) 
+		valid = tileValue == 1 || tileValue == 3;
+	else if (prevTileValue == 2)
+		valid = tileValue == 2 || tileValue == 3;
+	else
+		valid = tileValue == 1 || tileValue == 2 || tileValue == 3;
+
+	return valid;
+}
+
+//=============================================================================
 // Constructor
 //=============================================================================
 Stage::Stage() {}
@@ -94,6 +119,29 @@ std::string Stage::getCurrentTileType() {
 
 	return tileType;
 }
+
+bool Stage::isValidMove(int direction) {
+	Coordinates nextCoord;
+	int nextTileValue;
+
+	switch (direction) {
+	case LEFT:
+		nextCoord = { currentTile.x - 1, currentTile.y };
+		break;
+	case RIGHT:
+		nextCoord = { currentTile.x + 1, currentTile.y };
+		break;
+	case UP:
+		nextCoord = { currentTile.x, currentTile.y - 1 };
+		break;
+	case DOWN:
+		nextCoord = { currentTile.x, currentTile.y + 1 };
+		break;
+	}
+
+	nextTileValue = this->getTileValueAtCoordinates(nextCoord);
+	return isPath(this->getCurrentTileValue(), nextTileValue);
+};
 
 //=============================================================================
 // Shifts current tile by 1 tile in specified direction

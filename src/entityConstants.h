@@ -1,4 +1,4 @@
-#ifndef _ENTITIYCONST_H
+#ifndef _ENTITYCONST_H
 #define _ENTITYCONST_H
 
 #include "entity.h"
@@ -20,6 +20,5 @@ const EntityData DUCK_DATA = {
 	std::vector < int > { 1, 2 },
 	std::vector < entityNS::ABILITY_TYPE > {},
 };
-
 
 #endif
