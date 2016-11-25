@@ -38,7 +38,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
 
-	if (!map.initialize(graphics, 0, 0, 0, &mapTexture))
+	if (!map.initialize(this, &mapTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
@@ -90,53 +90,32 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 // Update all game items
 //=============================================================================
 void ThreeChances::update() {
+	map.update(stage, input, &keysPressed);
+	player.update(frameTime, input, &keysPressed);
+	duck.update(frameTime);
+
+	// Prevent long key press
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
 		keysPressed["LEFT"] = true;
 		lastKeyPressed = "LEFT";
-
-		if (map.getX() < 0) {
-			map.setX(map.getX() + TILE_SIZE * SCALE);
-			stage->moveCurrentTile(LEFT);
-			stage->logTile(map.getX(), map.getY());
-		}
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
 		keysPressed["RIGHT"] = true;
 		lastKeyPressed = "RIGHT";
-
-		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
-			map.setX(map.getX() - TILE_SIZE * SCALE);
-			stage->moveCurrentTile(RIGHT);
-			stage->logTile(map.getX(), map.getY());
-		}
 	}
 
 	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
 		keysPressed["UP"] = true;
 		lastKeyPressed = "UP";
-
-		if (map.getY() < 0) {
-			map.setY(map.getY() + TILE_SIZE * SCALE);
-			stage->moveCurrentTile(UP);
-			stage->logTile(map.getX(), map.getY());
-		}
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
 		keysPressed["DOWN"] = true;
 		lastKeyPressed = "DOWN";
-
-		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
-			map.setY(map.getY() - TILE_SIZE * SCALE);
-			stage->moveCurrentTile(DOWN);
-			stage->logTile(map.getX(), map.getY());
-		}
 	}
 
 	resetKeysPressedMap(input, &keysPressed);
-	player.update(frameTime, input, &keysPressed);
-	duck.update(frameTime);
 }
 
 //=============================================================================

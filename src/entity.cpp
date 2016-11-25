@@ -13,8 +13,6 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	levels = ed.levels;
 	abilities = ed.abilities;
 
-	// Initialize image
-	input = gamePtr->getInput();
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }
 

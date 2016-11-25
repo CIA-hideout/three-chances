@@ -28,9 +28,6 @@ protected:
 	std::vector<int> levels;
 	std::vector<entityNS::ABILITY_TYPE> abilities;
 
-	// variables needed for update
-	Input *input;
-
 public:
 	Entity();
 	~Entity();

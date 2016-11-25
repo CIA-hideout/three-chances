@@ -13,7 +13,7 @@
 #include "stage.h"
 #include "entityConstants.h"
 #include "textureManager.h"
-#include "image.h"
+#include "board.h"
 
 #include "player.h"
 #include "duck.h"
@@ -25,7 +25,7 @@ private:
 	TextureManager playerMaleTexture;
 	TextureManager duckTexture;
 
-	Image		   map;
+	Board		   map;
 	Player		   player;
 	Duck		   duck;
 	std::map<std::string, bool> keysPressed;

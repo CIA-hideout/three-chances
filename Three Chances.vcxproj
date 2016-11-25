@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\board.h" />
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\duck.h" />
     <ClInclude Include="src\entity.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\board.cpp" />
     <ClCompile Include="src\duck.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\game.cpp" />
