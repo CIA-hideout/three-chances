@@ -60,16 +60,13 @@ void ThreeChances::initialize(HWND hwnd) {
 	duck.setX(TILE_SIZE * SCALE * 3);
 	duck.setY(TILE_SIZE * SCALE * 2);
 
-	stage->logLayout();
-
-	printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
 	return;
 }
 
 void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)["LEFT"] = false;
-	if (!input->isKeyDown(RIGHT_KEY))
+	if (!input->isKeyDown(RIGHT_KEY)) 
 		(*keysPressed)["RIGHT"] = false;
 	if (!input->isKeyDown(UP_KEY))
 		(*keysPressed)["UP"] = false;
@@ -93,9 +90,6 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 // Update all game items
 //=============================================================================
 void ThreeChances::update() {
-	// make the map move at a certain velocity, trigger player animation at that time
-	// switch the sprites and align them
-
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
 		keysPressed["LEFT"] = true;
 		lastKeyPressed = "LEFT";
@@ -103,10 +97,8 @@ void ThreeChances::update() {
 		if (map.getX() < 0) {
 			map.setX(map.getX() + TILE_SIZE * SCALE);
 			stage->moveCurrentTile(LEFT);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+			stage->logTile(map.getX(), map.getY());
 		}
-
-		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
@@ -116,10 +108,8 @@ void ThreeChances::update() {
 		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
 			map.setX(map.getX() - TILE_SIZE * SCALE);
 			stage->moveCurrentTile(RIGHT);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+			stage->logTile(map.getX(), map.getY());
 		}
-
-		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
@@ -129,10 +119,8 @@ void ThreeChances::update() {
 		if (map.getY() < 0) {
 			map.setY(map.getY() + TILE_SIZE * SCALE);
 			stage->moveCurrentTile(UP);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+			stage->logTile(map.getX(), map.getY());
 		}
-
-		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
@@ -142,14 +130,12 @@ void ThreeChances::update() {
 		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
 			map.setY(map.getY() - TILE_SIZE * SCALE);
 			stage->moveCurrentTile(DOWN);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+			stage->logTile(map.getX(), map.getY());
 		}
-
-		player.rotateEntity(findKeyDown(&keysPressed));
 	}
 
 	resetKeysPressedMap(input, &keysPressed);
-	player.update(frameTime);
+	player.update(frameTime, input, &keysPressed);
 	duck.update(frameTime);
 }
 

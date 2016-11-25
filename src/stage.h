@@ -40,6 +40,7 @@ public:
 	void setStageNo(int sn) { stageNo = sn; }
 
 	void logLayout();
+	void logTile(float x, float y);
 
 	int getTileValueAtCoordinates(Coordinates coordinates);
 

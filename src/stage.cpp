@@ -40,6 +40,13 @@ void Stage::logLayout() {
 }
 
 //=============================================================================
+// Log tile information with x and y coordinates
+//=============================================================================
+void Stage::logTile(float x, float y) {
+	printf("X: %.2f Y: %.2f Tile: %s\n", x, y, this->getCurrentTileType().c_str());
+}
+
+//=============================================================================
 // Returns tile at specified coordinates
 //=============================================================================
 int Stage::getTileValueAtCoordinates(Coordinates coordinates) {

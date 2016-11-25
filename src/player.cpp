@@ -7,8 +7,24 @@ Player::Player() : Entity() {
 
 Player::~Player() {}
 
-void Player::update(float frameTime) {
+void Player::update(float frameTime, Input *input, std::map<std::string, bool> *keysPressed) {
 	Entity::update(frameTime);
+
+	if (input->isKeyDown(LEFT_KEY) && (*keysPressed)["LEFT"]) {
+		this->rotateEntity("LEFT");
+	}
+
+	if (input->isKeyDown(RIGHT_KEY) && (*keysPressed)["RIGHT"]) {
+		this->rotateEntity("RIGHT");
+	}
+
+	if (input->isKeyDown(UP_KEY) && (*keysPressed)["UP"]) {
+		this->rotateEntity("UP");
+	}
+
+	if (input->isKeyDown(DOWN_KEY) && (*keysPressed)["DOWN"]) {
+		this->rotateEntity("DOWN");
+	}
 
 	if (this->getAnimationComplete()) {
 		// Clean up
