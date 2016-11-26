@@ -63,7 +63,7 @@ void ThreeChances::initialize(HWND hwnd) {
 void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)["LEFT"] = false;
-	if (!input->isKeyDown(RIGHT_KEY)) 
+	if (!input->isKeyDown(RIGHT_KEY))
 		(*keysPressed)["RIGHT"] = false;
 	if (!input->isKeyDown(UP_KEY))
 		(*keysPressed)["UP"] = false;
@@ -91,7 +91,7 @@ void ThreeChances::update() {
 	// if next move is valid so as to play walking animation
 	player.update(frameTime, stage, input, &keysPressed);
 	duck.update(frameTime);
-	map.update(stage, input, &keysPressed);
+	map.update(stage, player, input, &keysPressed);
 
 	// Prevent long key press
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {

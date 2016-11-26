@@ -12,19 +12,6 @@ bool isObstacle(int prevTileValue, int tileValue) {
 		tileValue == 6;
 }
 
-bool isPath(int prevTileValue, int tileValue) {
-	bool valid = false;
-
-	if (prevTileValue == 1) 
-		valid = tileValue == 1 || tileValue == 3;
-	else if (prevTileValue == 2)
-		valid = tileValue == 2 || tileValue == 3;
-	else
-		valid = tileValue == 1 || tileValue == 2 || tileValue == 3;
-
-	return valid;
-}
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -87,6 +74,30 @@ int Stage::getCurrentTileValue() {
 }
 
 //=============================================================================
+// Returns value of next tile in specified direction from current tile
+//=============================================================================
+int Stage::getNextTileValue(int direction) {
+	Coordinates nextCoord;
+
+	switch (direction) {
+	case LEFT:
+		nextCoord = { currentTile.x - 1, currentTile.y };
+		break;
+	case RIGHT:
+		nextCoord = { currentTile.x + 1, currentTile.y };
+		break;
+	case UP:
+		nextCoord = { currentTile.x, currentTile.y - 1 };
+		break;
+	case DOWN:
+		nextCoord = { currentTile.x, currentTile.y + 1 };
+		break;
+	}
+
+	return this->getTileValueAtCoordinates(nextCoord);
+}
+
+//=============================================================================
 // Returns type of tile at current coordinates
 //=============================================================================
 std::string Stage::getCurrentTileType() {
@@ -120,33 +131,10 @@ std::string Stage::getCurrentTileType() {
 	return tileType;
 }
 
-bool Stage::isValidMove(int direction) {
-	Coordinates nextCoord;
-	int nextTileValue;
-
-	switch (direction) {
-	case LEFT:
-		nextCoord = { currentTile.x - 1, currentTile.y };
-		break;
-	case RIGHT:
-		nextCoord = { currentTile.x + 1, currentTile.y };
-		break;
-	case UP:
-		nextCoord = { currentTile.x, currentTile.y - 1 };
-		break;
-	case DOWN:
-		nextCoord = { currentTile.x, currentTile.y + 1 };
-		break;
-	}
-
-	nextTileValue = this->getTileValueAtCoordinates(nextCoord);
-	return isPath(this->getCurrentTileValue(), nextTileValue);
-};
-
 //=============================================================================
 // Shifts current tile by 1 tile in specified direction
 //=============================================================================
-bool Stage::moveCurrentTile(int direction) {
+void Stage::moveCurrentTile(int direction) {
 	switch (direction) {
 	case LEFT:
 		currentTile = { currentTile.x - 1, currentTile.y };
@@ -161,6 +149,4 @@ bool Stage::moveCurrentTile(int direction) {
 		currentTile = { currentTile.x, currentTile.y + 1 };
 		break;
 	}
-
-	return true;
 }

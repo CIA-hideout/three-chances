@@ -39,17 +39,18 @@ public:
 	void setCurrentTile(Coordinates ct) { currentTile = ct; }
 	void setStageNo(int sn) { stageNo = sn; }
 
+	// Logging
 	void logLayout();
 	void logTile(float x, float y);
 
+	// Getting tile value
 	int getTileValueAtCoordinates(Coordinates coordinates);
-
 	int getCurrentTileValue();
+	int getNextTileValue(int direction);
 
 	std::string getCurrentTileType();
 
-	bool isValidMove(int direction);
-	bool moveCurrentTile(int direction);
+	void moveCurrentTile(int direction);
 };
 
 #endif

@@ -17,5 +17,6 @@ public:
 	void rotateEntity(std::string direction, bool moveValid);
 	void startAttackAnimation();
 	void startWalkAnimation();
+	bool isValidMove(Stage *stage, int direction);
 };
 #endif
