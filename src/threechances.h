@@ -9,26 +9,26 @@
 #include <stdio.h>
 
 #include "game.h"
-#include "stage.h"
 #include "entityConstants.h"
 #include "textureManager.h"
-#include "map.h"
+#include "levelGrid.h"
+#include "level.h"
 #include "player.h"
 #include "duck.h"
 
 class ThreeChances : public Game {
 private:
 	// Game items
-	TextureManager mapTexture;
+	TextureManager levelTexture;
 	TextureManager playerMaleTexture;
 	TextureManager duckTexture;
 
-	Map			   map;
+	Level		   level;
 	Player		   player;
 	Duck		   duck;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
-	Stage*		   stage;
+	LevelGrid*	   levelGrid;
 
 public:
 	// Constructor

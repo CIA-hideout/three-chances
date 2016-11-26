@@ -1,14 +1,14 @@
-#ifndef _STAGE_H
-#define _STAGE_H
+#ifndef _LEVELGRID_H
+#define _LEVELGRID_H
 #define WIN32_LEAN_AND_MEAN
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include "constants.h"
-#include "stageLayouts.h"
+#include "levelConstants.h"
 
-class Stage {
+class LevelGrid {
 private:
 	std::vector<std::vector<int>> layout;	// 2D array representing stage layout
 	Coordinates startTile;					// Coordinates of start tile
@@ -18,10 +18,10 @@ private:
 
 public:
 	// Constructor
-	Stage();
+	LevelGrid();
 
 	// Destructor
-	virtual ~Stage();
+	virtual ~LevelGrid();
 
 	bool initialize(int stageNo);
 

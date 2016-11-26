@@ -58,8 +58,8 @@ const int UP = 2;
 const int DOWN = 3;
 
 // Sprites
-const char MAP_1_IMAGE[] = "sprites\\level1 (w Grid).png";
-const char MAP_2_IMAGE[] = "sprites\\level2.png";
+const char LEVEL_1_IMAGE[] = "sprites\\level1 (w Grid).png";
+const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
 const char PLAYER_MALE_IMAGE[] = "sprites\\male-player.png";
 const char DUCK_IMAGE[] = "sprites\\psyduck.png";
 

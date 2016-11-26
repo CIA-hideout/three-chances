@@ -7,22 +7,22 @@ Player::Player() : Entity() {
 
 Player::~Player() {}
 
-void Player::update(float frameTime, Stage *stage, Input *input, 
+void Player::update(float frameTime, LevelGrid *levelGrid, Input *input,
 	std::map<std::string, bool> *keysPressed) {
 	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-		this->rotateEntity("LEFT", this->isValidMove(stage, LEFT));
+		this->rotateEntity("LEFT", this->isValidMove(levelGrid, LEFT));
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-		this->rotateEntity("RIGHT", this->isValidMove(stage, RIGHT));
+		this->rotateEntity("RIGHT", this->isValidMove(levelGrid, RIGHT));
 	}
 
 	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-		this->rotateEntity("UP", this->isValidMove(stage, UP));
+		this->rotateEntity("UP", this->isValidMove(levelGrid, UP));
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-		this->rotateEntity("DOWN", this->isValidMove(stage, DOWN));
+		this->rotateEntity("DOWN", this->isValidMove(levelGrid, DOWN));
 	}
 
 	if (this->getAnimationComplete()) {
@@ -67,9 +67,9 @@ void Player::startWalkAnimation() {
 
 void Player::startAttackAnimation() {}
 
-bool Player::isValidMove(Stage *stage, int direction) {
-	int currentTileValue = stage->getCurrentTileValue();
-	int nextTileValue = stage->getNextTileValue(direction);
+bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
+	int currentTileValue = levelGrid->getCurrentTileValue();
+	int nextTileValue = levelGrid->getNextTileValue(direction);
 
 	bool valid = false;
 

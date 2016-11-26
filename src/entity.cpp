@@ -12,7 +12,7 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	moves = ed.moves;
 	levels = ed.levels;
 	abilities = ed.abilities;
-	spriteData.scale = (float)SCALE;
+	this->setScale((float)SCALE);
 
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }
