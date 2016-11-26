@@ -25,11 +25,11 @@ void ThreeChances::initialize(HWND hwnd) {
 	Game::initialize(hwnd); // throws GameError
 
 	// initialize map class
-	stage = new Stage;
-	stage->initialize(1);
+	levelGrid = new LevelGrid;
+	levelGrid->initialize(1);
 
 	// map texture
-	if (!mapTexture.initialize(graphics, MAP_1_IMAGE))
+	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
@@ -38,7 +38,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
 
-	if (!map.initialize(this, &mapTexture))
+	if (!level.initialize(this, &levelTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
@@ -48,8 +48,8 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
 	// Set map to default scale and starting position
-	map.setX(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().x - 3)));
-	map.setY(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().y - 3)));
+	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
+	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
 
 	player.setX(TILE_SIZE * SCALE * 3);
 	player.setY(TILE_SIZE * SCALE * 3);
@@ -63,7 +63,7 @@ void ThreeChances::initialize(HWND hwnd) {
 void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)["LEFT"] = false;
-	if (!input->isKeyDown(RIGHT_KEY)) 
+	if (!input->isKeyDown(RIGHT_KEY))
 		(*keysPressed)["RIGHT"] = false;
 	if (!input->isKeyDown(UP_KEY))
 		(*keysPressed)["UP"] = false;
@@ -89,9 +89,9 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 void ThreeChances::update() {
 	// map will update last as player has to check 
 	// if next move is valid so as to play walking animation
-	player.update(frameTime, stage, input, &keysPressed);
+	player.update(frameTime, levelGrid, input, &keysPressed);
 	duck.update(frameTime);
-	map.update(stage, input, &keysPressed);
+	level.update(levelGrid, player, input, &keysPressed);
 
 	// Prevent long key press
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
@@ -133,7 +133,7 @@ void ThreeChances::collisions() {}
 void ThreeChances::render() {
 	graphics->spriteBegin();                // begin drawing sprites
 
-	map.draw();								// add the map to the scene
+	level.draw();								// add the map to the scene
 	player.draw();
 	duck.draw();
 
@@ -145,7 +145,7 @@ void ThreeChances::render() {
 // Release all reserved video memory so graphics device may be reset.
 //=============================================================================
 void ThreeChances::releaseAll() {
-	mapTexture.onLostDevice();
+	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
 	duckTexture.onLostDevice();
 
@@ -158,7 +158,7 @@ void ThreeChances::releaseAll() {
 // Recreate all surfaces.
 //=============================================================================
 void ThreeChances::resetAll() {
-	mapTexture.onResetDevice();
+	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
 	duckTexture.onResetDevice();
 

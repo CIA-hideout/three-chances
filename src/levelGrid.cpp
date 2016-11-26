@@ -1,4 +1,4 @@
-#include "stage.h"
+#include "levelGrid.h"
 
 //=============================================================================
 // Helpers
@@ -12,33 +12,20 @@ bool isObstacle(int prevTileValue, int tileValue) {
 		tileValue == 6;
 }
 
-bool isPath(int prevTileValue, int tileValue) {
-	bool valid = false;
-
-	if (prevTileValue == 1) 
-		valid = tileValue == 1 || tileValue == 3;
-	else if (prevTileValue == 2)
-		valid = tileValue == 2 || tileValue == 3;
-	else
-		valid = tileValue == 1 || tileValue == 2 || tileValue == 3;
-
-	return valid;
-}
-
 //=============================================================================
 // Constructor
 //=============================================================================
-Stage::Stage() {}
+LevelGrid::LevelGrid() {}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Stage::~Stage() {}
+LevelGrid::~LevelGrid() {}
 
 //=============================================================================
 // Initializes the map
 //=============================================================================
-bool Stage::initialize(int stageNo) {
+bool LevelGrid::initialize(int stageNo) {
 	switch (stageNo) {
 	case 1:
 		layout = STAGE_1_LAYOUT;
@@ -54,7 +41,7 @@ bool Stage::initialize(int stageNo) {
 //=============================================================================
 // Logs entire map layout
 //=============================================================================
-void Stage::logLayout() {
+void LevelGrid::logLayout() {
 	for (size_t i = 0; i < layout.size(); ++i) {
 		for (size_t j = 0; j < layout[i].size(); ++j) {
 			printf("%d ", layout[i][j]);
@@ -67,14 +54,14 @@ void Stage::logLayout() {
 //=============================================================================
 // Log tile information with x and y coordinates
 //=============================================================================
-void Stage::logTile(float x, float y) {
+void LevelGrid::logTile(float x, float y) {
 	printf("X: %.2f Y: %.2f Tile: %s\n", x, y, this->getCurrentTileType().c_str());
 }
 
 //=============================================================================
 // Returns tile at specified coordinates
 //=============================================================================
-int Stage::getTileValueAtCoordinates(Coordinates coordinates) {
+int LevelGrid::getTileValueAtCoordinates(Coordinates coordinates) {
 	// Y coordinate has to be first because of how the 2D array is structured
 	return layout[coordinates.y][coordinates.x];
 }
@@ -82,14 +69,38 @@ int Stage::getTileValueAtCoordinates(Coordinates coordinates) {
 //=============================================================================
 // Returns value of tile at current coordinates
 //=============================================================================
-int Stage::getCurrentTileValue() {
+int LevelGrid::getCurrentTileValue() {
 	return layout[currentTile.y][currentTile.x];
+}
+
+//=============================================================================
+// Returns value of next tile in specified direction from current tile
+//=============================================================================
+int LevelGrid::getNextTileValue(int direction) {
+	Coordinates nextCoord;
+
+	switch (direction) {
+	case LEFT:
+		nextCoord = { currentTile.x - 1, currentTile.y };
+		break;
+	case RIGHT:
+		nextCoord = { currentTile.x + 1, currentTile.y };
+		break;
+	case UP:
+		nextCoord = { currentTile.x, currentTile.y - 1 };
+		break;
+	case DOWN:
+		nextCoord = { currentTile.x, currentTile.y + 1 };
+		break;
+	}
+
+	return this->getTileValueAtCoordinates(nextCoord);
 }
 
 //=============================================================================
 // Returns type of tile at current coordinates
 //=============================================================================
-std::string Stage::getCurrentTileType() {
+std::string LevelGrid::getCurrentTileType() {
 	int value = getCurrentTileValue();
 	std::string tileType = "";
 
@@ -120,33 +131,10 @@ std::string Stage::getCurrentTileType() {
 	return tileType;
 }
 
-bool Stage::isValidMove(int direction) {
-	Coordinates nextCoord;
-	int nextTileValue;
-
-	switch (direction) {
-	case LEFT:
-		nextCoord = { currentTile.x - 1, currentTile.y };
-		break;
-	case RIGHT:
-		nextCoord = { currentTile.x + 1, currentTile.y };
-		break;
-	case UP:
-		nextCoord = { currentTile.x, currentTile.y - 1 };
-		break;
-	case DOWN:
-		nextCoord = { currentTile.x, currentTile.y + 1 };
-		break;
-	}
-
-	nextTileValue = this->getTileValueAtCoordinates(nextCoord);
-	return isPath(this->getCurrentTileValue(), nextTileValue);
-};
-
 //=============================================================================
 // Shifts current tile by 1 tile in specified direction
 //=============================================================================
-bool Stage::moveCurrentTile(int direction) {
+void LevelGrid::moveCurrentTile(int direction) {
 	switch (direction) {
 	case LEFT:
 		currentTile = { currentTile.x - 1, currentTile.y };
@@ -161,6 +149,4 @@ bool Stage::moveCurrentTile(int direction) {
 		currentTile = { currentTile.x, currentTile.y + 1 };
 		break;
 	}
-
-	return true;
 }
