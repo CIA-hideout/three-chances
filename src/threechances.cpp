@@ -35,36 +35,35 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male texture"));
 
-	if (!map.initialize(graphics, 0, 0, 0, &mapTexture))
+	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
+
+	if (!map.initialize(this, &mapTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
-	if (!playerMale.initialize(graphics, TILE_SIZE, TILE_SIZE, 3, &playerMaleTexture))
+	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
-	playerMale.setScale((float)SCALE);
-	playerMale.setX(TILE_SIZE * SCALE * 3);
-	playerMale.setY(TILE_SIZE * SCALE * 3);
+	if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
-	// Set initial male position, should follow grid later
-	playerMale.setLoop(false);
-	playerMale.setFrames(PLAYER_START_FRAME, PLAYER_END_FRAME);	// animation frames
-	playerMale.setFrameDelay(PLAYER_ANIMATION_DELAY);
-	playerMale.setCurrentFrame(3);
-
-	map.setScale((float)SCALE);
+	// Set map to default scale and starting position
 	map.setX(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().x - 3)));
 	map.setY(-(TILE_SIZE * SCALE * ((float)stage->getStartTile().y - 3)));
 
-	stage->logLayout();
+	player.setX(TILE_SIZE * SCALE * 3);
+	player.setY(TILE_SIZE * SCALE * 3);
 
-	printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
+	duck.setX(TILE_SIZE * SCALE * 3);
+	duck.setY(TILE_SIZE * SCALE * 2);
+
 	return;
 }
 
 void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)["LEFT"] = false;
-	if (!input->isKeyDown(RIGHT_KEY))
+	if (!input->isKeyDown(RIGHT_KEY)) 
 		(*keysPressed)["RIGHT"] = false;
 	if (!input->isKeyDown(UP_KEY))
 		(*keysPressed)["UP"] = false;
@@ -84,90 +83,38 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 	return "";
 }
 
-void rotatePlayer(Image *player, std::string direction) {
-	RECT sampleRect = player->getSpriteDataRect();
-
-	if (direction != "") {
-		sampleRect.left = 0;
-		sampleRect.right = TILE_SIZE;
-
-		if (direction == "LEFT")
-			sampleRect.top = 32;
-		if (direction == "RIGHT")
-			sampleRect.top = 96;
-		if (direction == "UP")
-			sampleRect.top = 64;
-		if (direction == "DOWN")
-			sampleRect.top = 0;
-
-		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		player->setCurrentFrame(0);
-	}
-
-	player->setSpriteDataRect(sampleRect);
-}
-
 //=============================================================================
 // Update all game items
 //=============================================================================
 void ThreeChances::update() {
-	// make the map move at a certain velocity, trigger player animation at that time
-	// switch the sprites and align them
+	// map will update last as player has to check 
+	// if next move is valid so as to play walking animation
+	player.update(frameTime, stage, input, &keysPressed);
+	duck.update(frameTime);
+	map.update(stage, input, &keysPressed);
 
+	// Prevent long key press
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
 		keysPressed["LEFT"] = true;
 		lastKeyPressed = "LEFT";
-
-		if (map.getX() < 0) {
-			map.setX(map.getX() + TILE_SIZE * SCALE);
-			stage->moveCurrentTile(LEFT);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
-		}
-
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
 		keysPressed["RIGHT"] = true;
 		lastKeyPressed = "RIGHT";
-
-		if (-map.getX() < map.getWidth() * SCALE - GAME_WIDTH) {
-			map.setX(map.getX() - TILE_SIZE * SCALE);
-			stage->moveCurrentTile(RIGHT);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
-		}
-
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
 		keysPressed["UP"] = true;
 		lastKeyPressed = "UP";
-
-		if (map.getY() < 0) {
-			map.setY(map.getY() + TILE_SIZE * SCALE);
-			stage->moveCurrentTile(UP);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
-		}
-
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
 		keysPressed["DOWN"] = true;
 		lastKeyPressed = "DOWN";
-
-		if (-map.getY() < map.getHeight() * SCALE - GAME_HEIGHT) {
-			map.setY(map.getY() - TILE_SIZE * SCALE);
-			stage->moveCurrentTile(DOWN);
-			printf("X: %.2f Y: %.2f Tile: %s\n", map.getX(), map.getY(), stage->getCurrentTileType().c_str());
-		}
-
-		rotatePlayer(&playerMale, findKeyDown(&keysPressed));
 	}
 
 	resetKeysPressedMap(input, &keysPressed);
-	playerMale.update(frameTime);
 }
 
 //=============================================================================
@@ -187,7 +134,8 @@ void ThreeChances::render() {
 	graphics->spriteBegin();                // begin drawing sprites
 
 	map.draw();								// add the map to the scene
-	playerMale.draw();
+	player.draw();
+	duck.draw();
 
 	graphics->spriteEnd();                  // end drawing sprites
 }
@@ -199,6 +147,7 @@ void ThreeChances::render() {
 void ThreeChances::releaseAll() {
 	mapTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
+	duckTexture.onLostDevice();
 
 	Game::releaseAll();
 	return;
@@ -211,6 +160,7 @@ void ThreeChances::releaseAll() {
 void ThreeChances::resetAll() {
 	mapTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
+	duckTexture.onResetDevice();
 
 	Game::resetAll();
 	return;

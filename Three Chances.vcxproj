@@ -77,7 +77,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\board.h" />
     <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\duck.h" />
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\gameError.h" />
@@ -86,16 +88,21 @@
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\stage.h" />
     <ClInclude Include="src\stageLayouts.h" />
+    <ClInclude Include="src\entityConstants.h" />
+    <ClInclude Include="src\player.h" />
     <ClInclude Include="src\threechances.h" />
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\board.cpp" />
+    <ClCompile Include="src\duck.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\stage.cpp" />
+    <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\threechances.cpp" />
     <ClCompile Include="src\textureManager.cpp" />
     <ClCompile Include="src\winmain.cpp" />
