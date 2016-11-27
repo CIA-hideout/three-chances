@@ -10,6 +10,7 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	damage = ed.damage;
 	atkRange = ed.atkRange;
 	moves = ed.moves;
+	movesLeft = ed.moves;
 	levels = ed.levels;
 	abilities = ed.abilities;
 	this->setScale((float)SCALE);
@@ -49,4 +50,12 @@ void Entity::rotateEntity(std::string direction) {
 void Entity::setRect() {
 	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
+}
+
+void Entity::moveExecuted() {
+	this->setMovesLeft(this->getMovesLeft() - 1);
+}
+
+void Entity::resetMovesLeft() {
+	this->setMovesLeft(this->getMoves());
 }

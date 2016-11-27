@@ -70,7 +70,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	// initialize game control
 	enemyVector.push_back(duck);
 	gameControl = new GameControl;
-	gameControl->initialize(&player, enemyVector);
+	gameControl->initialize(enemyVector);
 
 	// Set map and hud to default scale and starting position
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
@@ -123,11 +123,13 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 void ThreeChances::update() {
 	// map will update last as player has to check
 	// if next move is valid so as to play walking animation
-	player.update(frameTime, levelGrid, input, &keysPressed);
-	duck.update(frameTime, levelGrid, player, input, &keysPressed);
+	player.update(frameTime, levelGrid, input, &keysPressed, gameControl);
+	level.update(levelGrid, player, input, &keysPressed);
 	ghost.update(frameTime, levelGrid, player, input, &keysPressed);
 	slug.update(frameTime, levelGrid, player, input, &keysPressed);
-	level.update(levelGrid, player, input, &keysPressed);
+	duck.update(frameTime);
+
+	//std::cout << static_cast<char>(gameControl->getGameState()) << std::endl;
 
 	// Prevent long key press
 	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {

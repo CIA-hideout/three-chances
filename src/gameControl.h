@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "player.h"
 #include "entity.h"
 
 enum class GAME_STATE : char {
@@ -14,13 +13,8 @@ enum class GAME_STATE : char {
 class GameControl {
 private:
 	int turnsElapsed;
-	Player *player;
 	std::vector<Entity> enemyVector;
 	GAME_STATE gameState;
-
-	// internal turn phase
-	int pMovesLeft;
-	int eMovesLeft;
 
 public:
 	GameControl();
@@ -29,12 +23,12 @@ public:
 	// getters
 	int getTurnsElapsed() const { return turnsElapsed; }
 	GAME_STATE getGameState() const { return gameState; }
-	int getPMovesLeft() const { return pMovesLeft; }
-	int getEMovesLeft() const { return eMovesLeft; }
 
 	// setters
+	void setGameState(GAME_STATE gs) { gameState = gs; }
 
-	bool initialize(Player *player, std::vector<Entity> enemyVector);
+	bool initialize(std::vector<Entity> enemyVector);
+	GAME_STATE changeState();
 };
 
 
