@@ -8,6 +8,8 @@ ThreeChances::ThreeChances() {
 	keysPressed["RIGHT"] = false;
 	keysPressed["UP"] = false;
 	keysPressed["DOWN"] = false;
+
+	gameControl = new GameControl;
 }
 
 //=============================================================================
@@ -63,11 +65,6 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	hud = new Hud;
 	hud->initializeTexture(graphics);
-
-	// initialize game control
-	enemyVector.push_back(duck);
-	gameControl = new GameControl;
-	gameControl->initialize(enemyVector);
 
 	// Set map and hud to default scale and starting position
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
@@ -149,13 +146,25 @@ void ThreeChances::update() {
 		lastKeyPressed = "DOWN";
 	}
 
+	if (gameControl->getGameState() == GAME_STATE::enemy) {
+		enemyAi();
+	}
+
 	resetKeysPressedMap(input, &keysPressed);
+}
+
+void ThreeChances::enemyAi() {
+	std::cout << "Running enemy AI" << std::endl;
+	player.resetMovesLeft();
+	hud->resetMovesHud();
+	gameControl->setGameState(GAME_STATE::player);
 }
 
 //=============================================================================
 // Artificial Intelligence
 //=============================================================================
-void ThreeChances::ai() {}
+void ThreeChances::ai() {
+}
 
 //=============================================================================
 // Handle collisions

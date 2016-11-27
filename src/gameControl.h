@@ -1,10 +1,6 @@
 #ifndef _GAMECONTROL_H
 #define _GAMECONTROL_H
 
-#include <vector>
-
-#include "entity.h"
-
 enum class GAME_STATE : char {
 	player = 'p',
 	enemy = 'e',
@@ -12,24 +8,15 @@ enum class GAME_STATE : char {
 
 class GameControl {
 private:
-	int turnsElapsed;
-	std::vector<Entity> enemyVector;
 	GAME_STATE gameState;
+	int turnsElapsed;
 
 public:
 	GameControl();
 	~GameControl();
 
-	// getters
-	int getTurnsElapsed() const { return turnsElapsed; }
-	GAME_STATE getGameState() const { return gameState; }
-
-	// setters
-	void setGameState(GAME_STATE gs) { turnsElapsed++; gameState = gs; }
-
-	bool initialize(std::vector<Entity> enemyVector);
-	void startEnemyTurn();
+	GAME_STATE getGameState() { return gameState; }
+	void setGameState(GAME_STATE gs) { turnsElapsed++;  gameState = gs; }
 };
-
 
 #endif

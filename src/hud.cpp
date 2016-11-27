@@ -38,7 +38,13 @@ void Hud::setInitialPosition() {
 	}
 }
 
-void Hud::update(float frameTime, Player *player) {	
+void Hud::resetMovesHud() {
+	for (size_t i = 0; i < turnIcons.size(); i++) {
+		turnIcons[i].setVisible(true);
+	}
+}
+
+void Hud::update(float frameTime, Player *player) {
 	for (int i = turnIcons.size(); i > player->getMovesLeft(); i--) {
 		turnIcons[i - 1].setVisible(false);
 	}

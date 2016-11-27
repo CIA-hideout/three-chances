@@ -2,7 +2,6 @@
 #define _LEVEL_H
 
 #include <map>
-#include "constants.h"
 #include "levelGrid.h"
 #include "input.h"
 #include "player.h"
@@ -15,7 +14,7 @@ public:
 
 	virtual bool initialize(Game *gamePtr, TextureManager *textureM);
 	void update(LevelGrid *levelGrid, Player *player, Input *input, 
-		std::map<std::string, bool> *keysPressed, GameControl *gameControl);
+		std::map<std::string, bool> *keysPressed, GameControl* gc);
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
 	~Player();
 
 	void update(float frameTime, LevelGrid *levelGrid, Input *input, 
-		std::map<std::string, bool> *keysPressed, GameControl *gameControl);
+		std::map<std::string, bool> *keysPressed, GameControl *gc);
 	void rotateEntity(std::string direction, bool moveValid);
 	void startAttackAnimation();
 	void startWalkAnimation();

@@ -26,9 +26,11 @@ public:
 
 	void initializeTexture(Graphics *graphics);
 	void setInitialPosition();
+	void resetMovesHud();
 	void update(float frameTime, Player* player);
 	void draw();
 	void releaseAll();
 	void resetAll();
+
 };
 #endif

@@ -10,9 +10,9 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 }
 
 void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
-	std::map<std::string, bool> *keysPressed, GameControl *gameControl) {
+	std::map<std::string, bool> *keysPressed, GameControl *gc) {
 
-	if (gameControl->getGameState() == GAME_STATE::player) {
+	if (gc->getGameState() == GAME_STATE::player) {
 		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
 			if (player->isValidMove(levelGrid, LEFT)) {
 				this->setX(this->getX() + TILE_SIZE * SCALE);
@@ -54,7 +54,7 @@ void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
 		}
 
 		if (player->getMovesLeft() == 0) {
-			gameControl->setGameState(GAME_STATE::enemy);
+			gc->setGameState(GAME_STATE::enemy);
 		}
 	}
 }

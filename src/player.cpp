@@ -8,9 +8,9 @@ Player::Player() : Entity() {
 Player::~Player() {}
 
 void Player::update(float frameTime, LevelGrid *levelGrid, Input *input,
-	std::map<std::string, bool> *keysPressed, GameControl *gameControl) {
+	std::map<std::string, bool> *keysPressed, GameControl *gc) {
 
-	if (gameControl->getGameState() == GAME_STATE::player) {
+	if (gc->getGameState() == GAME_STATE::player) {
 		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
 			this->rotateEntity("LEFT", this->isValidMove(levelGrid, LEFT));
 		}
