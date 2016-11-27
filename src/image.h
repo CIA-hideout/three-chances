@@ -152,9 +152,13 @@ public:
 	virtual void setColorFilter(COLOR_ARGB color) { colorFilter = color; }
 
 	// Set TextureManager
-	virtual void setTextureManager(TextureManager *textureM) {
-		textureManager = textureM;
-	}
+	virtual void setTextureManager(TextureManager *textureM) { textureManager = textureM; }
+
+	//Set StartFrame
+	virtual void setStartFrame(int startframe) { startFrame = startframe; }
+
+	//Set EndFrame
+	virtual void setEndFrame(int endframe) { endFrame = endframe; }
 };
 
 #endif
