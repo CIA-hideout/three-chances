@@ -8,6 +8,7 @@
 #include <vector>
 #include <stdio.h>
 
+#include "gameControl.h"
 #include "game.h"
 #include "entityConstants.h"
 #include "textureManager.h"
@@ -20,22 +21,27 @@
 
 class ThreeChances : public Game {
 private:
+	// Consts
+	GameControl*   gameControl;
+	LevelGrid*	   levelGrid;
+
 	// Game items
 	TextureManager levelTexture;
 	TextureManager playerMaleTexture;
 	TextureManager duckTexture;
 	TextureManager ghostTexture;
 	TextureManager slugTexture;
+	TextureManager hudBgTexture;
 
 	Level		   level;
 	Player		   player;
 	Duck		   duck;
 	Ghost		   ghost;
 	Slug		   slug;
-	
+
+	Image		   hudBg;
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
-	LevelGrid*	   levelGrid;
 
 public:
 	// Constructor

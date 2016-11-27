@@ -18,7 +18,6 @@
 // Safely call onResetDevice
 #define SAFE_ON_RESET_DEVICE(ptr) { if (ptr) { (ptr)->onResetDevice(); } }
 // Color which should be transparent
-//#define TRANSCOLOR SETCOLOR_ARGB(0,255,0,255)
 #define TRANSCOLOR D3DCOLOR_XRGB(255, 0, 255)
 
 //-----------------------------------------------
@@ -33,7 +32,7 @@ const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";
 const bool FULLSCREEN = false;
 const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE * SCALE;
-const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE;
+const UINT GAME_HEIGHT = (TILE_SIZE * (VIEW_RANGE + 3)) * SCALE; // HUD will be 5 tile size
 
 // Game
 const double PI = 3.14159265;
@@ -64,6 +63,7 @@ const char PLAYER_MALE_IMAGE[] = "sprites\\male-player.png";
 const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
+const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
