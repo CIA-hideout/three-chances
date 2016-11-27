@@ -147,14 +147,16 @@ void ThreeChances::update() {
 	}
 
 	if (gameControl->getGameState() == GAME_STATE::enemy) {
-		enemyAi();
+		enemyAi(frameTime);
 	}
 
 	resetKeysPressedMap(input, &keysPressed);
 }
 
-void ThreeChances::enemyAi() {
+void ThreeChances::enemyAi(float frameTime) {
 	std::cout << "Running enemy AI" << std::endl;
+	duck.ai(frameTime, &player, levelGrid);
+
 	player.resetMovesLeft();
 	hud->resetMovesHud();
 	gameControl->setGameState(GAME_STATE::player);

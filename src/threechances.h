@@ -56,7 +56,7 @@ public:
 	void initialize(HWND hwnd);
 	void update();      // must override pure virtual from Game
 	void ai();          // "
-	void enemyAi();
+	void enemyAi(float frameTime);
 	void collisions();  // "
 	void render();      // "
 	void releaseAll();

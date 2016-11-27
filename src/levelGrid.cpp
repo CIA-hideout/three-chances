@@ -97,6 +97,10 @@ int LevelGrid::getNextTileValue(int direction) {
 	return this->getTileValueAtCoordinates(nextCoord);
 }
 
+Coordinates LevelGrid::convertXYToCoord(float x, float y) {
+	return Coordinates( x/ SCALE/ TILE_SIZE, y/ SCALE /TILE_SIZE );
+}
+
 //=============================================================================
 // Returns type of tile at current coordinates
 //=============================================================================

@@ -47,6 +47,7 @@ public:
 	int getTileValueAtCoordinates(Coordinates coordinates);
 	int getCurrentTileValue();
 	int getNextTileValue(int direction);
+	Coordinates convertXYToCoord(float x, float y);
 
 	std::string getCurrentTileType();
 

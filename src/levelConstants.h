@@ -7,6 +7,10 @@ struct Coordinates {
 	Coordinates(int x, int y) : x(x), y(y) {}
 };
 
+bool operator==(const Coordinates& lhs, const Coordinates& rhs) {
+	return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 // Legend
 // 0 - border
 // 1 - 1st floor path
