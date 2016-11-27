@@ -8,11 +8,12 @@
 #include <vector>
 #include <stdio.h>
 
-#include "gameControl.h"
-#include "game.h"
 #include "entityConstants.h"
-#include "textureManager.h"
+#include "game.h"
+#include "gameControl.h"
 #include "levelGrid.h"
+#include "hud.h"
+#include "textureManager.h"
 #include "level.h"
 #include "player.h"
 #include "duck.h"
@@ -24,6 +25,7 @@ private:
 	// Consts
 	GameControl*   gameControl;
 	LevelGrid*	   levelGrid;
+	Hud*		   hud;
 
 	// Game items
 	TextureManager levelTexture;
@@ -34,7 +36,7 @@ private:
 	TextureManager hudBgTexture;
 
 	Level		   level;
-	Player		   player;
+	Player		 player;
 	Duck		   duck;
 	Ghost		   ghost;
 	Slug		   slug;

@@ -13,26 +13,18 @@ void Player::update(float frameTime, LevelGrid *levelGrid, Input *input,
 	if (gameControl->getGameState() == GAME_STATE::player) {
 		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
 			this->rotateEntity("LEFT", this->isValidMove(levelGrid, LEFT));
-			this->moveExecuted();
 		}
 
 		if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
 			this->rotateEntity("RIGHT", this->isValidMove(levelGrid, RIGHT));
-			this->moveExecuted();
 		}
 
 		if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
 			this->rotateEntity("UP", this->isValidMove(levelGrid, UP));
-			this->moveExecuted();
 		}
 
 		if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
 			this->rotateEntity("DOWN", this->isValidMove(levelGrid, DOWN));
-			this->moveExecuted();
-		}
-
-		if (this->getMovesLeft() == 0) {
-			gameControl->setGameState(GAME_STATE::enemy);
 		}
 	}
 

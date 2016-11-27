@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="src\ghost.h" />
     <ClInclude Include="src\gameControl.h" />
+    <ClInclude Include="src\hud.h" />
     <ClInclude Include="src\level.h" />
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\duck.h" />
@@ -99,6 +100,7 @@
   <ItemGroup>
     <ClCompile Include="src\ghost.cpp" />
     <ClCompile Include="src\gameControl.cpp" />
+    <ClCompile Include="src\hud.cpp" />
     <ClCompile Include="src\level.cpp" />
     <ClCompile Include="src\duck.cpp" />
     <ClCompile Include="src\entity.cpp" />

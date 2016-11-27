@@ -25,10 +25,10 @@ public:
 	GAME_STATE getGameState() const { return gameState; }
 
 	// setters
-	void setGameState(GAME_STATE gs) { gameState = gs; }
+	void setGameState(GAME_STATE gs) { turnsElapsed++; gameState = gs; }
 
 	bool initialize(std::vector<Entity> enemyVector);
-	GAME_STATE changeState();
+	void startEnemyTurn();
 };
 
 

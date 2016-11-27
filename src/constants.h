@@ -64,6 +64,7 @@ const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
 const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
+const char TURN_ICON[] = "sprites\\white-circle.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;

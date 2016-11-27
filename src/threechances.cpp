@@ -34,9 +34,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
-	if (!hudBgTexture.initialize(graphics, HUD_BG_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing hud bg texture"));
-
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male texture"));
 
@@ -52,9 +49,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!level.initialize(this, &levelTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
-	if (!hudBg.initialize(graphics, 0, 0, 0, &hudBgTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing hug bg"));
-
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
@@ -67,6 +61,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
 
+	hud = new Hud;
+	hud->initializeTexture(graphics);
+
 	// initialize game control
 	enemyVector.push_back(duck);
 	gameControl = new GameControl;
@@ -75,9 +72,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	// Set map and hud to default scale and starting position
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
 	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
-
-	hudBg.setScale(SCALE);
-	hudBg.setY(TILE_SIZE * SCALE * 7);
 
 	player.setX(TILE_SIZE * SCALE * 3);
 	player.setY(TILE_SIZE * SCALE * 3);
@@ -90,6 +84,8 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	slug.setX(TILE_SIZE * SCALE * 2);
 	slug.setY(TILE_SIZE * SCALE * 0);
+
+	hud->setInitialPosition();
 
 	return;
 }
@@ -124,10 +120,11 @@ void ThreeChances::update() {
 	// map will update last as player has to check
 	// if next move is valid so as to play walking animation
 	player.update(frameTime, levelGrid, input, &keysPressed, gameControl);
-	level.update(levelGrid, player, input, &keysPressed);
+	level.update(levelGrid, &player, input, &keysPressed, gameControl);
 	ghost.update(frameTime, levelGrid, player, input, &keysPressed);
 	slug.update(frameTime, levelGrid, player, input, &keysPressed);
 	duck.update(frameTime);
+	hud->update(frameTime, &player);
 
 	//std::cout << static_cast<char>(gameControl->getGameState()) << std::endl;
 
@@ -172,11 +169,11 @@ void ThreeChances::render() {
 	graphics->spriteBegin();                // begin drawing sprites
 
 	level.draw();								// add the map to the scene
-	hudBg.draw();
 	player.draw();
 	duck.draw();
 	ghost.draw();
 	slug.draw();
+	hud->draw();
 
 	graphics->spriteEnd();                  // end drawing sprites
 }
@@ -187,12 +184,12 @@ void ThreeChances::render() {
 //=============================================================================
 void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
-	hudBgTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
 	duckTexture.onLostDevice();
 	ghostTexture.onLostDevice();
 	slugTexture.onLostDevice();
 
+	hud->releaseAll();
 	Game::releaseAll();
 	return;
 }
@@ -203,12 +200,12 @@ void ThreeChances::releaseAll() {
 //=============================================================================
 void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
-	hudBgTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
 	duckTexture.onResetDevice();
 	ghostTexture.onResetDevice();
 	slugTexture.onResetDevice();
 
+	hud->resetAll();
 	Game::resetAll();
 	return;
 }
