@@ -1,8 +1,6 @@
 #include "player.h"
 
 Player::Player() : Entity() {
-	/*this->setStartFrame(0);
-	this->setEndFrame(2);*/
 	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
 	this->setLoop(false);
 }

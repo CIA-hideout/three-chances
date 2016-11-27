@@ -2,8 +2,6 @@
 
 Duck::Duck() : Entity() {
 	this->setFrameDelay(DUCK_ANIMATION_DELAY);
-	/*this->setStartFrame(3);
-	this->setEndFrame(5);*/
 	this->setCurrentFrame(2);
 	this->setLoop(false);
 }
@@ -20,28 +18,24 @@ void Duck::update(float frameTime, LevelGrid *levelGrid, Player player, Input *i
 	}
 	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
 		if (player.isValidMove(levelGrid, LEFT)) {
-			printf("GET: %f SET: %f", this->getX(), this->getX() + TILE_SIZE * SCALE);
 			this->setX(this->getX() + TILE_SIZE * SCALE);
 		}
 	}
 
 	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
 		if (player.isValidMove(levelGrid, RIGHT)) {
-			printf("GET: %f SET: %f", this->getX(), this->getX() + TILE_SIZE * SCALE);
 			this->setX(this->getX() - TILE_SIZE * SCALE);
 		}
 	}
 
 	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
 		if (player.isValidMove(levelGrid, UP)) {
-			printf("GET: %f SET: %f", this->getX(), this->getX() + TILE_SIZE * SCALE); 
 			this->setY(this->getY() + TILE_SIZE * SCALE);
 		}
 	}
 
 	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
 		if (player.isValidMove(levelGrid, DOWN)) {
-			printf("GET: %f SET: %f", this->getX(), this->getX() + TILE_SIZE * SCALE); 
 			this->setY(this->getY() - TILE_SIZE * SCALE);
 		}
 	}

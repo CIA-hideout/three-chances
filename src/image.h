@@ -153,12 +153,6 @@ public:
 
 	// Set TextureManager
 	virtual void setTextureManager(TextureManager *textureM) { textureManager = textureM; }
-
-	//Set StartFrame
-	virtual void setStartFrame(int startframe) { startFrame = startframe; }
-
-	//Set EndFrame
-	virtual void setEndFrame(int endframe) { endFrame = endframe; }
 };
 
 #endif
