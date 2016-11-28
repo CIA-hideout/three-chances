@@ -59,9 +59,6 @@ const int RIGHT = 1;
 const int UP = 2;
 const int DOWN = 3;
 
-const float VELOCITY = 200.0f;
-const float ROTATION_RATE = 180.0f;
-
 // Sprites
 const char LEVEL_1_IMAGE[] = "sprites\\level1 (w Grid).png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
@@ -76,7 +73,7 @@ const char SWORD_IMAGE[] = "sprites\\sword2.png";
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 3;
-const float PLAYER_ANIMATION_DELAY = 0.15f;
+const float PLAYER_ANIMATION_DELAY = 0.1f;
 const int PLAYER_COLS = 4;
 
 const int DUCK_STANDING_FRAME = 0;

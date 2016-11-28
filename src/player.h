@@ -3,7 +3,6 @@
 
 #include <map>
 
-#include "input.h"
 #include "entity.h"
 #include "levelGrid.h"
 #include "gameControl.h"
@@ -18,12 +17,12 @@ public:
 	Player();
 	~Player();
 
-	void update(float frameTime, LevelGrid *levelGrid, Input *input, 
-		std::map<int, bool> *keysPressed, GameControl *gc);
-	void rotateEntity(int direction, bool moveValid);
+	void update(float frameTime, GameControl* gc);
+	void rotateEntity(int direction);
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);
+	void moveInDirection(LevelGrid *levelGrid, int direction, float endPoint);
 
 	bool getAnimating() const { return animating; }
 	void setAnimating(bool a) { animating = a; }
