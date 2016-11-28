@@ -45,10 +45,6 @@ Coordinates MonsterGrid::findCoord(int id) {
 	return Coordinates(-1, -1);
 }
 
-float MonsterGrid::convertCoordToXY(int index) {
-	return (index * 32 + 32) * SCALE;
-}
-
 float MonsterGrid::convertYCoord(int yIndex) {
 	int noOfGrids = 0;
 	bool inMap = false;
@@ -65,7 +61,7 @@ float MonsterGrid::convertYCoord(int yIndex) {
 		return -1.0;
 	}
 
-	return noOfGrids * TILE_SIZE * SCALE;
+	return float(noOfGrids * TILE_SIZE * SCALE);
 }
 
 float MonsterGrid::convertXCoord(int xIndex) {
@@ -84,7 +80,19 @@ float MonsterGrid::convertXCoord(int xIndex) {
 		return -1.0;
 	}
 
-	return noOfGrids * TILE_SIZE * SCALE;
+	return float(noOfGrids * TILE_SIZE * SCALE);
+}
+
+// Assuming target is seen on map
+float MonsterGrid::convertMapToXCoord(float x) {
+	float noOfGrids = x / TILE_SIZE / SCALE;
+	return noOfGrids + topLeft.x;
+}
+
+// Assuming target is seen on map
+float MonsterGrid::convertMapToYCoord(float y) {
+	float noOfGrids = y / TILE_SIZE / SCALE;
+	return noOfGrids + topLeft.y;
 }
 
 void MonsterGrid::moveEdgesX(int range) {

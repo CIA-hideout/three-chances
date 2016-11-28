@@ -11,7 +11,6 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 
 void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
 	std::map<int, bool> *keysPressed, GameControl *gc, MonsterGrid *mg) {
-
 	if (gc->getGameState() == GAME_STATE::player) {
 		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)[LEFT]) {
 			if (player->isValidMove(levelGrid, LEFT)) {

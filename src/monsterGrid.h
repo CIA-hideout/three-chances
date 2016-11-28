@@ -23,11 +23,12 @@ public:
 	std::vector<std::vector<int>> getGrid() { return grid; }
 	void add(Coordinates coord, int type);
 	Coordinates findCoord(int id);
-	float convertCoordToXY(int index);
 	void logLayout();
 
 	float convertXCoord(int xIndex);
 	float convertYCoord(int yIndex);
+	float convertMapToXCoord(float x);
+	float convertMapToYCoord(float y);
 
 	void setTopLeft(Coordinates tl);
 	void setTopRight(Coordinates tr);

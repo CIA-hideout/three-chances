@@ -19,8 +19,26 @@ std::vector<Coordinates> getGridAroundEntity(int range, int startX, int startY) 
 
 	for (int i = lowerY; i <= upperY; i++) {
 		for (int j = lowerX; j <= upperX; j++) {
-			coordVec.push_back(Coordinates(i, j));
+			coordVec.push_back(Coordinates(j, i));
 		}
+	}
+
+	return coordVec;
+}
+
+std::vector<Coordinates> getSidesOfEntity(int range, int startX, int startY) {
+	std::vector<Coordinates> coordVec;
+	int lowerX = startX - range;
+	int upperX = startX + range;
+	int lowerY = startY - range;
+	int upperY = startY + range;	
+
+	for (int i = lowerY; i <= upperY; i++) {
+		coordVec.push_back(Coordinates(startX, i));
+	}
+
+	for (int j = lowerX; j <= upperX; j++) {
+		coordVec.push_back(Coordinates(j, startY));
 	}
 
 	return coordVec;
@@ -84,8 +102,8 @@ void Duck::update(float frameTime, MonsterGrid* monsterGrid) {
 	float xMap = monsterGrid->convertXCoord(duckXY.x);
 	float yMap = monsterGrid->convertYCoord(duckXY.y);
 
-	std::cout << "X: " << monsterGrid->convertXCoord(duckXY.x) << std::endl;
-	std::cout << "Y: " << monsterGrid->convertYCoord(duckXY.y) << std::endl;
+	//std::cout << "X: " << monsterGrid->convertXCoord(duckXY.x) << std::endl;
+	//std::cout << "Y: " << monsterGrid->convertYCoord(duckXY.y) << std::endl;
 
 	if (xMap > -1.0 && yMap > -1.0) {
 		this->setVisible(true);
@@ -106,9 +124,11 @@ void Duck::update(float frameTime, MonsterGrid* monsterGrid) {
 }
 
 void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid, MonsterGrid *mg) {
-	// draw a 3 * 3 grid around Duck
-	Coordinates duckTC = lvlGrid->convertXYToCoord(this->getX(), this->getY());
-	Coordinates playerTC = lvlGrid->convertXYToCoord(player->getX(), player->getY());
+
+	Coordinates duckTC = mg->findCoord(1);
+	//Coordinates playerTC = lvlGrid->convertXYToCoord(player->getX(), player->getY());
+	Coordinates playerTC = Coordinates(mg->convertMapToXCoord(player->getX()),
+		mg->convertMapToYCoord(player->getY()));
 
 	std::vector<Coordinates> pointsToBeMatched = getGridAroundEntity(2, duckTC.x, duckTC.y);
 	bool targetDetected = isCoordMatched(pointsToBeMatched, playerTC);
@@ -124,7 +144,7 @@ void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid, MonsterGrid *
 		currentPost = Coordinates(duckTC.x, duckTC.y);
 		for (int i = 0; i < this->getMoves(); i++) {
 			// check if target is around entity
-			duckAtkRange = getGridAroundEntity(this->getAtkRange(), currentPost.x, currentPost.y);
+			duckAtkRange = getSidesOfEntity(this->getAtkRange(), currentPost.x, currentPost.y);
 			targetInRange = isCoordMatched(duckAtkRange, playerTC);
 
 			if (targetInRange) {
