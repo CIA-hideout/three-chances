@@ -6,6 +6,7 @@
 #include "input.h"
 #include "player.h"
 #include "levelGrid.h"
+#include "monsterGrid.h"
 
 class Duck : public Entity {
 public:
@@ -13,8 +14,8 @@ public:
 	~Duck();
 
 	void rotateEntity(std::string direction, bool moveValid);
-	void update(float frameTime);
-	void ai(float frameTime, Player *player, LevelGrid *lvlGrid);
+	void update(float frameTime, MonsterGrid *monsterGrid);
+	void ai(float frameTime, Player *player, LevelGrid *lvlGrid, MonsterGrid *mg);
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);

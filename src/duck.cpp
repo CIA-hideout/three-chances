@@ -16,7 +16,7 @@ std::vector<Coordinates> getGridAroundEntity(int range, int startX, int startY) 
 	int upperX = startX + range;
 	int lowerY = startY - range;
 	int upperY = startY + range;
-	
+
 	for (int i = lowerY; i <= upperY; i++) {
 		for (int j = lowerX; j <= upperX; j++) {
 			coordVec.push_back(Coordinates(i, j));
@@ -36,11 +36,11 @@ bool isCoordMatched(std::vector<Coordinates> coordVec, Coordinates target) {
 	return false;
 }
 
-Coordinates moveTowardsTarget (Coordinates target, Coordinates start) {
+Coordinates findNextPostToTarget (Coordinates target, Coordinates start) {
 	if (start.x != target.x) {
-		if (start.x < target.x) 
+		if (start.x < target.x)
 			return Coordinates(start.x + 1, start.y);
-		else 
+		else
 			return Coordinates(start.x - 1, start.y);
 	}
 	else {
@@ -78,44 +78,34 @@ Duck::Duck() : Entity() {
 
 Duck::~Duck() {}
 
-void Duck::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
-	Entity::update(frameTime);
+void Duck::update(float frameTime, MonsterGrid* monsterGrid) {
+	Coordinates duckXY = monsterGrid->findCoord(1);
+
+	float xMap = monsterGrid->convertXCoord(duckXY.x);
+	float yMap = monsterGrid->convertYCoord(duckXY.y);
+
+	std::cout << "X: " << monsterGrid->convertXCoord(duckXY.x) << std::endl;
+	std::cout << "Y: " << monsterGrid->convertYCoord(duckXY.y) << std::endl;
+
+	if (xMap > -1.0 && yMap > -1.0) {
+		this->setVisible(true);
+		this->setX(monsterGrid->convertXCoord(duckXY.x));
+		this->setY(monsterGrid->convertYCoord(duckXY.y));
+	}
+	else {
+		this->setVisible(false);
+	}
 
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
 		this->setCurrentFrame(DUCK_STANDING_FRAME);
 	}
-	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-		if (player.isValidMove(levelGrid, LEFT)) {
-			this->setX(this->getX() + TILE_SIZE * SCALE);
-			this->rotateEntity("LEFT", true);
-		}
-	}
 
-	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-		if (player.isValidMove(levelGrid, RIGHT)) {
-			this->setX(this->getX() - TILE_SIZE * SCALE);
-			this->rotateEntity("RIGHT", true);
-		}
-	}
-
-	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-		if (player.isValidMove(levelGrid, UP)) {
-			this->setY(this->getY() + TILE_SIZE * SCALE);
-			this->rotateEntity("UP", true);
-		}
-	}
-
-	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-		if (player.isValidMove(levelGrid, DOWN)) {
-			this->setY(this->getY() - TILE_SIZE * SCALE);
-			this->rotateEntity("DOWN", true);
-		}
-	}
+	Entity::update(frameTime);
 }
 
-void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid) {
+void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid, MonsterGrid *mg) {
 	// draw a 3 * 3 grid around Duck
 	Coordinates duckTC = lvlGrid->convertXYToCoord(this->getX(), this->getY());
 	Coordinates playerTC = lvlGrid->convertXYToCoord(player->getX(), player->getY());
@@ -125,6 +115,7 @@ void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid) {
 
 	std::vector<Coordinates> duckAtkRange;
 	Coordinates currentPost;
+	Coordinates nextPost;
 	bool targetInRange;
 	int directionOfTarget;
 
@@ -139,7 +130,18 @@ void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid) {
 			if (targetInRange) {
 				// attack target
 				directionOfTarget = findDirectionOfTarget(playerTC, currentPost);
-				//this->rotateEntity(directionOfTarget);
+				this->rotateEntity(directionOfTarget);
+				this->startAttackAnimation();
+
+				// inflict dmg code
+			}
+			else {
+				// add in movement checking code
+				nextPost = findNextPostToTarget(playerTC, currentPost);
+				mg->moveMonster(currentPost, nextPost);
+				/*this->setX(lvlGrid->convertCoordToXY(nextPost.x));
+				this->setY(lvlGrid->convertCoordToXY(nextPost.y));*/
+				currentPost = nextPost;
 			}
 		}
 	}
@@ -199,4 +201,3 @@ bool Duck::isValidMove(LevelGrid *levelGrid, int direction) {
 
 	return valid;
 }
-

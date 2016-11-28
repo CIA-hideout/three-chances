@@ -6,6 +6,7 @@
 #include "input.h"
 #include "player.h"
 #include "gameControl.h"
+#include "monsterGrid.h"
 
 class Level : public Image {
 public:
@@ -14,7 +15,7 @@ public:
 
 	virtual bool initialize(Game *gamePtr, TextureManager *textureM);
 	void update(LevelGrid *levelGrid, Player *player, Input *input, 
-		std::map<int, bool> *keysPressed, GameControl* gc);
+		std::map<int, bool> *keysPressed, GameControl* gc, MonsterGrid* mg);
 };
 
 #endif

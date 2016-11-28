@@ -45,8 +45,10 @@ void Hud::resetMovesHud() {
 }
 
 void Hud::update(float frameTime, Player *player) {
-	for (int i = turnIcons.size(); i > player->getMovesLeft(); i--) {
-		turnIcons[i - 1].setVisible(false);
+	if (player->getMovesLeft() > -1) {
+		for (int i = turnIcons.size(); i > player->getMovesLeft(); i--) {
+			turnIcons[i - 1].setVisible(false);
+		}
 	}
 }
 

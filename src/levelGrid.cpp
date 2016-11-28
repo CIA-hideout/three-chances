@@ -101,6 +101,10 @@ Coordinates LevelGrid::convertXYToCoord(float x, float y) {
 	return Coordinates( x/ SCALE/ TILE_SIZE, y/ SCALE /TILE_SIZE );
 }
 
+float LevelGrid::convertCoordToXY(int index) {
+	return index * 32 + 32;
+}
+
 //=============================================================================
 // Returns type of tile at current coordinates
 //=============================================================================

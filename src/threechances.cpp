@@ -32,6 +32,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	levelGrid = new LevelGrid;
 	levelGrid->initialize(1);
 
+	// initialize monster grid
+	monsterGrid = new MonsterGrid;
+
 	// map texture
 	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
@@ -73,6 +76,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	player.setX(TILE_SIZE * SCALE * 3);
 	player.setY(TILE_SIZE * SCALE * 3);
 
+<<<<<<< HEAD
 	duck.setX(TILE_SIZE * SCALE * 3);
 	duck.setY(TILE_SIZE * SCALE * 0);
 
@@ -81,8 +85,21 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	slug.setX(TILE_SIZE * SCALE * 2);
 	slug.setY(TILE_SIZE * SCALE * 0);
+=======
+	//duck.setX(TILE_SIZE * SCALE * 3);
+	//duck.setY(TILE_SIZE * SCALE * 2);
+
+	//duck.setX(TILE_SIZE * SCALE * 3);
+	//duck.setY(TILE_SIZE * SCALE * 2);
+
+	// x = 192, y = 128
+	std::cout << "X: " << TILE_SIZE * SCALE * 3 << std::endl;
+	std::cout << "Y: " << TILE_SIZE * SCALE * 2 << std::endl;
+
+	monsterGrid->add(Coordinates(3, 27), 1);
 
 	hud->setInitialPosition();
+	monsterGrid->logLayout();
 
 	return;
 }
@@ -120,7 +137,8 @@ void ThreeChances::update() {
 	level.update(levelGrid, &player, input, &keysPressed, gameControl);
 	ghost.update(frameTime, levelGrid, player, input, &keysPressed);
 	slug.update(frameTime, levelGrid, player, input, &keysPressed);
-	duck.update(frameTime);
+	duck.update(frameTime, monsterGrid);
+	level.update(levelGrid, &player, input, &keysPressed, gameControl, monsterGrid);
 	hud->update(frameTime, &player);
 
 	//std::cout << static_cast<char>(gameControl->getGameState()) << std::endl;
@@ -155,7 +173,7 @@ void ThreeChances::update() {
 
 void ThreeChances::enemyAi(float frameTime) {
 	std::cout << "Running enemy AI" << std::endl;
-	duck.ai(frameTime, &player, levelGrid);
+	duck.ai(frameTime, &player, levelGrid, monsterGrid);
 
 	player.resetMovesLeft();
 	hud->resetMovesHud();

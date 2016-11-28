@@ -84,6 +84,9 @@
     <ClInclude Include="src\gameControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\monsterGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game.cpp">
@@ -135,6 +138,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\gameControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monsterGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

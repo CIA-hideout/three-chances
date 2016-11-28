@@ -10,13 +10,14 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 }
 
 void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
-	std::map<int, bool> *keysPressed, GameControl *gc) {
+	std::map<int, bool> *keysPressed, GameControl *gc, MonsterGrid *mg) {
 
 	if (gc->getGameState() == GAME_STATE::player) {
 		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)[LEFT]) {
 			if (player->isValidMove(levelGrid, LEFT)) {
 				this->setX(this->getX() + TILE_SIZE * SCALE);
 				levelGrid->moveCurrentTile(LEFT);
+				mg->moveCamera(LEFT);
 				player->moveExecuted();
 
 				levelGrid->logTile(this->getX(), this->getY());
@@ -27,6 +28,7 @@ void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
 			if (player->isValidMove(levelGrid, RIGHT)) {
 				this->setX(this->getX() - TILE_SIZE * SCALE);
 				levelGrid->moveCurrentTile(RIGHT);
+				mg->moveCamera(RIGHT);
 				player->moveExecuted();
 
 				levelGrid->logTile(this->getX(), this->getY());
@@ -37,6 +39,7 @@ void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
 			if (player->isValidMove(levelGrid, UP)) {
 				this->setY(this->getY() + TILE_SIZE * SCALE);
 				levelGrid->moveCurrentTile(UP);
+				mg->moveCamera(UP);
 				player->moveExecuted();
 
 				levelGrid->logTile(this->getX(), this->getY());
@@ -47,6 +50,7 @@ void Level::update(LevelGrid *levelGrid, Player *player, Input *input,
 			if (player->isValidMove(levelGrid, DOWN)) {
 				this->setY(this->getY() - TILE_SIZE * SCALE);
 				levelGrid->moveCurrentTile(DOWN);
+				mg->moveCamera(DOWN);
 				player->moveExecuted();
 
 				levelGrid->logTile(this->getX(), this->getY());

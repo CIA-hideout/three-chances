@@ -19,12 +19,14 @@
 #include "duck.h"
 #include "ghost.h"
 #include "slug.h"
+#include "monsterGrid.h"
 
 class ThreeChances : public Game {
 private:
 	// Consts
 	GameControl*   gameControl;
 	LevelGrid*	   levelGrid;
+	MonsterGrid*   monsterGrid;
 	Hud*		   hud;
 
 	// Game items
