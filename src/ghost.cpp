@@ -1,13 +1,13 @@
-#include "duck.h"
+#include "ghost.h"
 
-Duck::Duck() : Entity() {
-	this->setFrameDelay(DUCK_ANIMATION_DELAY);
+Ghost::Ghost() : Entity() {
+	this->setFrameDelay(GHOST_ANIMATION_DELAY);
 	this->setLoop(false);
 }
 
-Duck::~Duck() {}
+Ghost::~Ghost() {}
 
-void Duck::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
+void Ghost::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
 	Entity::update(frameTime);
 
 	if (this->getAnimationComplete()) {
@@ -44,10 +44,10 @@ void Duck::update(float frameTime, LevelGrid *levelGrid, Player player, Input *i
 	}
 }
 
-void Duck::ai(float frameTime, Entity &ent) {
+void Ghost::ai(float frameTime, Entity &ent) {
 }
 
-void Duck::rotateEntity(std::string direction, bool moveValid) {
+void Ghost::rotateEntity(std::string direction, bool moveValid) {
 	RECT sampleRect = this->getSpriteDataRect();
 
 	if (direction != "") {
@@ -55,11 +55,11 @@ void Duck::rotateEntity(std::string direction, bool moveValid) {
 		sampleRect.right = TILE_SIZE;
 
 		if (direction == "LEFT")
-			sampleRect.top = 64;
+			sampleRect.top = 32;
 		if (direction == "RIGHT")
 			sampleRect.top = 96;
 		if (direction == "UP")
-			sampleRect.top = 32;
+			sampleRect.top = 64;
 		if (direction == "DOWN")
 			sampleRect.top = 0;
 
@@ -73,12 +73,12 @@ void Duck::rotateEntity(std::string direction, bool moveValid) {
 	this->setSpriteDataRect(sampleRect);
 }
 
-void Duck::startWalkAnimation() {
-	this->setFrames(DUCK_WALK_START_FRAME, DUCK_WALK_END_FRAME);
-	this->setCurrentFrame(DUCK_WALK_START_FRAME);
+void Ghost::startWalkAnimation() {
+	this->setFrames(GHOST_WALK_START_FRAME, GHOST_WALK_END_FRAME);
+	this->setCurrentFrame(GHOST_WALK_START_FRAME);
 }
 
-void Duck::startAttackAnimation() {
-	this->setFrames(DUCK_ATK_START_FRAME, DUCK_ATK_END_FRAME);
-	this->setCurrentFrame(DUCK_ATK_START_FRAME);
+void Ghost::startAttackAnimation() {
+	this->setFrames(GHOST_ATK_START_FRAME, GHOST_ATK_END_FRAME);
+	this->setCurrentFrame(GHOST_ATK_START_FRAME);
 }

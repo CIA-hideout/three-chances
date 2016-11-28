@@ -1,19 +1,19 @@
-#include "duck.h"
+#include "slug.h"
 
-Duck::Duck() : Entity() {
-	this->setFrameDelay(DUCK_ANIMATION_DELAY);
+Slug::Slug() : Entity() {
+	this->setFrameDelay(SLUG_ANIMATION_DELAY);
 	this->setLoop(false);
 }
 
-Duck::~Duck() {}
+Slug::~Slug() {}
 
-void Duck::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
+void Slug::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
 	Entity::update(frameTime);
 
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
-		this->setCurrentFrame(DUCK_STANDING_FRAME);
+		this->setCurrentFrame(SLUG_STANDING_FRAME);
 	}
 	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
 		if (player.isValidMove(levelGrid, LEFT)) {
@@ -44,10 +44,10 @@ void Duck::update(float frameTime, LevelGrid *levelGrid, Player player, Input *i
 	}
 }
 
-void Duck::ai(float frameTime, Entity &ent) {
+void Slug::ai(float frameTime, Entity &ent) {
 }
 
-void Duck::rotateEntity(std::string direction, bool moveValid) {
+void Slug::rotateEntity(std::string direction, bool moveValid) {
 	RECT sampleRect = this->getSpriteDataRect();
 
 	if (direction != "") {
@@ -73,12 +73,12 @@ void Duck::rotateEntity(std::string direction, bool moveValid) {
 	this->setSpriteDataRect(sampleRect);
 }
 
-void Duck::startWalkAnimation() {
-	this->setFrames(DUCK_WALK_START_FRAME, DUCK_WALK_END_FRAME);
-	this->setCurrentFrame(DUCK_WALK_START_FRAME);
+void Slug::startWalkAnimation() {
+	this->setFrames(SLUG_WALK_START_FRAME, SLUG_WALK_END_FRAME);
+	this->setCurrentFrame(SLUG_WALK_START_FRAME);
 }
 
-void Duck::startAttackAnimation() {
-	this->setFrames(DUCK_ATK_START_FRAME, DUCK_ATK_END_FRAME);
-	this->setCurrentFrame(DUCK_ATK_START_FRAME);
+void Slug::startAttackAnimation() {
+	this->setFrames(SLUG_ATK_START_FRAME, SLUG_ATK_END_FRAME);
+	this->setCurrentFrame(SLUG_ATK_START_FRAME);
 }
