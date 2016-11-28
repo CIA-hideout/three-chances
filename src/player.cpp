@@ -8,23 +8,23 @@ Player::Player() : Entity() {
 Player::~Player() {}
 
 void Player::update(float frameTime, LevelGrid *levelGrid, Input *input,
-	std::map<std::string, bool> *keysPressed, GameControl *gc) {
+	std::map<int, bool> *keysPressed, GameControl *gc) {
 
 	if (gc->getGameState() == GAME_STATE::player) {
-		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-			this->rotateEntity("LEFT", this->isValidMove(levelGrid, LEFT));
+		if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)[LEFT]) {
+			this->rotateEntity(LEFT, this->isValidMove(levelGrid, LEFT));
 		}
 
-		if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-			this->rotateEntity("RIGHT", this->isValidMove(levelGrid, RIGHT));
+		if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)[RIGHT]) {
+			this->rotateEntity(RIGHT, this->isValidMove(levelGrid, RIGHT));
 		}
 
-		if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-			this->rotateEntity("UP", this->isValidMove(levelGrid, UP));
+		if (input->isKeyDown(UP_KEY) && !(*keysPressed)[UP]) {
+			this->rotateEntity(UP, this->isValidMove(levelGrid, UP));
 		}
 
-		if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-			this->rotateEntity("DOWN", this->isValidMove(levelGrid, DOWN));
+		if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)[DOWN]) {
+			this->rotateEntity(DOWN, this->isValidMove(levelGrid, DOWN));
 		}
 	}
 
@@ -37,20 +37,20 @@ void Player::update(float frameTime, LevelGrid *levelGrid, Input *input,
 	Entity::update(frameTime);
 }
 
-void Player::rotateEntity(std::string direction, bool moveValid) {
+void Player::rotateEntity(int direction, bool moveValid) {
 	RECT sampleRect = this->getSpriteDataRect();
 
-	if (direction != "") {
+	if (direction != -1) {
 		sampleRect.left = 0;
 		sampleRect.right = TILE_SIZE;
 
-		if (direction == "LEFT")
+		if (direction == LEFT)
 			sampleRect.top = 32;
-		if (direction == "RIGHT")
+		if (direction == RIGHT)
 			sampleRect.top = 96;
-		if (direction == "UP")
+		if (direction == UP)
 			sampleRect.top = 64;
-		if (direction == "DOWN")
+		if (direction == DOWN)
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;

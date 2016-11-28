@@ -42,8 +42,8 @@ private:
 	Slug		   slug;
 
 	Image		   hudBg;
-	std::map<std::string, bool> keysPressed;
-	std::string	   lastKeyPressed;
+	std::map<int, bool> keysPressed;
+	int	   lastKeyPressed;
 
 public:
 	// Constructor

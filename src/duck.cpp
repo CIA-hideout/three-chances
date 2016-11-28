@@ -1,9 +1,13 @@
 #include "duck.h"
 
+bool operator==(const Coordinates& lhs, const Coordinates& rhs) {
+	return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 bool isTargetInRange (int range, int target, int start) {
 	int lowerLimit = start - range;
 	int upperLimit = start + range;
-	return lowerLimit < target < upperLimit;
+	return lowerLimit < target && lowerLimit < upperLimit;
 }
 
 std::vector<Coordinates> getGridAroundEntity(int range, int startX, int startY) {
@@ -135,7 +139,7 @@ void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid) {
 			if (targetInRange) {
 				// attack target
 				directionOfTarget = findDirectionOfTarget(playerTC, currentPost);
-				this->rotateEntity(directionOfTarget);
+				//this->rotateEntity(directionOfTarget);
 			}
 		}
 	}

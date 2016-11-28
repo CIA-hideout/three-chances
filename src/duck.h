@@ -2,14 +2,10 @@
 #define _DUCK_H
 
 #include "entity.h"
-<<<<<<< HEAD
 #include "levelGrid.h"
 #include "input.h"
 #include "player.h"
-=======
-#include "player.h"
 #include "levelGrid.h"
->>>>>>> Starting work on AI for duck
 
 class Duck : public Entity {
 public:

@@ -4,10 +4,10 @@
 // Constructor
 //=============================================================================
 ThreeChances::ThreeChances() {
-	keysPressed["LEFT"] = false;
-	keysPressed["RIGHT"] = false;
-	keysPressed["UP"] = false;
-	keysPressed["DOWN"] = false;
+	keysPressed[LEFT] = false;
+	keysPressed[RIGHT] = false;
+	keysPressed[UP] = false;
+	keysPressed[DOWN] = false;
 
 	gameControl = new GameControl;
 }
@@ -87,27 +87,27 @@ void ThreeChances::initialize(HWND hwnd) {
 	return;
 }
 
-void resetKeysPressedMap(Input *input, std::map<std::string, bool> *keysPressed) {
+void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY))
-		(*keysPressed)["LEFT"] = false;
+		(*keysPressed)[LEFT] = false;
 	if (!input->isKeyDown(RIGHT_KEY))
-		(*keysPressed)["RIGHT"] = false;
+		(*keysPressed)[RIGHT] = false;
 	if (!input->isKeyDown(UP_KEY))
-		(*keysPressed)["UP"] = false;
+		(*keysPressed)[UP] = false;
 	if (!input->isKeyDown(DOWN_KEY))
-		(*keysPressed)["DOWN"] = false;
+		(*keysPressed)[DOWN] = false;
 }
 
-std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
-	if ((*keysPressed)["LEFT"])
-		return "LEFT";
-	if ((*keysPressed)["RIGHT"])
-		return "RIGHT";
-	if ((*keysPressed)["UP"])
-		return "UP";
-	if ((*keysPressed)["DOWN"])
-		return "DOWN";
-	return "";
+int findKeyDown(std::map<int, bool> *keysPressed) {
+	if ((*keysPressed)[LEFT])
+		return LEFT;
+	if ((*keysPressed)[RIGHT])
+		return RIGHT;
+	if ((*keysPressed)[UP])
+		return UP;
+	if ((*keysPressed)[DOWN])
+		return DOWN;
+	return -1;
 }
 
 //=============================================================================
@@ -126,24 +126,24 @@ void ThreeChances::update() {
 	//std::cout << static_cast<char>(gameControl->getGameState()) << std::endl;
 
 	// Prevent long key press
-	if (input->isKeyDown(LEFT_KEY) && !keysPressed["LEFT"]) {
-		keysPressed["LEFT"] = true;
-		lastKeyPressed = "LEFT";
+	if (input->isKeyDown(LEFT_KEY) && !keysPressed[LEFT]) {
+		keysPressed[LEFT] = true;
+		lastKeyPressed = LEFT;
 	}
 
-	if (input->isKeyDown(RIGHT_KEY) && !keysPressed["RIGHT"]) {
-		keysPressed["RIGHT"] = true;
-		lastKeyPressed = "RIGHT";
+	if (input->isKeyDown(RIGHT_KEY) && !keysPressed[RIGHT]) {
+		keysPressed[RIGHT] = true;
+		lastKeyPressed = RIGHT;
 	}
 
-	if (input->isKeyDown(UP_KEY) && !keysPressed["UP"]) {
-		keysPressed["UP"] = true;
-		lastKeyPressed = "UP";
+	if (input->isKeyDown(UP_KEY) && !keysPressed[UP]) {
+		keysPressed[UP] = true;
+		lastKeyPressed = UP;
 	}
 
-	if (input->isKeyDown(DOWN_KEY) && !keysPressed["DOWN"]) {
-		keysPressed["DOWN"] = true;
-		lastKeyPressed = "DOWN";
+	if (input->isKeyDown(DOWN_KEY) && !keysPressed[DOWN]) {
+		keysPressed[DOWN] = true;
+		lastKeyPressed = DOWN;
 	}
 
 	if (gameControl->getGameState() == GAME_STATE::enemy) {

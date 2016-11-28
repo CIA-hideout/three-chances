@@ -2,7 +2,6 @@
 #define _PLAYER_H
 
 #include <map>
-#include <string>
 
 #include "input.h"
 #include "entity.h"
@@ -15,8 +14,8 @@ public:
 	~Player();
 
 	void update(float frameTime, LevelGrid *levelGrid, Input *input, 
-		std::map<std::string, bool> *keysPressed, GameControl *gc);
-	void rotateEntity(std::string direction, bool moveValid);
+		std::map<int, bool> *keysPressed, GameControl *gc);
+	void rotateEntity(int direction, bool moveValid);
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);

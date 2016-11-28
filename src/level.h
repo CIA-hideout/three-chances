@@ -14,7 +14,7 @@ public:
 
 	virtual bool initialize(Game *gamePtr, TextureManager *textureM);
 	void update(LevelGrid *levelGrid, Player *player, Input *input, 
-		std::map<std::string, bool> *keysPressed, GameControl* gc);
+		std::map<int, bool> *keysPressed, GameControl* gc);
 };
 
 #endif

@@ -1,3 +1,6 @@
+#ifndef _LEVELCONSTANTS_H
+#define _LEVELCONSTANTS_H
+
 #include <vector>
 
 struct Coordinates {
@@ -6,10 +9,6 @@ struct Coordinates {
 	Coordinates() {}
 	Coordinates(int x, int y) : x(x), y(y) {}
 };
-
-bool operator==(const Coordinates& lhs, const Coordinates& rhs) {
-	return lhs.x == rhs.x && lhs.y == rhs.y;
-}
 
 // Legend
 // 0 - border
@@ -58,3 +57,4 @@ const std::vector<std::vector<int>> STAGE_1_LAYOUT = {
 const Coordinates STAGE_1_START_TILE(5, 28);
 
 const Coordinates STAGE_1_END_TILE(16, 4);
+#endif

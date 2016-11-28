@@ -56,7 +56,7 @@ public:
 		TextureManager *textureM, EntityData ed);
 	virtual void update(float frameTime);
 	virtual void setRect();
-	virtual void rotateEntity(std::string direction);
+	virtual void rotateEntity(int direction);
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void ai(float frameTime, Entity &ent);
