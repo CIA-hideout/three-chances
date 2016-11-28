@@ -15,6 +15,8 @@
 #include "level.h"
 #include "player.h"
 #include "duck.h"
+#include "ghost.h"
+#include "slug.h"
 
 class ThreeChances : public Game {
 private:
@@ -22,10 +24,15 @@ private:
 	TextureManager levelTexture;
 	TextureManager playerMaleTexture;
 	TextureManager duckTexture;
+	TextureManager ghostTexture;
+	TextureManager slugTexture;
 
 	Level		   level;
 	Player		   player;
 	Duck		   duck;
+	Ghost		   ghost;
+	Slug		   slug;
+	
 	std::map<std::string, bool> keysPressed;
 	std::string	   lastKeyPressed;
 	LevelGrid*	   levelGrid;

@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ghost.h" />
     <ClInclude Include="src\level.h" />
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\duck.h" />
@@ -90,10 +91,12 @@
     <ClInclude Include="src\levelConstants.h" />
     <ClInclude Include="src\entityConstants.h" />
     <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\slug.h" />
     <ClInclude Include="src\threechances.h" />
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ghost.cpp" />
     <ClCompile Include="src\level.cpp" />
     <ClCompile Include="src\duck.cpp" />
     <ClCompile Include="src\entity.cpp" />
@@ -103,6 +106,7 @@
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\levelGrid.cpp" />
     <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\slug.cpp" />
     <ClCompile Include="src\threechances.cpp" />
     <ClCompile Include="src\textureManager.cpp" />
     <ClCompile Include="src\winmain.cpp" />
