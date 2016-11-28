@@ -3,6 +3,9 @@
 Player::Player() : Entity() {
 	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
 	this->setLoop(false);
+	animating = false;
+	direction = -1;
+	endPoint = 0.0f;
 }
 
 Player::~Player() {}

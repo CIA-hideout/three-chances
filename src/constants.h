@@ -56,6 +56,9 @@ const int RIGHT = 1;
 const int UP = 2;
 const int DOWN = 3;
 
+const float VELOCITY = 200.0f;
+const float ROTATION_RATE = 180.0f;
+
 // Sprites
 const char LEVEL_1_IMAGE[] = "sprites\\level1 (w Grid).png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";

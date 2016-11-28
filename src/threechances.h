@@ -38,7 +38,7 @@ private:
 	TextureManager hudBgTexture;
 
 	Level		   level;
-	Player		 player;
+	Player		   player;
 	Duck		   duck;
 	Ghost		   ghost;
 	Slug		   slug;

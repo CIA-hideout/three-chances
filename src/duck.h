@@ -13,7 +13,6 @@ public:
 	Duck();
 	~Duck();
 
-	void rotateEntity(std::string direction, bool moveValid);
 	void update(float frameTime, MonsterGrid *monsterGrid);
 	void ai(float frameTime, Player *player, LevelGrid *lvlGrid, MonsterGrid *mg);
 	void startAttackAnimation();

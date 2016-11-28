@@ -109,7 +109,7 @@ void Duck::update(float frameTime, MonsterGrid* monsterGrid) {
 		this->setVisible(true);
 		this->setX(monsterGrid->convertXCoord(duckXY.x));
 		this->setY(monsterGrid->convertYCoord(duckXY.y));
-	}
+	   }
 	else {
 		this->setVisible(false);
 	}
@@ -168,32 +168,6 @@ void Duck::ai(float frameTime, Player *player, LevelGrid *lvlGrid, MonsterGrid *
 	else {
 		// move randomly
 	}
-}
-
-void Duck::rotateEntity(std::string direction, bool moveValid) {
-	RECT sampleRect = this->getSpriteDataRect();
-
-	if (direction != "") {
-		sampleRect.left = 0;
-		sampleRect.right = TILE_SIZE;
-
-		if (direction == "LEFT")
-			sampleRect.top = 64;
-		if (direction == "RIGHT")
-			sampleRect.top = 96;
-		if (direction == "UP")
-			sampleRect.top = 32;
-		if (direction == "DOWN")
-			sampleRect.top = 0;
-
-		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-
-		if (moveValid) {
-			startWalkAnimation();
-		}
-	}
-
-	this->setSpriteDataRect(sampleRect);
 }
 
 void Duck::startWalkAnimation() {
