@@ -55,7 +55,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	player.setY(TILE_SIZE * SCALE * 3);
 
 	duck.setX(TILE_SIZE * SCALE * 3);
-	duck.setY(TILE_SIZE * SCALE * 2);
+	duck.setY(TILE_SIZE * SCALE * 0);
 
 	return;
 }
@@ -88,9 +88,9 @@ std::string findKeyDown(std::map<std::string, bool> *keysPressed) {
 //=============================================================================
 void ThreeChances::update() {
 	// map will update last as player has to check 
-	// if next move is valid so as to play walking animation
+	// if next move is valid so as to play walking animation 
 	player.update(frameTime, levelGrid, input, &keysPressed);
-	duck.update(frameTime);
+	duck.update(frameTime, levelGrid, player, input, &keysPressed);
 	level.update(levelGrid, player, input, &keysPressed);
 
 	// Prevent long key press

@@ -152,9 +152,7 @@ public:
 	virtual void setColorFilter(COLOR_ARGB color) { colorFilter = color; }
 
 	// Set TextureManager
-	virtual void setTextureManager(TextureManager *textureM) {
-		textureManager = textureM;
-	}
+	virtual void setTextureManager(TextureManager *textureM) { textureManager = textureM; }
 };
 
 #endif
