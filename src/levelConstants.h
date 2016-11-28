@@ -1,3 +1,6 @@
+#ifndef _LEVELCONSTANTS_H
+#define _LEVELCONSTANTS_H
+
 #include <vector>
 
 struct Coordinates {
@@ -54,3 +57,4 @@ const std::vector<std::vector<int>> STAGE_1_LAYOUT = {
 const Coordinates STAGE_1_START_TILE(5, 28);
 
 const Coordinates STAGE_1_END_TILE(16, 4);
+#endif

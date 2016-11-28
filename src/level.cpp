@@ -9,36 +9,63 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 	return(Image::initialize(gamePtr->getGraphics(), 0, 0, 0, textureM));
 }
 
-void Level::update(LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
-	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-		if (this->getX() < 0 && player.isValidMove(levelGrid, LEFT)) {
-			this->setX(this->getX() + TILE_SIZE * SCALE);
-			levelGrid->moveCurrentTile(LEFT);
-			levelGrid->logTile(this->getX(), this->getY());
-		}
-	}
+void Level::update(float frameTime, LevelGrid *lg, Player *p, GameControl* gc, int direction) {
+	//std::cout << direction << std::endl;
 
-	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-		if (-this->getX() < this->getWidth() * SCALE - GAME_WIDTH && player.isValidMove(levelGrid, RIGHT)) {
-			this->setX(this->getX() - TILE_SIZE * SCALE);
-			levelGrid->moveCurrentTile(RIGHT);
-			levelGrid->logTile(this->getX(), this->getY());
-		}
-	}
+	switch (p->getDirection()) {
+		case LEFT:
+			if (this->getX() < p->getEndPoint()) {
+				this->setX(this->getX() + VELOCITY * frameTime);
+			}
+			else {
+				this->setX(p->getEndPoint());
+				p->setAnimating(false);
+				p->moveExecuted();
+				lg->moveCurrentTile(LEFT);
+				lg->logTile(this->getX(), this->getY());
+			}
+			break;
 
-	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-		if (this->getY() < 0 && player.isValidMove(levelGrid, UP)) {
-			this->setY(this->getY() + TILE_SIZE * SCALE);
-			levelGrid->moveCurrentTile(UP);
-			levelGrid->logTile(this->getX(), this->getY());
-		}
-	}
+		case RIGHT:
+			if (this->getX() > p->getEndPoint()) {
+				this->setX(this->getX() - VELOCITY * frameTime);
+			}
+			else {
+				this->setX(p->getEndPoint());
+				p->setAnimating(false);
+				p->moveExecuted();
+				lg->moveCurrentTile(RIGHT);
+				lg->logTile(this->getX(), this->getY());
+			}
+			break;
 
-	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-		if (-this->getY() < this->getHeight() * SCALE - GAME_HEIGHT && player.isValidMove(levelGrid, DOWN)) {
-			this->setY(this->getY() - TILE_SIZE * SCALE);
-			levelGrid->moveCurrentTile(DOWN);
-			levelGrid->logTile(this->getX(), this->getY());
+		case UP:
+			if (this->getY() < p->getEndPoint()) {
+				this->setY(this->getY() + VELOCITY * frameTime);
+			}
+			else {
+				this->setY(p->getEndPoint());
+				p->setAnimating(false);
+				p->moveExecuted();
+				lg->moveCurrentTile(UP);
+				lg->logTile(this->getX(), this->getY());
+			}
+			break;
+
+		case DOWN:
+			if (this->getY() > p->getEndPoint()) {
+				this->setY(this->getY() - VELOCITY * frameTime);
+			}
+			else { 
+				this->setY(p->getEndPoint());	// for precision
+				p->setAnimating(false);
+				p->moveExecuted();
+				lg->moveCurrentTile(DOWN);
+				lg->logTile(this->getX(), this->getY());
+			}
 		}
+
+	if (p->getMovesLeft() == 0) {
+		gc->setGameState(GAME_STATE::enemy);
 	}
 }

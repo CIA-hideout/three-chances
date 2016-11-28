@@ -25,6 +25,7 @@ protected:
 	float damage;
 	int atkRange;
 	int moves;
+	int movesLeft;
 	std::vector<int> levels;
 	std::vector<entityNS::ABILITY_TYPE> abilities;
 
@@ -37,6 +38,7 @@ public:
 	float getDamamge() const { return damage; }
 	int getAtkRange() const { return atkRange; }
 	int getMoves() const { return moves; }
+	int getMovesLeft() const { return movesLeft; }
 	std::vector<int> getLevels() const { return levels; }
 	std::vector<entityNS::ABILITY_TYPE> getAbilities() const { return abilities; }
 
@@ -45,6 +47,7 @@ public:
 	void setDamage(float d) { damage = d; }
 	void setAtkRange(int ar) { atkRange = ar; }
 	void setMoves(int m) { moves = m; }
+	void setMovesLeft(int ml) { movesLeft = ml; }
 	void setLevel(std::vector<int> l) { levels = l; }
 	void setAbilities(std::vector<entityNS::ABILITY_TYPE> a) { abilities = a; }
 
@@ -53,10 +56,13 @@ public:
 		TextureManager *textureM, EntityData ed);
 	virtual void update(float frameTime);
 	virtual void setRect();
-	virtual void rotateEntity(std::string direction);
+	virtual void rotateEntity(int direction);
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void ai(float frameTime, Entity &ent);
+
+	virtual void moveExecuted();
+	virtual void resetMovesLeft();
 };
 
 #endif

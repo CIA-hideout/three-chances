@@ -10,6 +10,7 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	damage = ed.damage;
 	atkRange = ed.atkRange;
 	moves = ed.moves;
+	movesLeft = ed.moves;
 	levels = ed.levels;
 	abilities = ed.abilities;
 	this->setScale((float)SCALE);
@@ -24,20 +25,20 @@ void Entity::update(float frameTime) {
 
 void Entity::ai(float frameTime, Entity &ent) {}
 
-void Entity::rotateEntity(std::string direction) {
+void Entity::rotateEntity(int direction) {
 	RECT sampleRect = this->getSpriteDataRect();
 
-	if (direction != "") {
+	if (direction != -1) {
 		sampleRect.left = 0;
 		sampleRect.right = TILE_SIZE;
 
-		if (direction == "LEFT")
+		if (direction == LEFT)
 			sampleRect.top = 64;
-		if (direction == "RIGHT")
+		if (direction == RIGHT)
 			sampleRect.top = 96;
-		if (direction == "UP")
+		if (direction == UP)
 			sampleRect.top = 32;
-		if (direction == "DOWN")
+		if (direction == DOWN)
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;
@@ -49,4 +50,12 @@ void Entity::rotateEntity(std::string direction) {
 void Entity::setRect() {
 	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
+}
+
+void Entity::moveExecuted() {
+	this->setMovesLeft(this->getMovesLeft() - 1);
+}
+
+void Entity::resetMovesLeft() {
+	this->setMovesLeft(this->getMoves());
 }
