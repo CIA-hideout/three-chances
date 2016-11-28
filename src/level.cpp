@@ -56,7 +56,7 @@ void Level::update(float frameTime, LevelGrid *lg, Player *p, GameControl* gc, i
 			if (this->getY() > p->getEndPoint()) {
 				this->setY(this->getY() - VELOCITY * frameTime);
 			}
-			else { 
+			else {
 				this->setY(p->getEndPoint());	// for precision
 				p->setAnimating(false);
 				p->moveExecuted();

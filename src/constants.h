@@ -40,6 +40,8 @@ const float FRAME_RATE = 200.0f;
 const float MIN_FRAME_RATE = 10.0f;
 const float MIN_FRAME_TIME = 1.0f / FRAME_RATE;
 const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_RATE;
+const float VELOCITY = 200.0f;
+const float ROTATION_RATE = 180.0f;
 
 // Key Mappings
 const UCHAR ESC_KEY = VK_ESCAPE;
@@ -49,6 +51,7 @@ const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR DOWN_KEY = VK_DOWN;
+const UCHAR SPACE_KEY = VK_SPACE;
 
 // Direction to integer
 const int LEFT = 0;
@@ -68,11 +71,12 @@ const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
 const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
 const char TURN_ICON[] = "sprites\\white-circle.png";
+const char SWORD_IMAGE[] = "sprites\\sword2.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 3;
-const float PLAYER_ANIMATION_DELAY = 0.25f;
+const float PLAYER_ANIMATION_DELAY = 0.15f;
 const int PLAYER_COLS = 4;
 
 const int DUCK_STANDING_FRAME = 0;

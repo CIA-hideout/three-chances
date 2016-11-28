@@ -20,6 +20,7 @@
 #include "ghost.h"
 #include "slug.h"
 #include "monsterGrid.h"
+#include "sword.h"
 
 class ThreeChances : public Game {
 private:
@@ -36,9 +37,10 @@ private:
 	TextureManager ghostTexture;
 	TextureManager slugTexture;
 	TextureManager hudBgTexture;
+	TextureManager swordTexture;
 
 	Level		   level;
-	Player		   player;
+	Player		 player;
 	Duck		   duck;
 	Ghost		   ghost;
 	Slug		   slug;
@@ -46,6 +48,8 @@ private:
 	Image		   hudBg;
 	std::map<int, bool> keysPressed;
 	int	   lastKeyPressed;
+
+	Sword		   sword;
 
 public:
 	// Constructor

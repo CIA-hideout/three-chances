@@ -51,6 +51,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!slugTexture.initialize(graphics, SLUG_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
 
+	if (!swordTexture.initialize(graphics, SWORD_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
+
 	if (!level.initialize(this, &levelTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
@@ -69,7 +72,10 @@ void ThreeChances::initialize(HWND hwnd) {
 	hud = new Hud;
 	hud->initializeTexture(graphics);
 
-	// Set map and hud to default scale and starting position
+	if (!sword.initialize(this, 112, 112, 4, &swordTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
+
+	// Set map to starting position
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
 	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
 
@@ -93,6 +99,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	hud->setInitialPosition();
 	monsterGrid->logLayout();
+	sword.setDirection(DOWN);
 
 	return;
 }
@@ -178,7 +185,7 @@ void ThreeChances::update() {
 		}
 	}
 	else {
-		level.update(frameTime, levelGrid, &player, 
+		level.update(frameTime, levelGrid, &player,
 			gameControl, findKeyDown(&keysPressed));
 	}
 
@@ -201,8 +208,7 @@ void ThreeChances::enemyAi(float frameTime) {
 //=============================================================================
 // Artificial Intelligence
 //=============================================================================
-void ThreeChances::ai() {
-}
+void ThreeChances::ai() {}
 
 //=============================================================================
 // Handle collisions
@@ -221,6 +227,7 @@ void ThreeChances::render() {
 	ghost.draw();
 	slug.draw();
 	hud->draw();
+	sword.draw();
 
 	graphics->spriteEnd();                  // end drawing sprites
 }
@@ -235,6 +242,7 @@ void ThreeChances::releaseAll() {
 	duckTexture.onLostDevice();
 	ghostTexture.onLostDevice();
 	slugTexture.onLostDevice();
+	swordTexture.onLostDevice();
 
 	hud->releaseAll();
 	Game::releaseAll();
@@ -251,6 +259,7 @@ void ThreeChances::resetAll() {
 	duckTexture.onResetDevice();
 	ghostTexture.onResetDevice();
 	slugTexture.onResetDevice();
+	swordTexture.onResetDevice();
 
 	hud->resetAll();
 	Game::resetAll();
