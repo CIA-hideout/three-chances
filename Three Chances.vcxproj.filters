@@ -74,6 +74,7 @@
     </ClInclude>
     <ClInclude Include="src\slug.h">
       <Filter>Header Files\monsters</Filter>
+    </ClInclude>
     <ClInclude Include="src\sword.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,6 +133,7 @@
     </ClCompile>
     <ClCompile Include="src\slug.cpp">
       <Filter>Source Files\monsters</Filter>
+    </ClCompile>
     <ClCompile Include="src\sword.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
