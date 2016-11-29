@@ -45,8 +45,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
 
-	//if (!ghostTexture.initialize(graphics, GHOST_IMAGE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost texture"));
+	if (!ghostTexture.initialize(graphics, GHOST_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost texture"));
 
 	//if (!slugTexture.initialize(graphics, SLUG_IMAGE))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
@@ -63,8 +63,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
-	//if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
+	if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
 	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
@@ -79,16 +79,17 @@ void ThreeChances::initialize(HWND hwnd) {
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
 	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
 
-	duck.setX(TILE_SIZE * SCALE * 3);
+	duck.setX(TILE_SIZE * SCALE * 4);
 	duck.setY(TILE_SIZE * SCALE * 0);
 
-	//ghost.setX(TILE_SIZE * SCALE * 4);
-	//ghost.setY(TILE_SIZE * SCALE * 0);
+	ghost.setX(TILE_SIZE * SCALE * 3);
+	ghost.setY(TILE_SIZE * SCALE * 0);
 
 	//slug.setX(TILE_SIZE * SCALE * 2);
 	//slug.setY(TILE_SIZE * SCALE * 0);
 
-	monsterGrid->addMonster(Coordinates(5, 25), 1);
+	monsterGrid->addMonster(Coordinates(6, 25), 1);
+	monsterGrid->addMonster(Coordinates(5, 25), 2);
 
 	hud->setInitialPosition();
 	monsterGrid->logLayout();
@@ -127,9 +128,7 @@ void ThreeChances::update() {
 	// map will update last as player has to check
 	// if next move is valid so as to play walking animation
 
-	//ghost.update(frameTime, levelGrid, player, input, &keysPressed);
 	//slug.update(frameTime, levelGrid, player, input, &keysPressed);
-	//duck.update(frameTime, monsterGrid);
 	//hud->update(frameTime, &player);
 
 	//std::cout << static_cast<char>(gameControl->getGameState()) << std::endl;
@@ -169,6 +168,7 @@ void ThreeChances::update() {
 		// Check if it's enemy's turn
 		else if (gameControl->getGameState() == GAME_STATE::enemy) {
 			enemyAi(frameTime);
+			ghost.ai(frameTime, monsterGrid->findMonsterCoord(2), levelGrid->getCurrentTile());
 		}
 	}
 	// Animates sprites
@@ -188,6 +188,7 @@ void ThreeChances::update() {
 		}
 
 		duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), 1));
+		ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), 2));
 		player.update(frameTime, gameControl);
 	}
 
@@ -222,7 +223,7 @@ void ThreeChances::render() {
 	level.draw();								// add the map to the scene
 	player.draw();
 	duck.draw();
-	//ghost.draw();
+	ghost.draw();
 	//slug.draw();
 	hud->draw();
 	sword.draw();
@@ -238,7 +239,7 @@ void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
 	duckTexture.onLostDevice();
-	//ghostTexture.onLostDevice();
+	ghostTexture.onLostDevice();
 	//slugTexture.onLostDevice();
 	swordTexture.onLostDevice();
 
@@ -255,7 +256,7 @@ void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
 	duckTexture.onResetDevice();
-	//ghostTexture.onResetDevice();
+	ghostTexture.onResetDevice();
 	//slugTexture.onResetDevice();
 	swordTexture.onResetDevice();
 

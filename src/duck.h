@@ -2,7 +2,6 @@
 #define _DUCK_H
 
 #include "entity.h"
-#include "levelGrid.h"
 #include "input.h"
 #include "player.h"
 #include "levelGrid.h"
