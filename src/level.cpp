@@ -9,63 +9,59 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 	return(Image::initialize(gamePtr->getGraphics(), 0, 0, 0, textureM));
 }
 
-void Level::update(float frameTime, LevelGrid *lg, Player *p, GameControl* gc, int direction) {
-	//std::cout << direction << std::endl;
+void Level::update(LevelGrid *lg, Player *p) {
+	// Updates player and levelGrid once the levelGrid sprite has finished moving
+	p->setAnimating(false);
+	p->moveExecuted();
+	lg->logTile(this->getX(), this->getY());
+}
 
-	switch (p->getDirection()) {
-		case LEFT:
-			if (this->getX() < p->getEndPoint()) {
-				this->setX(this->getX() + VELOCITY * frameTime);
-			}
-			else {
-				this->setX(p->getEndPoint());
-				p->setAnimating(false);
-				p->moveExecuted();
-				lg->moveCurrentTile(LEFT);
-				lg->logTile(this->getX(), this->getY());
-			}
-			break;
+bool Level::moveInDirection(float frameTime, int direction, float endPoint) {
+	bool reachedEndPoint = false;
 
-		case RIGHT:
-			if (this->getX() > p->getEndPoint()) {
-				this->setX(this->getX() - VELOCITY * frameTime);
-			}
-			else {
-				this->setX(p->getEndPoint());
-				p->setAnimating(false);
-				p->moveExecuted();
-				lg->moveCurrentTile(RIGHT);
-				lg->logTile(this->getX(), this->getY());
-			}
-			break;
-
-		case UP:
-			if (this->getY() < p->getEndPoint()) {
-				this->setY(this->getY() + VELOCITY * frameTime);
-			}
-			else {
-				this->setY(p->getEndPoint());
-				p->setAnimating(false);
-				p->moveExecuted();
-				lg->moveCurrentTile(UP);
-				lg->logTile(this->getX(), this->getY());
-			}
-			break;
-
-		case DOWN:
-			if (this->getY() > p->getEndPoint()) {
-				this->setY(this->getY() - VELOCITY * frameTime);
-			}
-			else { 
-				this->setY(p->getEndPoint());	// for precision
-				p->setAnimating(false);
-				p->moveExecuted();
-				lg->moveCurrentTile(DOWN);
-				lg->logTile(this->getX(), this->getY());
-			}
+	switch (direction) {
+	case LEFT:
+		// Keep moving sprite until it reaches end point
+		if (this->getX() > endPoint) {
+			this->setX(this->getX() - VELOCITY * frameTime);
 		}
+		// Once it reaches, set sprite to exact end point location for precision
+		else {
+			this->setX(endPoint);
+			reachedEndPoint = true;
+		}
+		break;
 
-	if (p->getMovesLeft() == 0) {
-		gc->setGameState(GAME_STATE::enemy);
+	case RIGHT:
+		if (this->getX() < endPoint) {
+			this->setX(this->getX() + VELOCITY * frameTime);
+		}
+		else {
+			this->setX(endPoint);
+			reachedEndPoint = true;
+		}
+		break;
+
+	case UP:
+		if (this->getY() > endPoint) {
+			this->setY(this->getY() - VELOCITY * frameTime);
+		}
+		else {
+			this->setY(endPoint);
+			reachedEndPoint = true;
+		}
+		break;
+
+	case DOWN:
+		if (this->getY() < endPoint) {
+			this->setY(this->getY() + VELOCITY * frameTime);
+		}
+		else {
+			this->setY(endPoint);
+			reachedEndPoint = true;
+		}
+		break;
 	}
+
+	return reachedEndPoint;
 }
