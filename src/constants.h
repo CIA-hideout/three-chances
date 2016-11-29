@@ -68,7 +68,7 @@ const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
 const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
 const char TURN_ICON[] = "sprites\\white-circle.png";
-const char SWORD_IMAGE[] = "sprites\\sword2.png";
+const char SWORD_IMAGE[] = "sprites\\sword.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;

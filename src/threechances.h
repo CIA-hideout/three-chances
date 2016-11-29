@@ -25,31 +25,31 @@
 class ThreeChances : public Game {
 private:
 	// Consts
-	GameControl*   gameControl;
-	LevelGrid*	   levelGrid;
-	MonsterGrid*   monsterGrid;
-	Hud*		   hud;
+	GameControl*	gameControl;
+	LevelGrid*		levelGrid;
+	MonsterGrid*	monsterGrid;
+	Hud*			hud;
 
 	// Game items
-	TextureManager levelTexture;
-	TextureManager playerMaleTexture;
-	TextureManager duckTexture;
-	TextureManager ghostTexture;
-	TextureManager slugTexture;
-	TextureManager hudBgTexture;
-	TextureManager swordTexture;
+	TextureManager	levelTexture;
+	TextureManager	playerMaleTexture;
+	TextureManager	duckTexture;
+	TextureManager	ghostTexture;
+	TextureManager	slugTexture;
+	TextureManager	hudBgTexture;
+	TextureManager	swordTexture;
 
-	Level		   level;
-	Player		 player;
-	Duck		   duck;
-	Ghost		   ghost;
-	Slug		   slug;
+	// Sprites
+	Level			level;
+	Player			player;
+	Sword			sword;
+	Duck			duck;
+	Ghost			ghost;
+	Slug			slug;
+	Image			hudBg;
 
-	Image		   hudBg;
 	std::map<int, bool> keysPressed;
-	int	   lastKeyPressed;
-
-	Sword		   sword;
+	int				lastKeyPressed;
 
 public:
 	// Constructor

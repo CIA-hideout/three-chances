@@ -18,5 +18,6 @@ public:
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);
+	bool moveInDirection(float frameTime, int direction, Position endPos);
 };
 #endif

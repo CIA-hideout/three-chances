@@ -28,7 +28,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	Game::initialize(hwnd); // throws GameError
 
-	// initialize map class
+	// initialize level grid
 	levelGrid = new LevelGrid;
 	levelGrid->initialize(1);
 
@@ -42,8 +42,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male texture"));
 
-	//if (!duckTexture.initialize(graphics, DUCK_IMAGE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
+	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
 
 	//if (!ghostTexture.initialize(graphics, GHOST_IMAGE))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost texture"));
@@ -60,8 +60,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
-	//if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
+	if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
 	//if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
@@ -79,8 +79,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
 	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
 
-	//duck.setX(TILE_SIZE * SCALE * 3);
-	//duck.setY(TILE_SIZE * SCALE * 0);
+	duck.setX(TILE_SIZE * SCALE * 3);
+	duck.setY(TILE_SIZE * SCALE * 0);
 
 	//ghost.setX(TILE_SIZE * SCALE * 4);
 	//ghost.setY(TILE_SIZE * SCALE * 0);
@@ -88,14 +88,10 @@ void ThreeChances::initialize(HWND hwnd) {
 	//slug.setX(TILE_SIZE * SCALE * 2);
 	//slug.setY(TILE_SIZE * SCALE * 0);
 
-	// x = 192, y = 128
-	std::cout << "X: " << TILE_SIZE * SCALE * 3 << std::endl;
-	std::cout << "Y: " << TILE_SIZE * SCALE * 2 << std::endl;
-
-	//monsterGrid->add(Coordinates(3, 27), 1);
+	monsterGrid->addMonster(Coordinates(5, 25), 1);
 
 	hud->setInitialPosition();
-	//monsterGrid->logLayout();
+	monsterGrid->logLayout();
 	sword.setDirection(DOWN);
 
 	return;
@@ -177,9 +173,21 @@ void ThreeChances::update() {
 	}
 	// Animates sprites
 	else {
-		if (level.moveInDirection(frameTime, player.getDirection(), player.getEndPoint())) {
+		int oppDirection = -1;
+		if (player.getDirection() == LEFT)
+			oppDirection = RIGHT;
+		else if (player.getDirection() == RIGHT)
+			oppDirection = LEFT;
+		else if (player.getDirection() == UP)
+			oppDirection = DOWN;
+		else if (player.getDirection() == DOWN)
+			oppDirection = UP;
+
+		if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 			level.update(levelGrid, &player);
 		}
+
+		duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), 1));
 		player.update(frameTime, gameControl);
 	}
 
@@ -213,7 +221,7 @@ void ThreeChances::render() {
 
 	level.draw();								// add the map to the scene
 	player.draw();
-	//duck.draw();
+	duck.draw();
 	//ghost.draw();
 	//slug.draw();
 	hud->draw();
@@ -229,7 +237,7 @@ void ThreeChances::render() {
 void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
-	//duckTexture.onLostDevice();
+	duckTexture.onLostDevice();
 	//ghostTexture.onLostDevice();
 	//slugTexture.onLostDevice();
 	swordTexture.onLostDevice();
@@ -246,7 +254,7 @@ void ThreeChances::releaseAll() {
 void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
-	//duckTexture.onResetDevice();
+	duckTexture.onResetDevice();
 	//ghostTexture.onResetDevice();
 	//slugTexture.onResetDevice();
 	swordTexture.onResetDevice();

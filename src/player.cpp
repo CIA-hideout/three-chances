@@ -80,6 +80,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, int direction, float endPoint
 	this->rotateEntity(direction);
 
 	if (this->isValidMove(levelGrid, direction)) {
+		levelGrid->moveCurrentTile(direction);
 		this->startWalkAnimation();
 		this->setAnimating(true);
 		this->setEndPoint(endPoint);

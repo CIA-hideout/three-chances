@@ -1,27 +1,18 @@
 #include "monsterGrid.h"
 
 MonsterGrid::MonsterGrid() {
-	std::vector<int> tempVec;
+	std::vector<int> gridRow;
 
 	for (int i = 0; i < 32; ++i) {
-		tempVec.push_back(0);
+		gridRow.push_back(0);
 	}
 
 	for (int j = 0; j < 32; ++j) {
-		grid.push_back(tempVec);
+		grid.push_back(gridRow);
 	}
-
-	topLeft = Coordinates(0, 25);
-	topRight = Coordinates(6, 25);
-	bottomLeft = Coordinates(0, 31);
-	bottomRight = Coordinates(6, 31);
 }
 
 MonsterGrid::~MonsterGrid() {}
-
-void MonsterGrid::add(Coordinates coord, int type) {
-	grid[coord.y][coord.x] = type;
-}
 
 void MonsterGrid::logLayout() {
 	for (size_t i = 0; i < grid.size(); ++i) {
@@ -33,7 +24,7 @@ void MonsterGrid::logLayout() {
 	}
 }
 
-Coordinates MonsterGrid::findCoord(int id) {
+Coordinates MonsterGrid::findMonsterCoord(int id) {
 	for (size_t i = 0; i < grid.size(); ++i) {
 		for (size_t j = 0; j < grid[i].size(); ++j) {
 			if (grid[i][j] == id) {
@@ -45,83 +36,35 @@ Coordinates MonsterGrid::findCoord(int id) {
 	return Coordinates(-1, -1);
 }
 
-float MonsterGrid::convertYCoord(int yIndex) {
-	int noOfGrids = 0;
-	bool inMap = false;
+Position MonsterGrid::getMonsterPos(Coordinates currentTile, int id) {
+	Coordinates monsterCoord = this->findMonsterCoord(id);
 
-	for (int i = topLeft.y; i <= bottomLeft.y; i++) {
-		if (i == yIndex) {
-			inMap = true;
-			break;
-		}
-		noOfGrids++;
+	if (monsterCoord.x != -1 && monsterCoord.y != -1) {
+		Coordinates startPos = Coordinates(currentTile.x - 3, currentTile.y - 3);
+
+		float monsterXPos = (monsterCoord.x - startPos.x) * TILE_SIZE * SCALE;
+		float monsterYPos = (monsterCoord.y - startPos.y) * TILE_SIZE * SCALE;
+
+		return Position(monsterXPos, monsterYPos);
 	}
-
-	if (!inMap) {
-		return -1.0;
-	}
-
-	return float(noOfGrids * TILE_SIZE * SCALE);
-}
-
-float MonsterGrid::convertXCoord(int xIndex) {
-	int noOfGrids = 0;
-	bool inMap = false;
 	
-	for (int i = bottomLeft.x; i <= bottomRight.x; i++) {
-		if (i == xIndex) {
-			inMap = true;
-			break;
-		}
-		noOfGrids++;
-	}
-
-	if (!inMap) {
-		return -1.0;
-	}
-
-	return float(noOfGrids * TILE_SIZE * SCALE);
+	return Position(-1.0, -1.0);
 }
 
-// Assuming target is seen on map
-float MonsterGrid::convertMapToXCoord(float x) {
-	float noOfGrids = x / TILE_SIZE / SCALE;
-	return noOfGrids + topLeft.x;
+
+
+void MonsterGrid::addMonster(Coordinates coord, int id) {
+	grid[coord.y][coord.x] = id;
 }
 
-// Assuming target is seen on map
-float MonsterGrid::convertMapToYCoord(float y) {
-	float noOfGrids = y / TILE_SIZE / SCALE;
-	return noOfGrids + topLeft.y;
-}
-
-void MonsterGrid::moveEdgesX(int range) {
-	topLeft.x = topLeft.x + range;
-	bottomLeft.x = bottomLeft.x + range;
-	topRight.x = topRight.x + range;
-	bottomRight.x = bottomRight.x + range;
-}
-
-void MonsterGrid::moveEdgesY(int range) {
-	topLeft.y = topLeft.y + range;
-	bottomLeft.y = bottomLeft.y + range;
-	topRight.y = topRight.y + range;
-	bottomRight.y = bottomRight.y + range;
-}
-
-void MonsterGrid::moveCamera(int direction) {
-	if (direction == LEFT)
-		moveEdgesX(-1);
-	else if (direction == RIGHT)
-		moveEdgesX(1);
-	else if (direction == UP)
-		moveEdgesY(-1);
-	else if (direction == DOWN)
-		moveEdgesY(1);
-}
-
-void MonsterGrid::moveMonster(Coordinates prevCoord, Coordinates nextCoord) {
-	int id = grid[prevCoord.y][prevCoord.x];
-	grid[prevCoord.y][prevCoord.x] = 0;
+void MonsterGrid::moveMonster(Coordinates currCoord, Coordinates nextCoord) {
+	int id = grid[currCoord.y][currCoord.x];
+	grid[currCoord.y][currCoord.x] = 0;
 	grid[nextCoord.y][nextCoord.x] = id;
+}
+
+void MonsterGrid::removeMonster(int id) {
+	Coordinates coord = this->findMonsterCoord(id);
+	if (coord.x != -1 && coord.y != -1)
+		grid[coord.y][coord.x] = 0;
 }

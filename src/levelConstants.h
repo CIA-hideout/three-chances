@@ -10,6 +10,13 @@ struct Coordinates {
 	Coordinates(int x, int y) : x(x), y(y) {}
 };
 
+struct Position {
+	float x;
+	float y;
+	Position() {}
+	Position(float x, float y) : x(x), y(y) {}
+};
+
 // Legend
 // 0 - border
 // 1 - 1st floor path
