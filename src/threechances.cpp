@@ -69,11 +69,11 @@ void ThreeChances::initialize(HWND hwnd) {
 	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
 
-	hud = new Hud;
-	hud->initializeTexture(graphics);
-
 	if (!sword.initialize(this, 112, 112, 4, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
+
+	hud = new Hud;
+	hud->initializeTexture(graphics);
 
 	// Set map to starting position
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
@@ -88,14 +88,38 @@ void ThreeChances::initialize(HWND hwnd) {
 	//slug.setX(TILE_SIZE * SCALE * 2);
 	//slug.setY(TILE_SIZE * SCALE * 0);
 
-	monsterGrid->addMonster(Coordinates(6, 25), 1);
-	monsterGrid->addMonster(Coordinates(5, 25), 2);
+	monsterGrid->addMonster(Coordinates(6, 25), duck.getId());
+	monsterGrid->addMonster(Coordinates(5, 25), ghost.getId());
 
+	//ghost.setX(TILE_SIZE * SCALE * 4);
+	//ghost.setY(TILE_SIZE * SCALE * 0);
+
+	//slug.setX(TILE_SIZE * SCALE * 2);
+	//slug.setY(TILE_SIZE * SCALE * 0);
+
+	this->initializeMonsters();
 	hud->setInitialPosition();
 	monsterGrid->logLayout();
 	sword.setDirection(DOWN);
 
 	return;
+}
+
+void ThreeChances::initializeMonsters() {
+	std::vector<Entity*> mv = gameControl->getMonsterVec();
+
+	// Add to monster grid
+	monsterGrid->addMonster(Coordinates(5, 25), duck.getId());
+	monsterGrid->addMonster(Coordinates(20, 25), ghost.getId());
+
+	// Add to monster vec
+	mv.push_back(&duck);
+	mv.push_back(&ghost);
+
+	duck.setX(TILE_SIZE * SCALE * 3);
+	duck.setY(TILE_SIZE * SCALE * 0);
+
+	gameControl->setMonsterVec(mv);
 }
 
 void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
@@ -193,8 +217,8 @@ void ThreeChances::update() {
 			level.update(levelGrid, &player);
 		}
 
-		duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), 1));
-		ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), 2));
+		duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId());
+		ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId()));
 		player.update(frameTime, gameControl);
 		hud->update(frameTime, &player);
 	}
@@ -208,31 +232,31 @@ void ThreeChances::enemyAi(float frameTime) {
 	Position oldPost;
 	Position newPost;
 
-	if (!gameControl->getEnemyAnimating()) {
-		// initialize enemy ai loop
-		std::cout << "Setting up enemey ai" << std::endl;
-		//duck.ai(frameTime, &player, levelGrid, monsterGrid);
+	//if (!gameControl->getEnemyAnimating()) {
+	//	// initialize enemy ai loop
+	//	std::cout << "Setting up enemey ai" << std::endl;
+	//	//duck.ai(frameTime, &player, levelGrid, monsterGrid);
 
-		oldPost = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), 1);
-		newPost.x = 32.0f * SCALE + oldPost.x;
-		newPost.y = oldPost.y;
-		duck.setEndPoint(newPost);
-		gameControl->setEnemyAnimating(true);
-	}
-	else {
-		std::cout << "Running enemy ai" << std::endl;
-		bool duckA = duck.aiMoveInDirection(frameTime, RIGHT, duck.getEndPoint());
-		duck.update(frameTime, monsterGrid);
+	//	oldPost = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId());
+	//	newPost.x = 32.0f * SCALE + oldPost.x;
+	//	newPost.y = oldPost.y;
+	//	duck.setEndPoint(newPost);
+	//	gameControl->setEnemyAnimating(true);
+	//}
+	//else {
+	//	std::cout << "Running enemy ai" << std::endl;
+	//	bool duckA = duck.aiMoveInDirection(frameTime, RIGHT, duck.getEndPoint());
+	//	duck.update(frameTime, monsterGrid);
 
-		if (duckA) {
-			monsterGrid->moveMonster(Coordinates(5, 25), Coordinates(6, 25));
-			gameControl->setGameState(GAME_STATE::player);
+	//	if (duckA) {
+	//		monsterGrid->moveMonster(Coordinates(5, 25), Coordinates(6, 25));
+	//		gameControl->setGameState(GAME_STATE::player);
 
-			gameControl->setEnemyAnimating(false);
-			player.resetMovesLeft();
-			hud->resetMovesHud();
-		}
-	}
+	//		gameControl->setEnemyAnimating(false);
+	//		player.resetMovesLeft();
+	//		hud->resetMovesHud();
+	//	}
+	//}
 }
 
 //=============================================================================

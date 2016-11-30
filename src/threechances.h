@@ -67,6 +67,8 @@ public:
 	void render();      // "
 	void releaseAll();
 	void resetAll();
+
+	void initializeMonsters();
 };
 
 #endif
