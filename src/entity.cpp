@@ -106,3 +106,67 @@ void Entity::moveExecuted() {
 void Entity::resetMovesLeft() {
 	this->setMovesLeft(this->getMoves());
 }
+
+bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
+	bool reachedEndPoint = false;
+
+	switch (direction) {
+	case LEFT:
+		if (this->getX() > endPos.x) {
+			this->setX(this->getX() - VELOCITY * frameTime);
+		}
+		else {
+			this->setAnimating(false);
+			this->setX(endPos.x);
+			reachedEndPoint = true;
+		}
+		break;
+	case RIGHT:
+		if (this->getX() < endPos.x) {
+			this->setX(this->getX() + VELOCITY * frameTime);
+		}
+		else {
+			this->setAnimating(false);
+			this->setX(endPos.x);
+			reachedEndPoint = true;
+		}
+		break;
+
+	case UP:
+		if (this->getY() > endPos.y) {
+			this->setY(this->getY() - VELOCITY * frameTime);
+		}
+		else {
+			this->setAnimating(false);
+			this->setY(endPos.y);
+			reachedEndPoint = true;
+		}
+		break;
+
+	case DOWN:
+		if (this->getY() < endPos.y) {
+			this->setY(this->getY() + VELOCITY * frameTime);
+		}
+		else {
+			this->setAnimating(false);
+			this->setY(endPos.y);
+			reachedEndPoint = true;
+		}
+		break;
+	}
+
+	return reachedEndPoint;
+}
+
+bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) {
+	if (!this->getAnimating()) {
+		std::cout << "Initializing AI" << std::endl;
+		this->rotateEntity(direction);
+		this->startWalkAnimation();
+		this->setAnimating(true);
+		return false;
+	}
+	else {
+		return moveInDirection(frameTime, direction, endPos);
+	}
+}

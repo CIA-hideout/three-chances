@@ -29,6 +29,8 @@ protected:
 	int movesLeft;
 	std::vector<int> levels;
 	std::vector<entityNS::ABILITY_TYPE> abilities;
+	Position endPoint;
+	bool animating;
 
 public:
 	Entity();
@@ -42,6 +44,8 @@ public:
 	int getMovesLeft() const { return movesLeft; }
 	std::vector<int> getLevels() const { return levels; }
 	std::vector<entityNS::ABILITY_TYPE> getAbilities() const { return abilities; }
+	Position getEndPoint() const { return endPoint; }
+	bool getAnimating() const { return animating; }
 
 	// setters
 	void setHealth(float h) { health = h; }
@@ -51,6 +55,8 @@ public:
 	void setMovesLeft(int ml) { movesLeft = ml; }
 	void setLevel(std::vector<int> l) { levels = l; }
 	void setAbilities(std::vector<entityNS::ABILITY_TYPE> a) { abilities = a; }
+	void setEndPoint(Position ep) { endPoint = ep; }
+	void setAnimating(bool a) { animating = a; }
 
 	// can be overridden
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
@@ -61,7 +67,14 @@ public:
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void ai(float frameTime, Entity &ent);
+<<<<<<< HEAD
 	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
+=======
+	// To compensate for map movement
+	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
+	// For AI moving
+	virtual bool aiMoveInDirection(float frameTime, int direction, Position endPos);
+>>>>>>> Basic animation for enemy turn
 
 	virtual void moveExecuted();
 	virtual void resetMovesLeft();

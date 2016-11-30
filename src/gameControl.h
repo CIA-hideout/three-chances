@@ -10,6 +10,7 @@ class GameControl {
 private:
 	GAME_STATE gameState;
 	int turnsElapsed;
+	bool enemyAnimating;
 
 public:
 	GameControl();
@@ -17,6 +18,9 @@ public:
 
 	GAME_STATE getGameState() { return gameState; }
 	void setGameState(GAME_STATE gs) { turnsElapsed++;  gameState = gs; }
+
+	bool getEnemyAnimating() { return enemyAnimating; }
+	void setEnemyAnimating(bool ea) { enemyAnimating = ea; }
 };
 
 #endif

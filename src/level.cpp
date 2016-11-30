@@ -12,13 +12,12 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 void Level::update(LevelGrid *lg, Player *p) {
 	// Updates player and levelGrid once the levelGrid sprite has finished moving
 	p->setAnimating(false);
-	p->moveExecuted();
+	//p->moveExecuted();
 	lg->logTile(this->getX(), this->getY());
 }
 
 bool Level::moveInDirection(float frameTime, int direction, float endPoint) {
 	bool reachedEndPoint = false;
-
 	switch (direction) {
 	case LEFT:
 		// Keep moving sprite until it reaches end point
