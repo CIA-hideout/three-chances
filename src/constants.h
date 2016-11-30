@@ -53,11 +53,13 @@ const UCHAR UP_KEY = VK_UP;
 const UCHAR DOWN_KEY = VK_DOWN;
 const UCHAR SPACE_KEY = VK_SPACE;
 
-// Direction to integer
+// Action integers
 const int LEFT = 0;
 const int RIGHT = 1;
 const int UP = 2;
 const int DOWN = 3;
+const int ATTACK = 4;
+const int STAY = 5;
 
 // Sprites
 const char LEVEL_1_IMAGE[] = "sprites\\level1 (w Grid).png";
@@ -81,7 +83,7 @@ const int DUCK_WALK_START_FRAME = 0;
 const int DUCK_WALK_END_FRAME = 3;
 const int DUCK_ATK_START_FRAME = 4;
 const int DUCK_ATK_END_FRAME = 5;
-const float DUCK_ANIMATION_DELAY = 0.25f;
+const float DUCK_ANIMATION_DELAY = 0.1f;
 const int DUCK_COLS = 8;
 
 const int GHOST_STANDING_FRAME = 0;
@@ -89,7 +91,7 @@ const int GHOST_WALK_START_FRAME = 0;
 const int GHOST_WALK_END_FRAME = 3;
 const int GHOST_ATK_START_FRAME = 4;
 const int GHOST_ATK_END_FRAME = 5;
-const float GHOST_ANIMATION_DELAY = 0.25f;
+const float GHOST_ANIMATION_DELAY = 0.1f;
 const int GHOST_COLS = 8;
 
 const int SLUG_STANDING_FRAME = 0;
@@ -97,7 +99,7 @@ const int SLUG_WALK_START_FRAME = 0;
 const int SLUG_WALK_END_FRAME = 2;
 const int SLUG_ATK_START_FRAME = 4;
 const int SLUG_ATK_END_FRAME = 5;
-const float SLUG_ANIMATION_DELAY = 0.25f;
+const float SLUG_ANIMATION_DELAY = 0.1f;
 const int SLUG_COLS = 8;
 
 #endif

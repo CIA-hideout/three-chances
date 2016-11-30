@@ -19,6 +19,8 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	levels = ed.levels;
 	abilities = ed.abilities;
 	id = currentId;
+	action = -1;
+
 	this->setScale((float)SCALE);
 
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
@@ -119,9 +121,7 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 
 bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) {
 	if (!this->getAnimating()) {
-		std::cout << "Initializing single enemy movement" << std::endl;
 		this->rotateEntity(direction);
-		this->startWalkAnimation();
 		this->setAnimating(true);
 		return false;
 	}

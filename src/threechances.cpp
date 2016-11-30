@@ -16,7 +16,7 @@ ThreeChances::ThreeChances() {
 // Destructor
 //=============================================================================
 ThreeChances::~ThreeChances() {
-	releaseAll();           // call onLostDevice() for every graphics item
+	releaseAll();
 }
 
 //=============================================================================
@@ -26,7 +26,7 @@ ThreeChances::~ThreeChances() {
 void ThreeChances::initialize(HWND hwnd) {
 	std::vector<Entity> enemyVector;
 
-	Game::initialize(hwnd); // throws GameError
+	Game::initialize(hwnd);
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -74,21 +74,10 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	hud = new Hud;
 	hud->initializeTexture(graphics);
-
-	// Set map to starting position
+	
+	// Set map position based off startTile
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
 	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
-
-	duck.setX(TILE_SIZE * SCALE * 4);
-	duck.setY(TILE_SIZE * SCALE * 0);
-
-
-
-	//slug.setX(TILE_SIZE * SCALE * 2);
-	//slug.setY(TILE_SIZE * SCALE * 0);
-
-	//ghost.setX(TILE_SIZE * SCALE * 4);
-	//ghost.setY(TILE_SIZE * SCALE * 0);
 
 	//slug.setX(TILE_SIZE * SCALE * 2);
 	//slug.setY(TILE_SIZE * SCALE * 0);
@@ -148,14 +137,6 @@ int findKeyDown(std::map<int, bool> *keysPressed) {
 // Update all game items
 //=============================================================================
 void ThreeChances::update() {
-	// map will update last as player has to check
-	// if next move is valid so as to play walking animation
-
-	//slug.update(frameTime, levelGrid, player, input, &keysPressed);
-	//hud->update(frameTime, &player);
-	//duck.update(frameTime, monsterGrid);
-	//std::cout << static_cast<char>(gameControl->getGameState()) << std::endl;
-
 	// Check no animation currently running
 	if (!player.getAnimating()) {
 		// Check if it's player's turn
@@ -166,7 +147,6 @@ void ThreeChances::update() {
 				keysPressed[LEFT] = true;
 				lastKeyPressed = LEFT;
 				endPoint = level.getX() + TILE_SIZE * SCALE;
-				player.moveExecuted();
 				player.moveInDirection(levelGrid, monsterGrid, LEFT, endPoint);
 			}
 
@@ -174,7 +154,6 @@ void ThreeChances::update() {
 				keysPressed[RIGHT] = true;
 				lastKeyPressed = RIGHT;
 				endPoint = level.getX() - TILE_SIZE * SCALE;
-				player.moveExecuted();
 				player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint);
 			}
 
@@ -182,7 +161,6 @@ void ThreeChances::update() {
 				keysPressed[UP] = true;
 				lastKeyPressed = UP;
 				endPoint = level.getY() + TILE_SIZE * SCALE;
-				player.moveExecuted();
 				player.moveInDirection(levelGrid, monsterGrid, UP, endPoint);
 			}
 
@@ -190,7 +168,6 @@ void ThreeChances::update() {
 				keysPressed[DOWN] = true;
 				lastKeyPressed = DOWN;
 				endPoint = level.getY() - TILE_SIZE * SCALE;
-				player.moveExecuted();
 				player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint);
 			}
 		}
@@ -215,74 +192,91 @@ void ThreeChances::update() {
 			level.update(levelGrid, &player);
 		}
 
+		// Loop thu monster vec and run 1 by 1
 		duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId()));
 		ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId()));
+		// end loop
 		player.update(frameTime, gameControl);
-		hud->update(frameTime, &player);
+		hud->update(frameTime, &player);			
 	}
 
+	// Loop thu monster vec
+	ghost.update(frameTime);
+	// end loop
 	resetKeysPressedMap(input, &keysPressed);
 }
 
 void ThreeChances::enemyAi() {
-	//std::cout << duckA << std::endl;
+	// Loop thu monster vec
+	if (ghost.getMovesLeft() > 0) {
+		if (!gameControl->getEnemyAnimating()) {
+			printf("Enemy AI action: ");
+			int action = ghost.ai(frameTime, monsterGrid->findMonsterCoord(ghost.getId()), levelGrid->getCurrentTile());
 
-	Position oldPost;
-	Position newPost;
+			Coordinates currCoord = monsterGrid->findMonsterCoord(ghost.getId());
 
-	if (!gameControl->getEnemyAnimating()) {
-		std::cout << "Setting up enemy ai" << std::endl;
-		//ghost.ai(frameTime, monsterGrid->findMonsterCoord(2), levelGrid->getCurrentTile());
+			switch (action) {
+			case LEFT:
+				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x - 1, currCoord.y));
+				break;
+			case RIGHT:
+				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x + 1, currCoord.y));
+				break;
+			case UP:
+				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x, currCoord.y - 1));
+				break;
+			case DOWN:
+				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x, currCoord.y + 1));
+				break;
+			case ATTACK:
+				break;
+			}
 
-		oldPost = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId());
-		newPost.x = 32.0f * SCALE + oldPost.x;
-		newPost.y = oldPost.y;
-		duck.setEndPoint(newPost);
-		gameControl->setEnemyAnimating(true);
-	}
-	else {
-		std::cout << "Running enemy ai" << std::endl;
-		bool duckAiCompleted = duck.aiMoveInDirection(frameTime, RIGHT, duck.getEndPoint());
-		bool ghostAiCompleted = ghost.ai(frameTime, monsterGrid->findMonsterCoord(ghost.getId()), levelGrid->getCurrentTile());
-		duck.update(frameTime, monsterGrid);
-		ghost.update(frameTime, monsterGrid);
+			gameControl->setEnemyAnimating(true);
+		}
+		else {
+			bool ghostAiComplete = false;
 
-		if (duckAiCompleted && ghostAiCompleted) {
-			monsterGrid->moveMonster(Coordinates(5, 25), Coordinates(6, 25));
-			gameControl->setGameState(GAME_STATE::player);
+			Position endPos = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId());
 
-			gameControl->setEnemyAnimating(false);
-			player.resetMovesLeft();
-			hud->resetMovesHud();
+			int ghostAction = ghost.getAction();
+
+			if (ghostAction == ATTACK) {
+				if (ghost.getAnimationComplete()) {
+					ghostAiComplete = true;
+					ghost.moveExecuted();
+				}
+			}
+			else if (ghostAction == STAY) {
+				ghostAiComplete = true;
+				ghost.setMovesLeft(0);
+			}
+			else if (ghostAction > -1) {
+				if (ghost.aiMoveInDirection(frameTime, ghostAction, endPos)) {
+					ghostAiComplete = true;
+					ghost.moveExecuted();
+				}
+			}
+
+			if (ghostAiComplete) {
+				printf("Enemy moves left: %d\n", ghost.getMovesLeft());
+				gameControl->setEnemyAnimating(false);
+			}
 		}
 	}
+	// end loop
 
+	// run below code once all monsters have moved
+	else {
+		printf("Enemy AI complete\n");
+		gameControl->setGameState(GAME_STATE::player);
 
-	//if (!gameControl->getEnemyAnimating()) {
-	//	// initialize enemy ai loop
-	//	std::cout << "Setting up enemey ai" << std::endl;
-	//	//duck.ai(frameTime, &player, levelGrid, monsterGrid);
-
-	//	oldPost = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId());
-	//	newPost.x = 32.0f * SCALE + oldPost.x;
-	//	newPost.y = oldPost.y;
-	//	duck.setEndPoint(newPost);
-	//	gameControl->setEnemyAnimating(true);
-	//}
-	//else {
-	//	std::cout << "Running enemy ai" << std::endl;
-	//	bool duckA = duck.aiMoveInDirection(frameTime, RIGHT, duck.getEndPoint());
-	//	duck.update(frameTime, monsterGrid);
-
-	//	if (duckA) {
-	//		monsterGrid->moveMonster(Coordinates(5, 25), Coordinates(6, 25));
-	//		gameControl->setGameState(GAME_STATE::player);
-
-	//		gameControl->setEnemyAnimating(false);
-	//		player.resetMovesLeft();
-	//		hud->resetMovesHud();
-	//	}
-	//}
+		// Loop monster vec
+		ghost.resetMovesLeft();
+		player.resetMovesLeft();
+		// end loop
+		hud->resetMovesHud();
+	}
 }
 
 //=============================================================================
@@ -299,9 +293,9 @@ void ThreeChances::collisions() {}
 // Render game items
 //=============================================================================
 void ThreeChances::render() {
-	graphics->spriteBegin();                // begin drawing sprites
+	graphics->spriteBegin();
 
-	level.draw();								// add the map to the scene
+	level.draw();
 	player.draw();
 	duck.draw();
 	ghost.draw();
@@ -309,7 +303,7 @@ void ThreeChances::render() {
 	hud->draw();
 	sword.draw();
 
-	graphics->spriteEnd();                  // end drawing sprites
+	graphics->spriteEnd();
 }
 
 //=============================================================================
