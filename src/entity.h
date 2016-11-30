@@ -5,6 +5,7 @@
 #include <string>
 #include "image.h"
 #include "game.h"
+#include "levelConstants.h"
 
 namespace entityNS {
 	enum ABILITY_TYPE { TRAVEL_WATER, TRAVEL_LAVA, TRAVEL_WALL, BURNS_PLAYER, SHOOTS_FIRE };
@@ -60,6 +61,7 @@ public:
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void ai(float frameTime, Entity &ent);
+	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
 
 	virtual void moveExecuted();
 	virtual void resetMovesLeft();
