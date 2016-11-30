@@ -19,7 +19,6 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	levels = ed.levels;
 	abilities = ed.abilities;
 	id = currentId;
-	direction = -1;
 	action = -1;
 
 	this->setScale((float)SCALE);
