@@ -24,6 +24,10 @@ void MonsterGrid::logLayout() {
 	}
 }
 
+int MonsterGrid::getValueAtCoordinates(Coordinates coordinates) {
+	return grid[coordinates.y][coordinates.x];
+}
+
 Coordinates MonsterGrid::findMonsterCoord(int id) {
 	for (size_t i = 0; i < grid.size(); ++i) {
 		for (size_t j = 0; j < grid[i].size(); ++j) {

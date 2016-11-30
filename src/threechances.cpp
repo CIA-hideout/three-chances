@@ -137,32 +137,38 @@ void ThreeChances::update() {
 	if (!player.getAnimating()) {
 		// Check if it's player's turn
 		if (gameControl->getGameState() == GAME_STATE::player) {
+			float endPoint;
+
 			if (input->isKeyDown(LEFT_KEY) && !keysPressed[LEFT]) {
 				keysPressed[LEFT] = true;
 				lastKeyPressed = LEFT;
+				endPoint = level.getX() + TILE_SIZE * SCALE;
 
-				player.moveInDirection(levelGrid, LEFT, level.getX() + TILE_SIZE * SCALE);
+				player.moveInDirection(levelGrid, monsterGrid, LEFT, endPoint);
 			}
 
 			if (input->isKeyDown(RIGHT_KEY) && !keysPressed[RIGHT]) {
 				keysPressed[RIGHT] = true;
 				lastKeyPressed = RIGHT;
+				endPoint = level.getX() - TILE_SIZE * SCALE;
 
-				player.moveInDirection(levelGrid, RIGHT, level.getX() - TILE_SIZE * SCALE);
+				player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint);
 			}
 
 			if (input->isKeyDown(UP_KEY) && !keysPressed[UP]) {
 				keysPressed[UP] = true;
 				lastKeyPressed = UP;
+				endPoint = level.getY() + TILE_SIZE * SCALE;
 
-				player.moveInDirection(levelGrid, UP, level.getY() + TILE_SIZE * SCALE);
+				player.moveInDirection(levelGrid, monsterGrid, UP, endPoint);
 			}
 
 			if (input->isKeyDown(DOWN_KEY) && !keysPressed[DOWN]) {
 				keysPressed[DOWN] = true;
 				lastKeyPressed = DOWN;
+				endPoint = level.getY() - TILE_SIZE * SCALE;
 
-				player.moveInDirection(levelGrid, DOWN, level.getY() - TILE_SIZE * SCALE);
+				player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint);
 			}
 		}
 		// Check if it's enemy's turn

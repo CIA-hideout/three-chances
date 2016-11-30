@@ -5,6 +5,7 @@
 
 #include "entity.h"
 #include "levelGrid.h"
+#include "monsterGrid.h"
 #include "gameControl.h"
 
 class Player : public Entity {
@@ -22,7 +23,7 @@ public:
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);
-	void moveInDirection(LevelGrid *levelGrid, int direction, float endPoint);
+	void moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, int direction, float endPoint);
 
 	bool getAnimating() const { return animating; }
 	void setAnimating(bool a) { animating = a; }

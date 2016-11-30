@@ -77,6 +77,11 @@ int LevelGrid::getCurrentTileValue() {
 // Returns value of next tile in specified direction from current tile
 //=============================================================================
 int LevelGrid::getNextTileValue(int direction) {
+	Coordinates nextCoord = this->getNextTileCoordinates(direction);
+	return this->getTileValueAtCoordinates(nextCoord);
+}
+
+Coordinates LevelGrid::getNextTileCoordinates(int direction) {
 	Coordinates nextCoord;
 
 	switch (direction) {
@@ -94,7 +99,7 @@ int LevelGrid::getNextTileValue(int direction) {
 		break;
 	}
 
-	return this->getTileValueAtCoordinates(nextCoord);
+	return nextCoord;
 }
 
 Coordinates LevelGrid::convertXYToCoord(float x, float y) {
