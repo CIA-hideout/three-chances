@@ -2,19 +2,21 @@
 #define _GHOST_H
 
 #include "entity.h"
-#include "levelGrid.h"
 #include "input.h"
 #include "player.h"
+#include "levelGrid.h"
+#include "monsterGrid.h"
 
 class Ghost : public Entity {
 public:
 	Ghost();
 	~Ghost();
 
-	void update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed);
-	void ai(float frameTime, Entity &ent);
-	void rotateEntity(std::string direction, bool moveValid);
+	void update(float frameTime, MonsterGrid *monsterGrid);
+	bool ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord);
+	void rotateEntity(int direction);
 	void startAttackAnimation();
 	void startWalkAnimation();
+	bool isValidMove(LevelGrid *levelGrid, int direction);
 };
 #endif

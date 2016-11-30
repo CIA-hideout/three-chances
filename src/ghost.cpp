@@ -1,5 +1,45 @@
 #include "ghost.h"
 
+bool targetWithinRange(Coordinates monsterCoord, Coordinates playerCoord, int range) {
+	// Check x coordinate within range
+	if (playerCoord.x <= monsterCoord.x + range && playerCoord.x >= monsterCoord.x - range) {
+		// Check y coordinate within range
+		if (playerCoord.y <= monsterCoord.y + range && playerCoord.y >= monsterCoord.y - range) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+int targetWithinAtkRange(Coordinates monsterCoord, Coordinates playerCoord, int atkRange) {
+	// True if player is on the same row as monster
+	if (playerCoord.y == monsterCoord.y) {
+		// Check if player is within LEFT atk range
+		if (playerCoord.x < monsterCoord.x && playerCoord.x >= monsterCoord.x - atkRange) {
+			return LEFT;
+		}
+		// Check if player is within RIGHT atk range
+		if (playerCoord.x > monsterCoord.x && playerCoord.x <= monsterCoord.x + atkRange) {
+			return RIGHT;
+		}
+	}
+	// True if player is on the same column as monster
+	if (playerCoord.x == monsterCoord.x) {
+		// Check if player is within UP atk range
+		if (playerCoord.y < monsterCoord.y && playerCoord.y >= monsterCoord.y - atkRange) {
+			return UP;
+		}
+		// Check if player is within DOWN atk range
+		if (playerCoord.y > monsterCoord.y && playerCoord.y <= monsterCoord.y + atkRange) {
+			return DOWN;
+		}
+	}
+
+	return -1;
+}
+
+
 Ghost::Ghost() : Entity() {
 	this->setFrameDelay(GHOST_ANIMATION_DELAY);
 	this->setLoop(false);
@@ -7,67 +47,54 @@ Ghost::Ghost() : Entity() {
 
 Ghost::~Ghost() {}
 
-void Ghost::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
+void Ghost::update(float frameTime, MonsterGrid* monsterGrid) {
 	Entity::update(frameTime);
 
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
-		this->setCurrentFrame(DUCK_STANDING_FRAME);
-	}
-	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-		if (player.isValidMove(levelGrid, LEFT)) {
-			this->setX(this->getX() + TILE_SIZE * SCALE);
-			this->rotateEntity("LEFT", true);
-		}
-	}
-
-	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-		if (player.isValidMove(levelGrid, RIGHT)) {
-			this->setX(this->getX() - TILE_SIZE * SCALE);
-			this->rotateEntity("RIGHT", true);
-		}
-	}
-
-	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-		if (player.isValidMove(levelGrid, UP)) {
-			this->setY(this->getY() + TILE_SIZE * SCALE);
-			this->rotateEntity("UP", true);
-		}
-	}
-
-	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-		if (player.isValidMove(levelGrid, DOWN)) {
-			this->setY(this->getY() - TILE_SIZE * SCALE);
-			this->rotateEntity("DOWN", true);
-		}
+		this->setCurrentFrame(GHOST_STANDING_FRAME);
 	}
 }
 
-void Ghost::ai(float frameTime, Entity &ent) {
+bool Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord) {
+	// if target within trigger range (3 tiles)
+	//		if target within atk range (1 tiles)
+	//			attack target
+	//		else
+	//			move towards target
+
+	if (targetWithinRange(monsterCoord, playerCoord, 3)) {
+		int directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
+
+		if (directionToAttack != -1) {
+			this->rotateEntity(directionToAttack);
+		}
+		else {
+			// move towards player
+		}
+	}
+
+	return true;
 }
 
-void Ghost::rotateEntity(std::string direction, bool moveValid) {
+void Ghost::rotateEntity(int direction) {
 	RECT sampleRect = this->getSpriteDataRect();
 
-	if (direction != "") {
+	if (direction != -1) {
 		sampleRect.left = 0;
 		sampleRect.right = TILE_SIZE;
 
-		if (direction == "LEFT")
+		if (direction == LEFT)
 			sampleRect.top = 32;
-		if (direction == "RIGHT")
+		if (direction == RIGHT)
 			sampleRect.top = 96;
-		if (direction == "UP")
+		if (direction == UP)
 			sampleRect.top = 64;
-		if (direction == "DOWN")
+		if (direction == DOWN)
 			sampleRect.top = 0;
 
 		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-
-		if (moveValid) {
-			startWalkAnimation();
-		}
 	}
 
 	this->setSpriteDataRect(sampleRect);
@@ -81,4 +108,20 @@ void Ghost::startWalkAnimation() {
 void Ghost::startAttackAnimation() {
 	this->setFrames(GHOST_ATK_START_FRAME, GHOST_ATK_END_FRAME);
 	this->setCurrentFrame(GHOST_ATK_START_FRAME);
+}
+
+bool Ghost::isValidMove(LevelGrid *levelGrid, int direction) {
+	int currentTileValue = levelGrid->getCurrentTileValue();
+	int nextTileValue = levelGrid->getNextTileValue(direction);
+
+	bool valid = false;
+
+	if (currentTileValue == 1)								// 1st floor
+		valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
+	else if (currentTileValue == 2)							// 2nd floor
+		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
+	else if (currentTileValue == 3)							// Stairs
+		valid = nextTileValue == 1 || nextTileValue == 2;	// 1st floor or 2nd floor
+
+	return valid;
 }

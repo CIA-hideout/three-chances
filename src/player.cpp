@@ -76,10 +76,11 @@ bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 	return valid;
 }
 
-void Player::moveInDirection(LevelGrid *levelGrid, int direction, float endPoint) {
+void Player::moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, int direction, float endPoint) {
 	this->rotateEntity(direction);
+	Coordinates nextCoord = levelGrid->getNextTileCoordinates(direction);
 
-	if (this->isValidMove(levelGrid, direction)) {
+	if (this->isValidMove(levelGrid, direction) && monsterGrid->getValueAtCoordinates(nextCoord) == 0) {
 		levelGrid->moveCurrentTile(direction);
 		this->startWalkAnimation();
 		this->setAnimating(true);
