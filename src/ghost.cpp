@@ -57,7 +57,7 @@ void Ghost::update(float frameTime, MonsterGrid* monsterGrid) {
 	}
 }
 
-void Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord) {
+bool Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord) {
 	// if target within trigger range (3 tiles)
 	//		if target within atk range (1 tiles)
 	//			attack target
@@ -74,6 +74,8 @@ void Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoor
 			// move towards player
 		}
 	}
+
+	return true;
 }
 
 void Ghost::rotateEntity(int direction) {

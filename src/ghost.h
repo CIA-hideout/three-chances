@@ -13,7 +13,7 @@ public:
 	~Ghost();
 
 	void update(float frameTime, MonsterGrid *monsterGrid);
-	void ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord);
+	bool ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord);
 	void rotateEntity(int direction);
 	void startAttackAnimation();
 	void startWalkAnimation();

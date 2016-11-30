@@ -58,53 +58,6 @@ void Entity::setRect() {
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }
 
-bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
-	bool reachedEndPoint = false;
-
-	switch (direction) {
-	case LEFT:
-		if (this->getX() > endPos.x) {
-			this->setX(this->getX() - VELOCITY * frameTime);
-		}
-		else {
-			this->setX(endPos.x);
-			reachedEndPoint = true;
-		}
-		break;
-	case RIGHT:
-		if (this->getX() < endPos.x) {
-			this->setX(this->getX() + VELOCITY * frameTime);
-		}
-		else {
-			this->setX(endPos.x);
-			reachedEndPoint = true;
-		}
-		break;
-
-	case UP:
-		if (this->getY() > endPos.y) {
-			this->setY(this->getY() - VELOCITY * frameTime);
-		}
-		else {
-			this->setY(endPos.y);
-			reachedEndPoint = true;
-		}
-		break;
-
-	case DOWN:
-		if (this->getY() < endPos.y) {
-			this->setY(this->getY() + VELOCITY * frameTime);
-		}
-		else {
-			this->setY(endPos.y);
-			reachedEndPoint = true;
-		}
-		break;
-	}
-
-	return reachedEndPoint;
-}
-
 void Entity::moveExecuted() {
 	this->setMovesLeft(this->getMovesLeft() - 1);
 }

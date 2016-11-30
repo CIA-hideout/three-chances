@@ -70,14 +70,10 @@ public:
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void ai(float frameTime, Entity &ent);
-<<<<<<< HEAD
-	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
-=======
 	// To compensate for map movement
 	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
 	// For AI moving
 	virtual bool aiMoveInDirection(float frameTime, int direction, Position endPos);
->>>>>>> Basic animation for enemy turn
 
 	virtual void moveExecuted();
 	virtual void resetMovesLeft();
