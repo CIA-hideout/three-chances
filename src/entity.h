@@ -30,8 +30,11 @@ protected:
 	int movesLeft;
 	std::vector<int> levels;
 	std::vector<entityNS::ABILITY_TYPE> abilities;
+
 	Position endPoint;
 	bool animating;
+	int direction;
+	int action;
 
 public:
 	Entity();
@@ -48,6 +51,8 @@ public:
 	std::vector<entityNS::ABILITY_TYPE> getAbilities() const { return abilities; }
 	Position getEndPoint() const { return endPoint; }
 	bool getAnimating() const { return animating; }
+	int getDirection() const { return direction; }
+	int getAction() const { return action; }
 
 	// setters
 	void setId(int i) { id = i; }
@@ -60,6 +65,8 @@ public:
 	void setAbilities(std::vector<entityNS::ABILITY_TYPE> a) { abilities = a; }
 	void setEndPoint(Position ep) { endPoint = ep; }
 	void setAnimating(bool a) { animating = a; }
+	void setDirection(int d) { direction = d; }
+	void setAction(int a) { action = a; }
 
 	// can be overridden
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
