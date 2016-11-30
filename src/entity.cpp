@@ -1,11 +1,16 @@
 #include "entity.h"
 
-Entity::Entity() : Image() {}
+int currentId = 0;
+
+Entity::Entity() : Image() {
+}
 
 Entity::~Entity() {}
 
 bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM, EntityData ed) {
+	currentId++;
+
 	health = ed.health;
 	damage = ed.damage;
 	atkRange = ed.atkRange;
@@ -13,6 +18,7 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	movesLeft = ed.moves;
 	levels = ed.levels;
 	abilities = ed.abilities;
+	id = currentId;
 	this->setScale((float)SCALE);
 
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
@@ -160,7 +166,7 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 
 bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) {
 	if (!this->getAnimating()) {
-		std::cout << "Initializing AI" << std::endl;
+		std::cout << "Initializing single enemy movement" << std::endl;
 		this->rotateEntity(direction);
 		this->startWalkAnimation();
 		this->setAnimating(true);

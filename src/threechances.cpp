@@ -151,39 +151,24 @@ void ThreeChances::update() {
 				keysPressed[RIGHT] = true;
 				lastKeyPressed = RIGHT;
 				endPoint = level.getX() - TILE_SIZE * SCALE;
-
-<<<<<<< HEAD
-				player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint);
-=======
 				player.moveExecuted();
-				player.moveInDirection(levelGrid, RIGHT, level.getX() - TILE_SIZE * SCALE);
->>>>>>> Basic animation for enemy turn
+				player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint);
 			}
 
 			if (input->isKeyDown(UP_KEY) && !keysPressed[UP]) {
 				keysPressed[UP] = true;
 				lastKeyPressed = UP;
 				endPoint = level.getY() + TILE_SIZE * SCALE;
-
-<<<<<<< HEAD
-				player.moveInDirection(levelGrid, monsterGrid, UP, endPoint);
-=======
 				player.moveExecuted();
-				player.moveInDirection(levelGrid, UP, level.getY() + TILE_SIZE * SCALE);
->>>>>>> Basic animation for enemy turn
+				player.moveInDirection(levelGrid, monsterGrid, UP, endPoint);
 			}
 
 			if (input->isKeyDown(DOWN_KEY) && !keysPressed[DOWN]) {
 				keysPressed[DOWN] = true;
 				lastKeyPressed = DOWN;
 				endPoint = level.getY() - TILE_SIZE * SCALE;
-
-<<<<<<< HEAD
-				player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint);
-=======
 				player.moveExecuted();
-				player.moveInDirection(levelGrid, DOWN, level.getY() - TILE_SIZE * SCALE);
->>>>>>> Basic animation for enemy turn
+				player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint);
 			}
 		}
 		// Enemy's turn

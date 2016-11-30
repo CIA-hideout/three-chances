@@ -22,6 +22,7 @@ struct EntityData {
 
 class Entity: public Image {
 protected:
+	int id;
 	float health;	// there is 0.5 dmg
 	float damage;
 	int atkRange;
@@ -37,6 +38,7 @@ public:
 	~Entity();
 
 	// getters
+	int getId() const { return id; }
 	float getHealth() const { return health; }
 	float getDamamge() const { return damage; }
 	int getAtkRange() const { return atkRange; }
@@ -48,6 +50,7 @@ public:
 	bool getAnimating() const { return animating; }
 
 	// setters
+	void setId(int i) { id = i; }
 	void setHealth(float h) { health = h; }
 	void setDamage(float d) { damage = d; }
 	void setAtkRange(int ar) { atkRange = ar; }
