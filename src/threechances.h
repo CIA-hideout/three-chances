@@ -10,6 +10,7 @@
 
 #include "entityConstants.h"
 #include "game.h"
+#include "font.h"
 #include "gameControl.h"
 #include "levelGrid.h"
 #include "hud.h"
@@ -38,6 +39,7 @@ private:
 	TextureManager	slugTexture;
 	TextureManager	hudBgTexture;
 	TextureManager	swordTexture;
+	TextureManager	fontTexture;
 
 	// Sprites
 	Level			level;
@@ -47,6 +49,9 @@ private:
 	Ghost			ghost;
 	Slug			slug;
 	Image			movesHeader;
+
+	Font*			titleFont;
+	Font*			secondaryTitleFont;
 
 	std::map<int, bool> keysPressed;
 	int				lastKeyPressed;
@@ -69,6 +74,7 @@ public:
 	void resetAll();
 
 	void initializeMonsters();
+	void initializeFonts();
 };
 
 #endif

@@ -81,7 +81,7 @@ bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 	else if (currentTileValue == 2)							// 2nd floor
 		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
 	else if (currentTileValue == 3)							// Stairs
-		valid = nextTileValue == 1 || nextTileValue == 2;	// 1st floor or 2nd floor
+		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor
 
 	return valid;
 }

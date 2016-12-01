@@ -57,7 +57,6 @@ void Entity::rotateEntity(int direction) {
 }
 
 void Entity::setRect() {
-	//printf("%f	 Current frame: %i\n", health, currentFrame);
 	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }

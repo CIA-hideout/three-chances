@@ -32,7 +32,8 @@ const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";
 const bool FULLSCREEN = false;
 const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE * SCALE;
-const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE; // HUD will be 5 tile size
+//const UINT GAME_HEIGHT = (TILE_SIZE * (VIEW_RANGE + 3)) * SCALE; // HUD will be 5 tile size
+const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE;
 
 // Game
 const double PI = 3.14159265;
@@ -69,6 +70,7 @@ const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
 const char SWORD_IMAGE[] = "sprites\\sword.png";
+<<<<<<< HEAD
 const char MOVES_HEADER_IMAGE[] = "sprites\\Moves_Header.png";
 const char MOVE_IMAGE[] = "sprites\\Move_Circle.png";
 const char EMPTY_MOVE_IMAGE[] = "sprites\\Empty_Move_Circle.png";
@@ -77,6 +79,14 @@ const char HEART_IMAGE[] = "sprites\\Heart.png";
 const char HALF_HEART_IMAGE[] = "sprites\\Half_Heart.png";
 const char EMPTY_HEART_IMAGE[] = "sprites\\Empty_Heart.png";
 const char ENEMIES_LEFT_HEADER_IMAGE[] = "sprites\\Enemies_Left_Header.png";
+=======
+const char FONT_TEXTURE[] = "resources\\silkscreen.png";
+const char FONT_TEXTURE_INFO[] = "resources\\silkscreen.dat";
+>>>>>>> Add fonts
+
+const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
+const char MOVE_ICON[] = "sprites\\white-circle.png";
+const char MOVE_OVER_ICON[] = "sprites\\black-circle.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;

@@ -9,8 +9,16 @@ enum class GAME_STATE : char {
 	enemy = 'e',
 };
 
+enum class GENERAL_STATE : int {
+	menu = 1,
+	game = 2,
+	paused = 3,
+	gameOver = 4,
+};
+
 class GameControl {
 private:
+	GENERAL_STATE generalState;
 	GAME_STATE gameState;
 	int turnsElapsed;
 	bool enemyAnimating;
@@ -23,6 +31,7 @@ public:
 	~GameControl();
 	
 	// getters
+	GENERAL_STATE getGeneralState() { return generalState; }
 	GAME_STATE getGameState() { return gameState; }
 	bool getEnemyAnimating() { return enemyAnimating; }
 	std::vector<Entity*> getMonsterVec() { return monsterVec; }
@@ -30,6 +39,7 @@ public:
 	Entity* getPlayer() { return player; }
 	
 	// setters
+	void setGeneralState(GENERAL_STATE gens) { generalState = gens; }
 	void setGameState(GAME_STATE gs) { turnsElapsed++;  gameState = gs; }
 	void setEnemyAnimating(bool ea) { enemyAnimating = ea; }
 	void setMonsterVec(std::vector<Entity*> mv) { monsterVec = mv; }

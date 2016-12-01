@@ -1,6 +1,7 @@
 #include "gameControl.h"
 
 GameControl::GameControl() {
+	generalState = GENERAL_STATE::game;
 	gameState = GAME_STATE::player;
 	turnsElapsed = 0;
 	enemyAnimating = false;

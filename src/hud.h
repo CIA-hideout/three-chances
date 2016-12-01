@@ -29,7 +29,7 @@ private:
 	std::vector<Image> healthIcons;
 	std::vector<Image> halfHealthIcons;
 	std::vector<Image> emptyHealthIcons;
-	
+
 	bool initialized;
 
 public:

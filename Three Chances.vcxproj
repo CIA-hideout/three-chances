@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\font.h" />
     <ClInclude Include="src\ghost.h" />
     <ClInclude Include="src\gameControl.h" />
     <ClInclude Include="src\hud.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="src\textureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\font.cpp" />
     <ClCompile Include="src\ghost.cpp" />
     <ClCompile Include="src\gameControl.cpp" />
     <ClCompile Include="src\hud.cpp" />

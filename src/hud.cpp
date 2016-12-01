@@ -99,7 +99,7 @@ void Hud::setInitialPosition() {
 		moveIcons[i].setX(float(TILE_SIZE * (i) + 2));
 		moveIcons[i].setY(TILE_SIZE * SCALE * 6 + 32);
 	}
-	
+
 	for (size_t i = 0; i < emptyMoveIcons.size(); i++) {
 		emptyMoveIcons[i].setScale((float)SCALE);
 		emptyMoveIcons[i].setX(float(TILE_SIZE * (i)+2));
@@ -122,7 +122,7 @@ void Hud::setInitialPosition() {
 		emptyHealthIcons[i].setScale((float)SCALE);
 		emptyHealthIcons[i].setX(float(TILE_SIZE * SCALE * 5 + 32 + (i)* 32));
 		emptyHealthIcons[i].setY(TILE_SIZE * SCALE * 6 + 32);
-	}
+		}
 }
 
 void Hud::resetMovesHud() {
@@ -161,11 +161,11 @@ void Hud::draw() {
 	for (size_t i = 0; i < emptyMoveIcons.size(); i++) {
 		emptyMoveIcons[i].draw();
 	}
-	
+
 	for (size_t i = 0; i < moveIcons.size(); i++) {
 		moveIcons[i].draw();
 	}
-	
+
 	for (size_t i = 0; i < emptyHealthIcons.size(); i++) {
 		emptyHealthIcons[i].draw();
 	}
