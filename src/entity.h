@@ -73,6 +73,7 @@ public:
 	virtual void rotateEntity(int direction);
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
+	virtual void startDeathAnimation();
 	virtual void ai(float frameTime, Entity &ent);
 	// To compensate for map movement
 	virtual bool moveInDirection(float frameTime, int direction, Position endPos);

@@ -147,28 +147,28 @@ void ThreeChances::update() {
 				keysPressed[LEFT] = true;
 				lastKeyPressed = LEFT;
 				endPoint = level.getX() + TILE_SIZE * SCALE;
-				player.moveInDirection(levelGrid, monsterGrid, LEFT, endPoint);
+				player.moveInDirection(levelGrid, monsterGrid, LEFT, endPoint, gameControl);
 			}
 
 			if (input->isKeyDown(RIGHT_KEY) && !keysPressed[RIGHT]) {
 				keysPressed[RIGHT] = true;
 				lastKeyPressed = RIGHT;
 				endPoint = level.getX() - TILE_SIZE * SCALE;
-				player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint);
+				player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint, gameControl);
 			}
 
 			if (input->isKeyDown(UP_KEY) && !keysPressed[UP]) {
 				keysPressed[UP] = true;
 				lastKeyPressed = UP;
 				endPoint = level.getY() + TILE_SIZE * SCALE;
-				player.moveInDirection(levelGrid, monsterGrid, UP, endPoint);
+				player.moveInDirection(levelGrid, monsterGrid, UP, endPoint, gameControl);
 			}
 
 			if (input->isKeyDown(DOWN_KEY) && !keysPressed[DOWN]) {
 				keysPressed[DOWN] = true;
 				lastKeyPressed = DOWN;
 				endPoint = level.getY() - TILE_SIZE * SCALE;
-				player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint);
+				player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint, gameControl);
 			}
 		}
 		// Enemy's turn
@@ -179,6 +179,7 @@ void ThreeChances::update() {
 	// Animates sprites for player turn
 	else {
 		int oppDirection = -1;
+		// player direction is set in player.cpp
 		if (player.getDirection() == LEFT)
 			oppDirection = RIGHT;
 		else if (player.getDirection() == RIGHT)
@@ -188,11 +189,13 @@ void ThreeChances::update() {
 		else if (player.getDirection() == DOWN)
 			oppDirection = UP;
 
-		if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
-			level.update(levelGrid, &player);
+		if (player.getDirection() != ATTACK) {
+			if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
+				level.finishAnimating(levelGrid, &player);
+			}
 		}
 
-		// Loop thu monster vec and run 1 by 1
+		// Loop the monster vec and run 1 by 1
 		duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId()));
 		ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId()));
 		// end loop

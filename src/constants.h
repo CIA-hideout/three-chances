@@ -78,7 +78,6 @@ const char HALF_HEART_IMAGE[] = "sprites\\Half_Heart.png";
 const char EMPTY_HEART_IMAGE[] = "sprites\\Empty_Heart.png";
 const char ENEMIES_LEFT_HEADER_IMAGE[] = "sprites\\Enemies_Left_Header.png";
 
-
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 4;
@@ -86,6 +85,8 @@ const float PLAYER_ANIMATION_DELAY = 0.08f;
 const int PLAYER_ATK_START_FRAME = 5;
 const int PLAYER_ATK_END_FRAME = 5;
 const int PLAYER_COLS = 6;
+// const int PLAYER_ATTACK_START_FRAME = 0;
+// const int PLAYER_ATTACK_END_FRAME = 3;
 
 const int DUCK_STANDING_FRAME = 0;
 const int DUCK_WALK_START_FRAME = 0;

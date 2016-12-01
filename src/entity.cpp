@@ -27,6 +27,10 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 }
 
 void Entity::update(float frameTime) {
+	if (this->getHealth() <= 0) {
+		this->startDeathAnimation();
+	}
+
 	// Call the base image update func to update the screen
 	Image::update(frameTime);
 }
@@ -128,4 +132,8 @@ bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) 
 	else {
 		return moveInDirection(frameTime, direction, endPos);
 	}
+}
+
+void Entity::startDeathAnimation() {
+	this->setVisible(false);
 }

@@ -9,7 +9,7 @@ bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
 	return(Image::initialize(gamePtr->getGraphics(), 0, 0, 0, textureM));
 }
 
-void Level::update(LevelGrid *lg, Player *p) {
+void Level::finishAnimating(LevelGrid *lg, Player *p) {
 	// Updates player and levelGrid once the levelGrid sprite has finished moving
 	p->setAnimating(false);
 	p->moveExecuted();
@@ -50,7 +50,6 @@ bool Level::moveInDirection(float frameTime, int direction, float endPoint) {
 			reachedEndPoint = true;
 		}
 		break;
-
 	case DOWN:
 		if (this->getY() < endPoint) {
 			this->setY(this->getY() + VELOCITY * frameTime);

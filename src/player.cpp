@@ -15,19 +15,26 @@ Player::Player() : Entity() {
 Player::~Player() {}
 
 void Player::update(float frameTime, GameControl* gc) {
-	if (this->getMovesLeft() == 0) {
-		gc->setGameState(GAME_STATE::enemy);
-	}
-
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
 		this->setCurrentFrame(PLAYER_STANDING_FRAME);
+
+		// Attack loop is done
+		if (this->getDirection() == ATTACK) {
+			this->setAnimating(false);
+			this->moveExecuted();
+			gc->damageEnemy(this->getDamage());
+		}
+	}
+
+	if (this->getMovesLeft() == 0) {
+		gc->setGameState(GAME_STATE::enemy);
 	}
 
 	Entity::update(frameTime);
 }
-
+ 
 void Player::rotateEntity(int direction) {
 	if (this->getDirection() != direction) {
 		RECT sampleRect = this->getSpriteDataRect();
@@ -58,7 +65,10 @@ void Player::startWalkAnimation() {
 	this->setCurrentFrame(PLAYER_WALK_START_FRAME);
 }
 
-void Player::startAttackAnimation() {}
+void Player::startAttackAnimation() {
+	this->setFrames(PLAYER_ATTACK_START_FRAME, PLAYER_ATTACK_END_FRAME);
+	this->setCurrentFrame(PLAYER_ATTACK_START_FRAME);
+}
 
 bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 	int currentTileValue = levelGrid->getCurrentTileValue();
@@ -76,14 +86,26 @@ bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 	return valid;
 }
 
-void Player::moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, int direction, float endPoint) {
+void Player::moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, 
+	int direction, float endPoint, GameControl* gc) {
 	this->rotateEntity(direction);
 	Coordinates nextCoord = levelGrid->getNextTileCoordinates(direction);
+	int nextTileMonsterId = monsterGrid->getValueAtCoordinates(nextCoord);
 
-	if (this->isValidMove(levelGrid, direction) && monsterGrid->getValueAtCoordinates(nextCoord) == 0) {
+	// Next tile is walkable
+	if (this->isValidMove(levelGrid, direction) && nextTileMonsterId == 0) {
 		levelGrid->moveCurrentTile(direction);
 		this->startWalkAnimation();
 		this->setAnimating(true);
 		this->setEndPoint(endPoint);
+	}
+
+	// Next tile is monster
+	if (nextTileMonsterId > 0) {
+		this->setDirection(ATTACK);
+		this->startAttackAnimation();
+		this->setAnimating(true);
+		gc->setEnemyAttackedId(nextTileMonsterId);
+		printf("next monster tile: %i\n", nextTileMonsterId);
 	}
 }

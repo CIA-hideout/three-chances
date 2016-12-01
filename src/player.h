@@ -23,7 +23,8 @@ public:
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);
-	void moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, int direction, float endPoint);
+	void moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, 
+		int direction, float endPoint, GameControl* gc);
 
 	bool getAnimating() const { return animating; }
 	void setAnimating(bool a) { animating = a; }

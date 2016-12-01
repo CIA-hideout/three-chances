@@ -11,7 +11,7 @@ public:
 	~Level();
 
 	virtual bool initialize(Game *gamePtr, TextureManager *textureM);
-	void update(LevelGrid *levelGrid, Player *player);
+	void finishAnimating(LevelGrid *levelGrid, Player *player);
 	bool moveInDirection(float frameTime, int direction, float endPoint);
 };
 
