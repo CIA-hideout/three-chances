@@ -107,6 +107,7 @@ void ThreeChances::initializeMonsters() {
 	ghost.setX(TILE_SIZE * SCALE * 3);
 	ghost.setY(TILE_SIZE * SCALE * 0);
 
+	gameControl->setPlayer(&player);
 	gameControl->setMonsterVec(mv);
 }
 
@@ -214,7 +215,7 @@ void ThreeChances::enemyAi() {
 	if (ghost.getMovesLeft() > 0) {
 		if (!gameControl->getEnemyAnimating()) {
 			printf("Enemy AI action: ");
-			int action = ghost.ai(frameTime, monsterGrid->findMonsterCoord(ghost.getId()), levelGrid->getCurrentTile());
+			int action = ghost.ai(frameTime, monsterGrid->findMonsterCoord(ghost.getId()), levelGrid->getCurrentTile(), gameControl);
 
 			Coordinates currCoord = monsterGrid->findMonsterCoord(ghost.getId());
 
@@ -238,7 +239,7 @@ void ThreeChances::enemyAi() {
 
 			gameControl->setEnemyAnimating(true);
 		}
-		else {
+		else {		// initialize a single ai move of ghost
 			bool ghostAiComplete = false;
 
 			Position endPos = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId());

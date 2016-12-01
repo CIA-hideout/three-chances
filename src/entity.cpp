@@ -3,6 +3,7 @@
 int currentId = 0;
 
 Entity::Entity() : Image() {
+	timer = 0.0;
 }
 
 Entity::~Entity() {}
@@ -27,10 +28,6 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 }
 
 void Entity::update(float frameTime) {
-	if (this->getHealth() <= 0) {
-		this->startDeathAnimation();
-	}
-
 	// Call the base image update func to update the screen
 	Image::update(frameTime);
 }
@@ -60,6 +57,7 @@ void Entity::rotateEntity(int direction) {
 }
 
 void Entity::setRect() {
+	//printf("%f	 Current frame: %i\n", health, currentFrame);
 	spriteData.rect.left = currentFrame * spriteData.width;
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }

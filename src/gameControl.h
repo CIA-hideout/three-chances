@@ -16,6 +16,7 @@ private:
 	bool enemyAnimating;
 	std::vector<Entity*> monsterVec;
 	int enemyAttackedId;
+	Entity* player;
 
 public:
 	GameControl();
@@ -26,14 +27,17 @@ public:
 	bool getEnemyAnimating() { return enemyAnimating; }
 	std::vector<Entity*> getMonsterVec() { return monsterVec; }
 	int getEnemyAttackedId() { return enemyAttackedId; }
+	Entity* getPlayer() { return player; }
 	
 	// setters
 	void setGameState(GAME_STATE gs) { turnsElapsed++;  gameState = gs; }
 	void setEnemyAnimating(bool ea) { enemyAnimating = ea; }
 	void setMonsterVec(std::vector<Entity*> mv) { monsterVec = mv; }
 	void setEnemyAttackedId(int id) { enemyAttackedId = id; }
+	void setPlayer(Entity* p) { player = p; }
 
-	void damageEnemy(float dmgAmt);
+	void damagePlayer(int id);
+	void damageEnemy();
 
 	// helpers
 	Entity* getPtrToEntity(int id);

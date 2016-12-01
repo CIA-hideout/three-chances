@@ -34,6 +34,7 @@ protected:
 	Position endPoint;
 	bool animating;
 	int action;
+	float timer;
 
 public:
 	Entity();
@@ -51,6 +52,7 @@ public:
 	Position getEndPoint() const { return endPoint; }
 	bool getAnimating() const { return animating; }
 	int getAction() const { return action; }
+	float getTimer() const { return timer; }
 
 	// setters
 	void setId(int i) { id = i; }
@@ -64,6 +66,7 @@ public:
 	void setEndPoint(Position ep) { endPoint = ep; }
 	void setAnimating(bool a) { animating = a; }
 	void setAction(int a) { action = a; }
+	void setTimer(float t) { timer = t; }
 
 	// can be overridden
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
@@ -73,6 +76,7 @@ public:
 	virtual void rotateEntity(int direction);
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
+	virtual void startHurtAnimation() {}
 	virtual void startDeathAnimation();
 	virtual void ai(float frameTime, Entity &ent);
 	// To compensate for map movement

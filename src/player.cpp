@@ -24,7 +24,7 @@ void Player::update(float frameTime, GameControl* gc) {
 		if (this->getDirection() == ATTACK) {
 			this->setAnimating(false);
 			this->moveExecuted();
-			gc->damageEnemy(this->getDamage());
+			gc->damageEnemy();
 		}
 	}
 

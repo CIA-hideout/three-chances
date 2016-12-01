@@ -102,6 +102,7 @@ const int GHOST_WALK_END_FRAME = 3;
 const int GHOST_ATK_START_FRAME = 4;
 const int GHOST_ATK_END_FRAME = 5;
 const float GHOST_ANIMATION_DELAY = 0.25f;
+const int GHOST_HURT_FRAME = 6;
 const int GHOST_COLS = 7;
 
 const int SLUG_STANDING_FRAME = 0;

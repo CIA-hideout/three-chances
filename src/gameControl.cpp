@@ -6,13 +6,20 @@ GameControl::GameControl() {
 	enemyAnimating = false;
 }
 
-void GameControl::damageEnemy(float dmgAmt) {
+void GameControl::damageEnemy() {
 	Entity* entityPtr = this->getPtrToEntity(this->getEnemyAttackedId());
-	int newHealth = entityPtr->getHealth() - dmgAmt;
-	entityPtr->setHealth(newHealth);
+	float newHealth = entityPtr->getHealth() - player->getDamage();
 
-	printf("damage: %f\n", entityPtr->getDamage());
-	printf("animationComplete: %s\n", entityPtr->getAnimating());
+	entityPtr->startHurtAnimation();
+	entityPtr->setHealth(newHealth);
+}
+
+void GameControl::damagePlayer(int id) {
+	Entity* entityPtr = this->getPtrToEntity(id);
+	float newHealth = player->getHealth() - entityPtr->getDamage();
+
+	player->setHealth(newHealth);
+	printf("Health: %f", player->getHealth());
 }
 
 Entity* GameControl::getPtrToEntity(int id) {
