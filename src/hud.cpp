@@ -34,7 +34,7 @@ void Hud::setInitialPosition() {
 	for (size_t i = 0; i < turnIcons.size(); i++) {
 		turnIcons[i].setScale((float)SCALE);
 		turnIcons[i].setX(float(TILE_SIZE * SCALE * (1 + i)));
-		turnIcons[i].setY(TILE_SIZE * SCALE * 7);
+		turnIcons[i].setY(TILE_SIZE * SCALE * 6);
 	}
 }
 
