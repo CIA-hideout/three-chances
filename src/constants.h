@@ -32,7 +32,7 @@ const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";
 const bool FULLSCREEN = false;
 const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE * SCALE;
-const UINT GAME_HEIGHT = (TILE_SIZE * (VIEW_RANGE + 3)) * SCALE; // HUD will be 5 tile size
+const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE; // HUD will be 5 tile size
 
 // Game
 const double PI = 3.14159265;
@@ -74,11 +74,11 @@ const char SWORD_IMAGE[] = "sprites\\sword.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
-const int PLAYER_WALK_END_FRAME = 3;
-const float PLAYER_ANIMATION_DELAY = 0.1f;
-const int PLAYER_ATK_START_FRAME = 4;
-const int PLAYER_ATK_END_FRAME = 4;
-const int PLAYER_COLS = 5;
+const int PLAYER_WALK_END_FRAME = 4;
+const float PLAYER_ANIMATION_DELAY = 0.08f;
+const int PLAYER_ATK_START_FRAME = 5;
+const int PLAYER_ATK_END_FRAME = 5;
+const int PLAYER_COLS = 6;
 
 const int DUCK_STANDING_FRAME = 0;
 const int DUCK_WALK_START_FRAME = 0;
