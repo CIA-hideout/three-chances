@@ -25,6 +25,9 @@ void Hud::initializeTexture(Graphics *graphics) {
 	if (!healthIconTexture.initialize(graphics, HEART_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health icon texture"));
 
+	if (!halfHealthIconTexture.initialize(graphics, HALF_HEART_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing half health icon texture"));
+
 	if (!emptyHealthIconTexture.initialize(graphics, EMPTY_HEART_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing empty health icon texture"));
 
@@ -59,6 +62,14 @@ void Hud::initializeTexture(Graphics *graphics) {
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health icon"));
 
 		healthIcons.push_back(healthIcon);
+	}
+
+	for (int i = 0; i < PLAYER_DATA.health; i++) {
+		Image halfHealthIcon;
+		if (!halfHealthIcon.initialize(graphics, 0, 0, 0, &halfHealthIconTexture))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing half health icon"));
+
+		halfHealthIcons.push_back(halfHealthIcon);
 	}
 
 	for (int i = 0; i < PLAYER_DATA.health; i++) {
@@ -101,6 +112,12 @@ void Hud::setInitialPosition() {
 		healthIcons[i].setY(TILE_SIZE * SCALE * 6 + 32);
 	}
 
+	for (size_t i = 0; i < halfHealthIcons.size(); i++) {
+		halfHealthIcons[i].setScale((float)SCALE);
+		halfHealthIcons[i].setX(float(TILE_SIZE * SCALE * 5 + 32 + (i)* 32));
+		halfHealthIcons[i].setY(TILE_SIZE * SCALE * 6 + 32);
+	}
+
 	for (size_t i = 0; i < emptyHealthIcons.size(); i++) {
 		emptyHealthIcons[i].setScale((float)SCALE);
 		emptyHealthIcons[i].setX(float(TILE_SIZE * SCALE * 5 + 32 + (i)* 32));
@@ -124,6 +141,14 @@ void Hud::update(float frameTime, Player *player) {
 	if (player->getHealth() > -1) {
 		for (int i = healthIcons.size(); i > player->getHealth(); i--) {
 			healthIcons[i - 1].setVisible(false);
+			if (player->getHealth() == 0.5f || player->getHealth() == 1.5f || player->getHealth() == 2.5f) {
+				if (i != healthIcons.size())
+					halfHealthIcons[i].setVisible(false);
+				halfHealthIcons[i - 1].setVisible(true);
+			}
+			else{
+				halfHealthIcons[i - 1].setVisible(false);
+			}
 		}
 	}
 }
@@ -146,6 +171,11 @@ void Hud::draw() {
 	}
 
 	for (size_t i = 0; i < healthIcons.size(); i++) {
+		halfHealthIcons[i].draw();
+		halfHealthIcons[i].setVisible(false);
+	}
+
+	for (size_t i = 0; i < healthIcons.size(); i++) {
 		healthIcons[i].draw();
 	}
 }
@@ -157,6 +187,7 @@ void Hud::releaseAll() {
 	moveIconTexture.onLostDevice();
 	emptyMoveIconTexture.onLostDevice();
 	healthIconTexture.onLostDevice();
+	halfHealthIconTexture.onLostDevice();
 	emptyHealthIconTexture.onLostDevice();
 }
 
@@ -167,5 +198,6 @@ void Hud::resetAll() {
 	moveIconTexture.onResetDevice();
 	emptyMoveIconTexture.onResetDevice();
 	healthIconTexture.onResetDevice();
+	halfHealthIconTexture.onResetDevice();
 	emptyHealthIconTexture.onResetDevice();
 }

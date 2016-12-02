@@ -199,7 +199,7 @@ void ThreeChances::update() {
 		player.update(frameTime, gameControl);
 		hud->update(frameTime, &player);			
 	}
-
+	hud->update(frameTime, &player);
 	// Loop thu monster vec
 	ghost.update(frameTime);
 	// end loop
@@ -229,7 +229,8 @@ void ThreeChances::enemyAi() {
 				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x, currCoord.y + 1));
 				break;
 			case ATTACK:
-				break;
+				player.setHealth((float)player.getHealth() - ghost.getDamage());
+				break;				
 			}
 
 			gameControl->setEnemyAnimating(true);

@@ -74,6 +74,7 @@ const char MOVE_IMAGE[] = "sprites\\Move_Circle.png";
 const char EMPTY_MOVE_IMAGE[] = "sprites\\Empty_Move_Circle.png";
 const char HEALTH_HEADER_IMAGE[] = "sprites\\Health_Header.png";
 const char HEART_IMAGE[] = "sprites\\Heart.png";
+const char HALF_HEART_IMAGE[] = "sprites\\Half_Heart.png";
 const char EMPTY_HEART_IMAGE[] = "sprites\\Empty_Heart.png";
 const char ENEMIES_LEFT_HEADER_IMAGE[] = "sprites\\Enemies_Left_Header.png";
 

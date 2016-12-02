@@ -19,6 +19,7 @@ private:
 	TextureManager moveIconTexture;
 	TextureManager emptyMoveIconTexture;
 	TextureManager healthIconTexture;
+	TextureManager halfHealthIconTexture;
 	TextureManager emptyHealthIconTexture;
 	Image movesHeader;
 	Image healthHeader;
@@ -26,6 +27,7 @@ private:
 	std::vector<Image> moveIcons;
 	std::vector<Image> emptyMoveIcons;
 	std::vector<Image> healthIcons;
+	std::vector<Image> halfHealthIcons;
 	std::vector<Image> emptyHealthIcons;
 	
 	bool initialized;
