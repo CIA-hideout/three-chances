@@ -301,6 +301,7 @@ void ThreeChances::render() {
 	ghost.draw();
 	//slug.draw();
 	hud->draw();
+	movesHeader.draw();
 	sword.draw();
 
 	graphics->spriteEnd();

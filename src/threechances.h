@@ -46,7 +46,7 @@ private:
 	Duck			duck;
 	Ghost			ghost;
 	Slug			slug;
-	Image			hudBg;
+	Image			movesHeader;
 
 	std::map<int, bool> keysPressed;
 	int				lastKeyPressed;

@@ -42,7 +42,7 @@ public:
 	// getters
 	int getId() const { return id; }
 	float getHealth() const { return health; }
-	float getDamamge() const { return damage; }
+	float getDamage() const { return damage; }
 	int getAtkRange() const { return atkRange; }
 	int getMoves() const { return moves; }
 	int getMovesLeft() const { return movesLeft; }
