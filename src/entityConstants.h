@@ -23,7 +23,7 @@ const EntityData DUCK_DATA = {
 
 const EntityData GHOST_DATA = {
 	2.0f,	// health
-	1.0f,	// dmg
+	0.5f,	// dmg
 	1,		// atkRange
 	2,		// moves
 	std::vector < int > { 1, 2 },

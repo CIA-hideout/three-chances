@@ -47,8 +47,6 @@ Ghost::Ghost() : Entity() {
 
 Ghost::~Ghost() {}
 
-
-
 void Ghost::update(float frameTime) {
 	// Need to block stage change and wait till animation is played finish for death
 	if (this->getAnimationComplete()) {

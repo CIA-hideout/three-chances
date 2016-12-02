@@ -122,7 +122,7 @@ void Hud::setInitialPosition() {
 		emptyHealthIcons[i].setScale((float)SCALE);
 		emptyHealthIcons[i].setX(float(TILE_SIZE * SCALE * 5 + 32 + (i)* 32));
 		emptyHealthIcons[i].setY(TILE_SIZE * SCALE * 6 + 32);
-		}
+	}
 }
 
 void Hud::resetMovesHud() {
@@ -146,7 +146,7 @@ void Hud::update(float frameTime, Player *player) {
 					halfHealthIcons[i].setVisible(false);
 				halfHealthIcons[i - 1].setVisible(true);
 			}
-			else{
+			else {
 				halfHealthIcons[i - 1].setVisible(false);
 			}
 		}

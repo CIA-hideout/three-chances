@@ -35,3 +35,15 @@ Entity* GameControl::getPtrToEntity(int id) {
 
 	return tempPtr;
 }
+
+bool GameControl::checkMonstersMovesCompleted() {
+	std::vector<Entity*> monterVec = this->getMonsterVec();
+
+	for (size_t i = 0; i < monsterVec.size(); i++) {
+		if (monsterVec[i]->getMovesLeft() > 0) {
+			return false;
+		}
+	}
+
+	return true;
+}

@@ -51,6 +51,7 @@ public:
 
 	// helpers
 	Entity* getPtrToEntity(int id);
+	bool checkMonstersMovesCompleted();
 };
 
 #endif

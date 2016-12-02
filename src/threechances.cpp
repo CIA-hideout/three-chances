@@ -76,15 +76,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!sword.initialize(this, 112, 112, 4, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
-<<<<<<< HEAD
-	//hud = new Hud;
-	//hud->initializeTexture(graphics);
-
-=======
 	hud = new Hud;
 	hud->initializeTexture(graphics);
 
->>>>>>> Add new sprites
 	// Set map position based off startTile
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
 	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
@@ -114,6 +108,11 @@ void ThreeChances::initializeFonts() {
 }
 
 void ThreeChances::initializeMonsters() {
+	// creating a
+	//Ghost tempGhost;
+	//tempGhost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+
+
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
 	// Add to monster grid
@@ -244,11 +243,11 @@ void ThreeChances::update() {
 				ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId()));
 				// end loop
 				player.update(frameTime, gameControl);
-				hud->update(frameTime, &player);
 			}
 
 			// Loop thu monster vec
 			ghost.update(frameTime);
+			hud->update(frameTime, &player);
 			// end loop
 			resetKeysPressedMap(input, &keysPressed);
 
@@ -277,9 +276,6 @@ void ThreeChances::enemyAi() {
 				break;
 			case DOWN:
 				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x, currCoord.y + 1));
-				break;
-			case ATTACK:
-				player.setHealth((float)player.getHealth() - ghost.getDamage());
 				break;
 			}
 
@@ -326,7 +322,7 @@ void ThreeChances::enemyAi() {
 		ghost.resetMovesLeft();
 		player.resetMovesLeft();
 		// end loop
-		//hud->resetMovesHud();
+		hud->resetMovesHud();
 	}
 }
 
