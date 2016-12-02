@@ -20,7 +20,6 @@ void GameControl::damagePlayer(int id) {
 	float newHealth = player->getHealth() - entityPtr->getDamage();
 
 	player->setHealth(newHealth);
-	//printf("Health: %f", player->getHealth());
 }
 
 void GameControl::cleanupEnemy(MonsterGrid *mg) {

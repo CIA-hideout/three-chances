@@ -73,30 +73,30 @@ void Ghost::update(float frameTime) {
 	Entity::update(frameTime);
 }
 
-bool Ghost::animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord) {
-	int ghostAction = this->getAction();
-	bool ghostAiCompleted = false;
-	Position endPos = mg->getMonsterPos(playerCoord, this->getId());
+bool Ghost::animateAi(float frameTime, MonsterGrid *monsterGrid, Coordinates playerCoord) {
+	int action = this->getAction();
+	bool animationComplete = false;
+	Position endPos = monsterGrid->getMonsterPos(playerCoord, this->getId());
 
-	if (ghostAction == ATTACK) {
+	if (action == ATTACK) {
 		if (this->getAnimationComplete()) {
-			ghostAiCompleted = true;
+			animationComplete = true;
 			this->moveExecuted();
 		}
 	}
-	else if (ghostAction == STAY) {
-		ghostAiCompleted = true;
+	else if (action == STAY) {
+		animationComplete = true;
 		this->setMovesLeft(0);
 	}
-	else if (ghostAction > -1) {
-		if (this->aiMoveInDirection(frameTime, ghostAction, endPos)) {
-			ghostAiCompleted = true;
+	else if (action > -1) {
+		if (this->aiMoveInDirection(frameTime, action, endPos)) {
+			animationComplete = true;
 			this->moveExecuted();
 		}
 	}
 
-	if (ghostAiCompleted) {
-		printf("Enemy moves left: %d\n", this->getMovesLeft());
+	if (animationComplete) {
+		printf("Enemy %d moves left: %d\n", this->getId(), this->getMovesLeft());
 		this->setAnimating(false);
 		return true;
 	}
@@ -104,74 +104,74 @@ bool Ghost::animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord)
 	return false;
 }
 
-void Ghost::initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc) {
+void Ghost::initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid, GameControl *gc) {
 	int action = -1;
 	int directionToAttack;
-	Coordinates monsterCoord = mg->findMonsterCoord(this->getId());
-	this->setAnimating(true);
+	Coordinates monsterCoord = monsterGrid->findMonsterCoord(this->getId());
+	Coordinates playerCoord = levelGrid->getCurrentTile();
 
 	if (targetWithinRange(monsterCoord, playerCoord, 3)) {
 		directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
 
-		// Attack if target is beside
+		// Attack if target is directly beside
 		if (directionToAttack != -1) {
-			this->startAttackAnimation();
 			action = ATTACK;
+			this->rotateEntity(directionToAttack);
+			this->startAttackAnimation();
 			gc->damagePlayer(this->getId());
-			printf(" Attack\n");
 		}
 		// Move if target is out of atk range
 		else {
-			this->startWalkAnimation();
+			std::vector<int> availableMoves = this->getAvailableMoves(monsterGrid, levelGrid, monsterCoord);
 
-			if (monsterCoord.x > playerCoord.x) {
-				action = LEFT;
-				printf(" Left\n");
-			}
-			else if (monsterCoord.x < playerCoord.x) {
-				action = RIGHT;
-				printf(" Right\n");
+			// All directions are blocked. Stay.
+			if (availableMoves.size() == 0) {
+				action = STAY;
 			}
 			else {
-				if (monsterCoord.y > playerCoord.y) {
-					action = UP;
-					printf(" Up\n");
+				std::vector<int> bestMoves = this->getBestMoves(monsterCoord, playerCoord);
+
+				// Get best available move
+				for (size_t i = 0; i < bestMoves.size(); ++i) {
+					for (size_t j = 0; j < availableMoves.size(); ++j) {
+						if (availableMoves[j] == bestMoves[i]) {
+							action = bestMoves[i];
+							break;
+						}
+					}
+
+					if (action != -1) break;
 				}
-				else if (monsterCoord.y < playerCoord.y) {
-					action = DOWN;
-					printf(" Down\n");
-				}
-			}
+
+				// Best move found, move in direction
+				this->rotateEntity(action);
+				this->startWalkAnimation();
+			}                                 
 		}
 	}
 	// Stay if target is out of range
 	else {
 		action = STAY;
-		printf(" Stay\n");
 	}
 
 	switch (action) {
 	case LEFT:
-		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x - 1, monsterCoord.y));
+		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x - 1, monsterCoord.y));
 		break;
 	case RIGHT:
-		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x + 1, monsterCoord.y));
+		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x + 1, monsterCoord.y));
 		break;
 	case UP:
-		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y - 1));
+		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y - 1));
 		break;
 	case DOWN:
-		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y + 1));
+		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y + 1));
 		break;
 	}
 
-	// only rotate for movement and attack actions
-	if (action == ATTACK)
-		this->rotateEntity(directionToAttack);
-	else if (action != STAY)
-		this->rotateEntity(action);
-
+	this->setAnimating(true);
 	this->setAction(action);
+	this->logAction();
 }
 
 void Ghost::rotateEntity(int direction) {
@@ -196,14 +196,14 @@ void Ghost::rotateEntity(int direction) {
 	this->setSpriteDataRect(sampleRect);
 }
 
-void Ghost::startWalkAnimation() {
-	this->setFrames(GHOST_WALK_START_FRAME, GHOST_WALK_END_FRAME);
-	this->setCurrentFrame(GHOST_WALK_START_FRAME);
-}
-
 void Ghost::startAttackAnimation() {
 	this->setFrames(GHOST_ATK_START_FRAME, GHOST_ATK_END_FRAME);
 	this->setCurrentFrame(GHOST_ATK_START_FRAME);
+}
+
+void Ghost::startWalkAnimation() {
+	this->setFrames(GHOST_WALK_START_FRAME, GHOST_WALK_END_FRAME);
+	this->setCurrentFrame(GHOST_WALK_START_FRAME);
 }
 
 void Ghost::startHurtAnimation() {
@@ -214,9 +214,35 @@ void Ghost::startDeathAnimation() {
 	this->setVisible(false);
 }
 
-bool Ghost::isValidMove(LevelGrid *levelGrid, int direction) {
-	int currentTileValue = levelGrid->getCurrentTileValue();
-	int nextTileValue = levelGrid->getNextTileValue(direction);
+void Ghost::logAction() {
+	printf("Enemy %d action: ", this->getId());
+	switch (this->getAction()) {
+	case 0:
+		printf("LEFT\n");
+		break;
+	case 1:
+		printf("RIGHT\n");
+		break;
+	case 2:
+		printf("UP\n");
+		break;
+	case 3:
+		printf("DOWN\n");
+		break;
+	case 4:
+		printf("ATTACK\n");
+		break;
+	case 5:
+		printf("STAY\n");
+		break;
+	default:
+		break;
+	}
+}
+
+bool Ghost::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
+	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
 
 	bool valid = false;
 
@@ -228,4 +254,69 @@ bool Ghost::isValidMove(LevelGrid *levelGrid, int direction) {
 		valid = nextTileValue == 1 || nextTileValue == 2;	// 1st floor or 2nd floor
 
 	return valid;
+}
+
+bool Ghost::isTileEmpty(MonsterGrid *monsterGrid, int direction) {
+	Coordinates currCoord = monsterGrid->findMonsterCoord(this->getId());
+	int nextTileValue = monsterGrid->getNextTileValue(currCoord, direction);
+
+	return nextTileValue == 0;
+}
+
+int Ghost::getBestXmove(int monsterX, int playerX) {
+	if (monsterX > playerX)
+		return LEFT;
+	else if (monsterX < playerX)
+		return RIGHT;
+	
+	return STAY;
+}
+
+int Ghost::getBestYmove(int monsterY, int playerY) {
+	if (monsterY > playerY)
+		return UP;
+	else if (monsterY < playerY)
+		return DOWN;
+
+	return STAY;
+}
+
+std::vector<int> Ghost::getBestMoves(Coordinates monsterCoord, Coordinates playerCoord) {
+	std::vector<int> bestMoves;
+
+	int bestXmove = this->getBestXmove(monsterCoord.x, playerCoord.x);
+	int bestYmove = this->getBestYmove(monsterCoord.y, playerCoord.y);
+
+	if (bestXmove != STAY && bestYmove != STAY) {
+		bestMoves.push_back(bestXmove);
+		bestMoves.push_back(bestYmove);
+		bestMoves.push_back(bestXmove == LEFT ? RIGHT : LEFT);
+		bestMoves.push_back(bestYmove == UP ? DOWN : UP);
+	}
+	else if (bestXmove == STAY) {
+		bestMoves.push_back(bestYmove);
+		bestMoves.push_back(LEFT);
+		bestMoves.push_back(RIGHT);
+		bestMoves.push_back(bestYmove == UP ? DOWN : UP);
+	}
+	else if (bestYmove == STAY) {
+		bestMoves.push_back(bestXmove);
+		bestMoves.push_back(UP);
+		bestMoves.push_back(DOWN);
+		bestMoves.push_back(bestXmove == LEFT ? RIGHT : LEFT);
+	}
+
+	return bestMoves;
+}
+
+std::vector<int> Ghost::getAvailableMoves(MonsterGrid *monsterGrid, LevelGrid *levelGrid, Coordinates monsterCoord) {
+	std::vector<int> moves = { LEFT, RIGHT, UP, DOWN };
+	std::vector<int> availableMoves;
+	for (size_t i = 0; i < moves.size(); ++i) {
+		if (this->isValidMove(levelGrid, monsterCoord, moves[i])
+			&& this->isTileEmpty(monsterGrid, moves[i]))
+			availableMoves.push_back(moves[i]);
+	}
+
+	return availableMoves;
 }

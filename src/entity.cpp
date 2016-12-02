@@ -81,7 +81,6 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setX(this->getX() - VELOCITY * frameTime);
 		}
 		else {
-			//this->setAnimating(false);
 			this->setX(endPos.x);
 			reachedEndPoint = true;
 		}
@@ -91,7 +90,6 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setX(this->getX() + VELOCITY * frameTime);
 		}
 		else {
-			//this->setAnimating(false);
 			this->setX(endPos.x);
 			reachedEndPoint = true;
 		}
@@ -102,7 +100,6 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setY(this->getY() - VELOCITY * frameTime);
 		}
 		else {
-			//this->setAnimating(false);
 			this->setY(endPos.y);
 			reachedEndPoint = true;
 		}
@@ -113,7 +110,6 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setY(this->getY() + VELOCITY * frameTime);
 		}
 		else {
-			//this->setAnimating(false);
 			this->setY(endPos.y);
 			reachedEndPoint = true;
 		}

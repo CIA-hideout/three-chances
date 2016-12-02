@@ -5,6 +5,7 @@
 #include <string>
 #include "image.h"
 #include "game.h"
+#include "levelGrid.h"
 #include "levelConstants.h"
 
 class GameControl;
@@ -87,7 +88,7 @@ public:
 	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
 	// For AI moving
 	virtual bool aiMoveInDirection(float frameTime, int direction, Position endPos);
-	virtual void initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc) {};
+	virtual void initAi(MonsterGrid *mg, LevelGrid *levelGrid, GameControl *gc) {};
 	virtual bool animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord) { return true; };
 
 	virtual void moveExecuted();

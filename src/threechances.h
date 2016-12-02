@@ -8,21 +8,23 @@
 #include <vector>
 #include <stdio.h>
 
-#include "entityConstants.h"
 #include "game.h"
 #include "font.h"
-#include "gameControl.h"
-#include "levelGrid.h"
-#include "hud.h"
 #include "textureManager.h"
+#include "entityConstants.h"
+
+#include "levelGrid.h"
+#include "monsterGrid.h"
+#include "gameControl.h"
+
+#include "hud.h"
 #include "level.h"
+#include "entity.h"
 #include "player.h"
 #include "duck.h"
 #include "ghost.h"
 #include "slug.h"
-#include "monsterGrid.h"
 #include "sword.h"
-#include "entity.h"
 
 class ThreeChances : public Game {
 private:
@@ -66,16 +68,15 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+	void initializeFonts();
+	void initializeMonsters();
 	void update();      // must override pure virtual from Game
-	void ai();          // "
 	void enemyAi();
+	void ai();          // "
 	void collisions();  // "
 	void render();      // "
 	void releaseAll();
 	void resetAll();
-
-	void initializeMonsters();
-	void initializeFonts();
 };
 
 #endif

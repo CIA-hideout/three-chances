@@ -76,31 +76,32 @@ int LevelGrid::getCurrentTileValue() {
 //=============================================================================
 // Returns value of next tile in specified direction from current tile
 //=============================================================================
-int LevelGrid::getNextTileValue(int direction) {
-	Coordinates nextCoord = this->getNextTileCoordinates(direction);
+int LevelGrid::getNextTileValue(Coordinates coordinates, int direction) {
+	Coordinates nextCoord = this->getNextTileCoordinates(coordinates, direction);
 	return this->getTileValueAtCoordinates(nextCoord);
 }
 
-Coordinates LevelGrid::getNextTileCoordinates(int direction) {
+Coordinates LevelGrid::getNextTileCoordinates(Coordinates currCoord, int direction) {
 	Coordinates nextCoord;
 
 	switch (direction) {
 	case LEFT:
-		nextCoord = { currentTile.x - 1, currentTile.y };
+		nextCoord = { currCoord.x - 1, currCoord.y };
 		break;
 	case RIGHT:
-		nextCoord = { currentTile.x + 1, currentTile.y };
+		nextCoord = { currCoord.x + 1, currCoord.y };
 		break;
 	case UP:
-		nextCoord = { currentTile.x, currentTile.y - 1 };
+		nextCoord = { currCoord.x, currCoord.y - 1 };
 		break;
 	case DOWN:
-		nextCoord = { currentTile.x, currentTile.y + 1 };
+		nextCoord = { currCoord.x, currCoord.y + 1 };
 		break;
 	}
 
 	return nextCoord;
 }
+
 
 Coordinates LevelGrid::convertXYToCoord(float x, float y) {
 	return Coordinates( int(x/ SCALE/ TILE_SIZE), int(y/ SCALE /TILE_SIZE));

@@ -1,5 +1,28 @@
 #include "threechances.h"
 
+void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
+	if (!input->isKeyDown(LEFT_KEY))
+		(*keysPressed)[LEFT] = false;
+	if (!input->isKeyDown(RIGHT_KEY))
+		(*keysPressed)[RIGHT] = false;
+	if (!input->isKeyDown(UP_KEY))
+		(*keysPressed)[UP] = false;
+	if (!input->isKeyDown(DOWN_KEY))
+		(*keysPressed)[DOWN] = false;
+}
+
+int findKeyDown(std::map<int, bool> *keysPressed) {
+	if ((*keysPressed)[LEFT])
+		return LEFT;
+	if ((*keysPressed)[RIGHT])
+		return RIGHT;
+	if ((*keysPressed)[UP])
+		return UP;
+	if ((*keysPressed)[DOWN])
+		return DOWN;
+	return -1;
+}
+
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -108,10 +131,6 @@ void ThreeChances::initializeFonts() {
 }
 
 void ThreeChances::initializeMonsters() {
-	// creating a temporary ghost
-	//Ghost tempGhost;
-	//tempGhost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
 	// Add to monster grid
@@ -132,29 +151,6 @@ void ThreeChances::initializeMonsters() {
 	gameControl->setMonsterVec(mv);
 }
 
-void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
-	if (!input->isKeyDown(LEFT_KEY))
-		(*keysPressed)[LEFT] = false;
-	if (!input->isKeyDown(RIGHT_KEY))
-		(*keysPressed)[RIGHT] = false;
-	if (!input->isKeyDown(UP_KEY))
-		(*keysPressed)[UP] = false;
-	if (!input->isKeyDown(DOWN_KEY))
-		(*keysPressed)[DOWN] = false;
-}
-
-int findKeyDown(std::map<int, bool> *keysPressed) {
-	if ((*keysPressed)[LEFT])
-		return LEFT;
-	if ((*keysPressed)[RIGHT])
-		return RIGHT;
-	if ((*keysPressed)[UP])
-		return UP;
-	if ((*keysPressed)[DOWN])
-		return DOWN;
-	return -1;
-}
-
 //=============================================================================
 // Update all game items
 //=============================================================================
@@ -164,11 +160,9 @@ void ThreeChances::update() {
 
 	switch (gs) {
 		case GENERAL_STATE::menu: {
-			// detect space
 			if (input->isKeyDown(SPACE_KEY)) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
 			}
-
 		} break;
 		case GENERAL_STATE::paused: {
 			if (input->isKeyDown(SPACE_KEY)) {
@@ -244,15 +238,14 @@ void ThreeChances::update() {
 					mv[i]->moveInDirection(frameTime, oppDirection, 
 						monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), mv[i]->getId()));
 				}
-				
-				player.update(frameTime, gameControl);
 			}
 
-			// Update monsters
+			// Update sprites
 			for (size_t i = 0; i < mv.size(); i++) {
 				mv[i]->update(frameTime);
 			}
 
+			player.update(frameTime, gameControl);
 			hud->update(frameTime, &player, gameControl->getMonstersLeft());
 			resetKeysPressedMap(input, &keysPressed);
 		} break;
@@ -267,8 +260,7 @@ void ThreeChances::enemyAi() {
 
 		if (entityPtr->getMovesLeft() > 0) {
 			if (!entityPtr->getAnimating()) {
-				printf("Enemy AI %i action:", mv[i]->getId());
-				mv[i]->initAi(monsterGrid, levelGrid->getCurrentTile(), gameControl);
+				mv[i]->initAi(monsterGrid, levelGrid, gameControl);
 			}
 			else {
 				mv[i]->animateAi(frameTime, monsterGrid, levelGrid->getCurrentTile());
@@ -277,14 +269,16 @@ void ThreeChances::enemyAi() {
 	}
 
 	if (gameControl->checkMonstersMovesCompleted()) {
-		printf("Enemy AI complete\n");
+		// Reset moves
 		for (size_t i = 0; i < mv.size(); i++) {
 			mv[i]->resetMovesLeft();
 		}
-
-		gameControl->setGameState(GAME_STATE::player);	
+			
 		player.resetMovesLeft();
 		hud->resetMovesHud();
+
+		// Update game state
+		gameControl->setGameState(GAME_STATE::player);
 		gameControl->setEnemyAnimating(false);
 	}
 	else {
