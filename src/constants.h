@@ -68,9 +68,16 @@ const char PLAYER_MALE_IMAGE[] = "sprites\\Male_Player.png";
 const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
-const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
-const char TURN_ICON[] = "sprites\\white-circle.png";
 const char SWORD_IMAGE[] = "sprites\\sword.png";
+const char MOVES_HEADER_IMAGE[] = "sprites\\Moves_Header.png";
+const char MOVE_IMAGE[] = "sprites\\Move_Circle.png";
+const char EMPTY_MOVE_IMAGE[] = "sprites\\Empty_Move_Circle.png";
+const char HEALTH_HEADER_IMAGE[] = "sprites\\Health_Header.png";
+const char HEART_IMAGE[] = "sprites\\Heart.png";
+const char HALF_HEART_IMAGE[] = "sprites\\Half_Heart.png";
+const char EMPTY_HEART_IMAGE[] = "sprites\\Empty_Heart.png";
+const char ENEMIES_LEFT_HEADER_IMAGE[] = "sprites\\Enemies_Left_Header.png";
+
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;

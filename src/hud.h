@@ -13,10 +13,22 @@
 
 class Hud {
 private:
-	TextureManager hudBgTexture;
-	TextureManager turnIconTexture;
-	Image hudBg;
-	std::vector<Image> turnIcons;
+	TextureManager movesHeaderTexture;
+	TextureManager healthHeaderTexture;
+	TextureManager enemiesLeftHeaderTexture;
+	TextureManager moveIconTexture;
+	TextureManager emptyMoveIconTexture;
+	TextureManager healthIconTexture;
+	TextureManager halfHealthIconTexture;
+	TextureManager emptyHealthIconTexture;
+	Image movesHeader;
+	Image healthHeader;
+	Image enemiesLeftHeader;
+	std::vector<Image> moveIcons;
+	std::vector<Image> emptyMoveIcons;
+	std::vector<Image> healthIcons;
+	std::vector<Image> halfHealthIcons;
+	std::vector<Image> emptyHealthIcons;
 	
 	bool initialized;
 
