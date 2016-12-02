@@ -32,7 +32,6 @@ const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";
 const bool FULLSCREEN = false;
 const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE * SCALE;
-//const UINT GAME_HEIGHT = (TILE_SIZE * (VIEW_RANGE + 3)) * SCALE; // HUD will be 5 tile size
 const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE;
 
 // Game
@@ -92,8 +91,8 @@ const float PLAYER_ANIMATION_DELAY = 0.08f;
 const int PLAYER_ATK_START_FRAME = 5;
 const int PLAYER_ATK_END_FRAME = 5;
 const int PLAYER_COLS = 6;
- const int PLAYER_ATTACK_START_FRAME = 0;
- const int PLAYER_ATTACK_END_FRAME = 3;
+const int PLAYER_ATTACK_START_FRAME = 0;
+const int PLAYER_ATTACK_END_FRAME = 3;
 
 const int DUCK_STANDING_FRAME = 0;
 const int DUCK_WALK_START_FRAME = 0;

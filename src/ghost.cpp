@@ -73,15 +73,50 @@ void Ghost::update(float frameTime) {
 	Entity::update(frameTime);
 }
 
-int Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord, GameControl *gc) {
+bool Ghost::animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord) {
+	int ghostAction = this->getAction();
+	bool ghostAiCompleted = false;
+	Position endPos = mg->getMonsterPos(playerCoord, this->getId());
+
+	if (ghostAction == ATTACK) {
+		if (this->getAnimationComplete()) {
+			ghostAiCompleted = true;
+			this->moveExecuted();
+		}
+	}
+	else if (ghostAction == STAY) {
+		ghostAiCompleted = true;
+		this->setMovesLeft(0);
+	}
+	else if (ghostAction > -1) {
+		if (this->aiMoveInDirection(frameTime, ghostAction, endPos)) {
+			ghostAiCompleted = true;
+			this->moveExecuted();
+		}
+	}
+
+	if (ghostAiCompleted) {
+		printf("Enemy moves left: %d\n", this->getMovesLeft());
+		this->setAnimating(false);
+		return true;
+	}
+
+	return false;
+}
+
+void Ghost::initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc) {
+	int action = -1;
+	int directionToAttack;
+	Coordinates monsterCoord = mg->findMonsterCoord(this->getId());
+	this->setAnimating(true);
+
 	if (targetWithinRange(monsterCoord, playerCoord, 3)) {
-		int directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
+		directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
 
 		// Attack if target is beside
 		if (directionToAttack != -1) {
-			this->rotateEntity(directionToAttack);
 			this->startAttackAnimation();
-			this->setAction(ATTACK);
+			action = ATTACK;
 			gc->damagePlayer(this->getId());
 			printf(" Attack\n");
 		}
@@ -90,20 +125,20 @@ int Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord
 			this->startWalkAnimation();
 
 			if (monsterCoord.x > playerCoord.x) {
-				this->setAction(LEFT);
+				action = LEFT;
 				printf(" Left\n");
 			}
 			else if (monsterCoord.x < playerCoord.x) {
-				this->setAction(RIGHT);
+				action = RIGHT;
 				printf(" Right\n");
 			}
 			else {
 				if (monsterCoord.y > playerCoord.y) {
-					this->setAction(UP);
+					action = UP;
 					printf(" Up\n");
 				}
 				else if (monsterCoord.y < playerCoord.y) {
-					this->setAction(DOWN);
+					action = DOWN;
 					printf(" Down\n");
 				}
 			}
@@ -111,11 +146,32 @@ int Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord
 	}
 	// Stay if target is out of range
 	else {
-		this->setAction(STAY);
+		action = STAY;
 		printf(" Stay\n");
 	}
 
-	return this->getAction();
+	switch (action) {
+	case LEFT:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x - 1, monsterCoord.y));
+		break;
+	case RIGHT:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x + 1, monsterCoord.y));
+		break;
+	case UP:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y - 1));
+		break;
+	case DOWN:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y + 1));
+		break;
+	}
+
+	// only rotate for movement and attack actions
+	if (action == ATTACK)
+		this->rotateEntity(directionToAttack);
+	else if (action != STAY)
+		this->rotateEntity(action);
+
+	this->setAction(action);
 }
 
 void Ghost::rotateEntity(int direction) {

@@ -11,7 +11,7 @@
 class Player : public Entity {
 private:
 	bool	animating;
-	int		direction;
+	int		action;
 	float	endPoint;
 
 public:
@@ -28,9 +28,6 @@ public:
 
 	bool getAnimating() const { return animating; }
 	void setAnimating(bool a) { animating = a; }
-
-	int getDirection() const { return direction; }
-	void setDirection(int d) { direction = d; }
 
 	float getEndPoint() const { return endPoint; }
 	void setEndPoint(float ep) { endPoint = ep; }

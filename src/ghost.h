@@ -14,11 +14,14 @@ public:
 	~Ghost();
 
 	void update(float frameTime);
-	int ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord, GameControl *gc);
 	void rotateEntity(int direction);
 	void startAttackAnimation();
 	void startWalkAnimation();
 	void startHurtAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);
+	
+	// ai woes
+	void initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc);
+	bool animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord);
 };
 #endif

@@ -7,6 +7,9 @@
 #include "game.h"
 #include "levelConstants.h"
 
+class GameControl;
+class MonsterGrid;
+
 namespace entityNS {
 	enum ABILITY_TYPE { TRAVEL_WATER, TRAVEL_LAVA, TRAVEL_WALL, BURNS_PLAYER, SHOOTS_FIRE };
 }
@@ -79,10 +82,13 @@ public:
 	virtual void startHurtAnimation() {}
 	virtual void startDeathAnimation();
 	virtual void ai(float frameTime, Entity &ent);
+	
 	// To compensate for map movement
 	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
 	// For AI moving
 	virtual bool aiMoveInDirection(float frameTime, int direction, Position endPos);
+	virtual void initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc) {};
+	virtual bool animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord) { return true; };
 
 	virtual void moveExecuted();
 	virtual void resetMovesLeft();

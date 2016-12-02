@@ -4,7 +4,6 @@ Player::Player() : Entity() {
 	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
 	this->setLoop(false);
 	animating = false;
-	direction = -1;
 	endPoint = 0.0f;
 
 	// Place player in middle of screen
@@ -21,7 +20,7 @@ void Player::update(float frameTime, GameControl* gc) {
 		this->setCurrentFrame(PLAYER_STANDING_FRAME);
 
 		// Attack loop is done
-		if (this->getDirection() == ATTACK) {
+		if (this->getAction() == ATTACK) {
 			this->setAnimating(false);
 			this->moveExecuted();
 			gc->damageEnemy();
@@ -36,7 +35,7 @@ void Player::update(float frameTime, GameControl* gc) {
 }
  
 void Player::rotateEntity(int direction) {
-	if (this->getDirection() != direction) {
+	if (this->getAction() != direction) {
 		RECT sampleRect = this->getSpriteDataRect();
 
 		if (direction != -1) {
@@ -55,7 +54,7 @@ void Player::rotateEntity(int direction) {
 			sampleRect.bottom = sampleRect.top + TILE_SIZE;
 		}
 
-		this->setDirection(direction);
+		this->setAction(direction);
 		this->setSpriteDataRect(sampleRect);
 	}
 }
@@ -102,7 +101,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid,
 
 	// Next tile is monster
 	if (nextTileMonsterId > 0) {
-		this->setDirection(ATTACK);
+		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);
 		gc->setEnemyAttackedId(nextTileMonsterId);

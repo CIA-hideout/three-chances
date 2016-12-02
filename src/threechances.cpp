@@ -116,15 +116,15 @@ void ThreeChances::initializeMonsters() {
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
 	// Add to monster grid
-	monsterGrid->addMonster(Coordinates(6, 25), duck.getId());
+	//monsterGrid->addMonster(Coordinates(6, 25), duck.getId());
 	monsterGrid->addMonster(Coordinates(5, 25), ghost.getId());
 
 	// Add to monster vec
-	mv.push_back(&duck);
+	//mv.push_back(&duck);
 	mv.push_back(&ghost);
 
-	duck.setX(TILE_SIZE * SCALE * 4);
-	duck.setY(TILE_SIZE * SCALE * 0);
+	//duck.setX(TILE_SIZE * SCALE * 4);
+	//duck.setY(TILE_SIZE * SCALE * 0);
 
 	ghost.setX(TILE_SIZE * SCALE * 3);
 	ghost.setY(TILE_SIZE * SCALE * 0);
@@ -223,23 +223,23 @@ void ThreeChances::update() {
 			else {
 				int oppDirection = -1;
 				// player direction is set in player.cpp
-				if (player.getDirection() == LEFT)
+				if (player.getAction() == LEFT)
 					oppDirection = RIGHT;
-				else if (player.getDirection() == RIGHT)
+				else if (player.getAction() == RIGHT)
 					oppDirection = LEFT;
-				else if (player.getDirection() == UP)
+				else if (player.getAction() == UP)
 					oppDirection = DOWN;
-				else if (player.getDirection() == DOWN)
+				else if (player.getAction() == DOWN)
 					oppDirection = UP;
 
-				if (player.getDirection() != ATTACK) {
+				if (player.getAction() != ATTACK) {
 					if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 						level.finishAnimating(levelGrid, &player);
 					}
 				}
 
 				// Loop the monster vec and run 1 by 1
-				duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId()));
+				//duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId()));
 				ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId()));
 				// end loop
 				player.update(frameTime, gameControl);
@@ -256,73 +256,35 @@ void ThreeChances::update() {
 }
 
 void ThreeChances::enemyAi() {
-	// Loop thu monster vec
-	if (ghost.getMovesLeft() > 0) {
-		if (!gameControl->getEnemyAnimating()) {
-			printf("Enemy AI action: ");
-			int action = ghost.ai(frameTime, monsterGrid->findMonsterCoord(ghost.getId()), levelGrid->getCurrentTile(), gameControl);
+	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
-			Coordinates currCoord = monsterGrid->findMonsterCoord(ghost.getId());
+	for (size_t i = 0; i < mv.size(); i++) {
+		Entity* entityPtr = mv[i];
 
-			switch (action) {
-			case LEFT:
-				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x - 1, currCoord.y));
-				break;
-			case RIGHT:
-				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x + 1, currCoord.y));
-				break;
-			case UP:
-				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x, currCoord.y - 1));
-				break;
-			case DOWN:
-				monsterGrid->moveMonster(currCoord, Coordinates(currCoord.x, currCoord.y + 1));
-				break;
+		if (entityPtr->getMovesLeft() > 0) {
+			if (!entityPtr->getAnimating()) {
+				printf("Enemy AI %i action:", mv[i]->getId());
+				mv[i]->initAi(monsterGrid, levelGrid->getCurrentTile(), gameControl);
 			}
-
-			gameControl->setEnemyAnimating(true);
-		}
-		else {		// initialize a single ai move of ghost
-			bool ghostAiComplete = false;
-
-			Position endPos = monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId());
-
-			int ghostAction = ghost.getAction();
-
-			if (ghostAction == ATTACK) {
-				if (ghost.getAnimationComplete()) {
-					ghostAiComplete = true;
-					ghost.moveExecuted();
-				}
-			}
-			else if (ghostAction == STAY) {
-				ghostAiComplete = true;
-				ghost.setMovesLeft(0);
-			}
-			else if (ghostAction > -1) {
-				if (ghost.aiMoveInDirection(frameTime, ghostAction, endPos)) {
-					ghostAiComplete = true;
-					ghost.moveExecuted();
-				}
-			}
-
-			if (ghostAiComplete) {
-				printf("Enemy moves left: %d\n", ghost.getMovesLeft());
-				gameControl->setEnemyAnimating(false);
+			else {
+				mv[i]->animateAi(frameTime, monsterGrid, levelGrid->getCurrentTile());
 			}
 		}
 	}
-	// end loop
 
-	// run below code once all monsters have moved
-	else {
+	if (gameControl->checkMonstersMovesCompleted()) {
 		printf("Enemy AI complete\n");
-		gameControl->setGameState(GAME_STATE::player);
+		for (size_t i = 0; i < mv.size(); i++) {
+			mv[i]->resetMovesLeft();
+		}
 
-		// Loop monster vec
-		ghost.resetMovesLeft();
+		gameControl->setGameState(GAME_STATE::player);	
 		player.resetMovesLeft();
-		// end loop
 		hud->resetMovesHud();
+		gameControl->setEnemyAnimating(false);
+	}
+	else {
+		gameControl->setEnemyAnimating(true);
 	}
 }
 
@@ -382,7 +344,7 @@ void ThreeChances::render() {
 		case GENERAL_STATE::game: {
 			level.draw();
 			player.draw();
-			duck.draw();
+			//duck.draw();
 			ghost.draw();
 			//slug.draw();
 			hud->draw();
@@ -401,7 +363,7 @@ void ThreeChances::render() {
 void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
-	duckTexture.onLostDevice();
+	//duckTexture.onLostDevice();
 	ghostTexture.onLostDevice();
 	//slugTexture.onLostDevice();
 	swordTexture.onLostDevice();
@@ -419,7 +381,7 @@ void ThreeChances::releaseAll() {
 void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
-	duckTexture.onResetDevice();
+	//duckTexture.onResetDevice();
 	ghostTexture.onResetDevice();
 	//slugTexture.onResetDevice();
 	swordTexture.onResetDevice();

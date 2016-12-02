@@ -22,6 +22,7 @@
 #include "slug.h"
 #include "monsterGrid.h"
 #include "sword.h"
+#include "entity.h"
 
 class ThreeChances : public Game {
 private:

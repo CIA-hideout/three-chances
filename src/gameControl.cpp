@@ -1,7 +1,7 @@
 #include "gameControl.h"
 
 GameControl::GameControl() {
-	generalState = GENERAL_STATE::game;
+	generalState = GENERAL_STATE::menu;
 	gameState = GAME_STATE::player;
 	turnsElapsed = 0;
 	enemyAnimating = false;
@@ -20,7 +20,7 @@ void GameControl::damagePlayer(int id) {
 	float newHealth = player->getHealth() - entityPtr->getDamage();
 
 	player->setHealth(newHealth);
-	printf("Health: %f", player->getHealth());
+	//printf("Health: %f", player->getHealth());
 }
 
 Entity* GameControl::getPtrToEntity(int id) {
