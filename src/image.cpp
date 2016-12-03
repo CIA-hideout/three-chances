@@ -119,14 +119,14 @@ void Image::setCurrentFrame(int c) {
 }
 
 inline void Image::setRect() {
-	//// configure spriteData.rect to draw currentFrame
-	//spriteData.rect.left = (currentFrame % cols) * spriteData.width;
-	//// right edge + 1
-	//spriteData.rect.right = spriteData.rect.left + spriteData.width;
-	//spriteData.rect.top = (currentFrame / cols) * spriteData.height;
-	//// bottom edge + 1
-	//spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
-
-	spriteData.rect.left = currentFrame * spriteData.width;
+	// configure spriteData.rect to draw currentFrame
+	spriteData.rect.left = (currentFrame % cols) * spriteData.width;
+	// right edge + 1
 	spriteData.rect.right = spriteData.rect.left + spriteData.width;
+	spriteData.rect.top = (currentFrame / cols) * spriteData.height;
+	// bottom edge + 1
+	spriteData.rect.bottom = spriteData.rect.top + spriteData.height;
+
+	//spriteData.rect.left = currentFrame * spriteData.width;
+	//spriteData.rect.right = spriteData.rect.left + spriteData.width;
 }

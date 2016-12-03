@@ -32,7 +32,7 @@ const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";
 const bool FULLSCREEN = false;
 const UINT GAME_WIDTH = TILE_SIZE * VIEW_RANGE * SCALE;
-const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE; // HUD will be 5 tile size
+const UINT GAME_HEIGHT = TILE_SIZE * VIEW_RANGE * SCALE;
 
 // Game
 const double PI = 3.14159265;
@@ -77,14 +77,19 @@ const char HEART_IMAGE[] = "sprites\\Heart.png";
 const char HALF_HEART_IMAGE[] = "sprites\\Half_Heart.png";
 const char EMPTY_HEART_IMAGE[] = "sprites\\Empty_Heart.png";
 const char ENEMIES_LEFT_HEADER_IMAGE[] = "sprites\\Enemies_Left_Header.png";
+const char FONT_TEXTURE[] = "resources\\silkscreen.png";
+const char FONT_TEXTURE_INFO[] = "resources\\silkscreen.dat";
 
+const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
+const char MOVE_ICON[] = "sprites\\white-circle.png";
+const char MOVE_OVER_ICON[] = "sprites\\black-circle.png";
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 4;
 const float PLAYER_ANIMATION_DELAY = 0.08f;
-const int PLAYER_ATK_START_FRAME = 5;
-const int PLAYER_ATK_END_FRAME = 5;
+const int PLAYER_ATK_START_FRAME = 0;
+const int PLAYER_ATK_END_FRAME = 3;
 const int PLAYER_COLS = 6;
 
 const int DUCK_STANDING_FRAME = 0;
@@ -101,6 +106,7 @@ const int GHOST_WALK_END_FRAME = 3;
 const int GHOST_ATK_START_FRAME = 4;
 const int GHOST_ATK_END_FRAME = 5;
 const float GHOST_ANIMATION_DELAY = 0.25f;
+const int GHOST_HURT_FRAME = 6;
 const int GHOST_COLS = 7;
 
 const int SLUG_STANDING_FRAME = 0;

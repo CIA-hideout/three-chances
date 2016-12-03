@@ -48,24 +48,76 @@ Ghost::Ghost() : Entity() {
 Ghost::~Ghost() {}
 
 void Ghost::update(float frameTime) {
+	// Need to block stage change and wait till animation is played finish for death
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
 		this->setCurrentFrame(GHOST_STANDING_FRAME);
+		this->setAnimationComplete(false);
+
+		if (this->getHealth() <= 0.0) {
+			this->startDeathAnimation();
+		}
+	}
+
+	if (this->getCurrentFrame() == GHOST_HURT_FRAME) {
+		this->setTimer(this->getTimer() + frameTime);
+
+		if (this->getTimer() > 0.2) {
+			this->setTimer(0.0f);
+			this->setAnimationComplete(true);
+		}
+
 	}
 
 	Entity::update(frameTime);
 }
 
-int Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord) {
+bool Ghost::animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord) {
+	int ghostAction = this->getAction();
+	bool ghostAiCompleted = false;
+	Position endPos = mg->getMonsterPos(playerCoord, this->getId());
+
+	if (ghostAction == ATTACK) {
+		if (this->getAnimationComplete()) {
+			ghostAiCompleted = true;
+			this->moveExecuted();
+		}
+	}
+	else if (ghostAction == STAY) {
+		ghostAiCompleted = true;
+		this->setMovesLeft(0);
+	}
+	else if (ghostAction > -1) {
+		if (this->aiMoveInDirection(frameTime, ghostAction, endPos)) {
+			ghostAiCompleted = true;
+			this->moveExecuted();
+		}
+	}
+
+	if (ghostAiCompleted) {
+		printf("Enemy moves left: %d\n", this->getMovesLeft());
+		this->setAnimating(false);
+		return true;
+	}
+
+	return false;
+}
+
+void Ghost::initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc) {
+	int action = -1;
+	int directionToAttack;
+	Coordinates monsterCoord = mg->findMonsterCoord(this->getId());
+	this->setAnimating(true);
+
 	if (targetWithinRange(monsterCoord, playerCoord, 3)) {
-		int directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
+		directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
 
 		// Attack if target is beside
 		if (directionToAttack != -1) {
-			this->rotateEntity(directionToAttack);
 			this->startAttackAnimation();
-			this->setAction(ATTACK);
+			action = ATTACK;
+			gc->damagePlayer(this->getId());
 			printf(" Attack\n");
 		}
 		// Move if target is out of atk range
@@ -73,20 +125,20 @@ int Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord
 			this->startWalkAnimation();
 
 			if (monsterCoord.x > playerCoord.x) {
-				this->setAction(LEFT);
+				action = LEFT;
 				printf(" Left\n");
 			}
 			else if (monsterCoord.x < playerCoord.x) {
-				this->setAction(RIGHT);
+				action = RIGHT;
 				printf(" Right\n");
 			}
 			else {
 				if (monsterCoord.y > playerCoord.y) {
-					this->setAction(UP);
+					action = UP;
 					printf(" Up\n");
 				}
 				else if (monsterCoord.y < playerCoord.y) {
-					this->setAction(DOWN);
+					action = DOWN;
 					printf(" Down\n");
 				}
 			}
@@ -94,11 +146,32 @@ int Ghost::ai(float frameTime, Coordinates monsterCoord, Coordinates playerCoord
 	}
 	// Stay if target is out of range
 	else {
-		this->setAction(STAY);
+		action = STAY;
 		printf(" Stay\n");
 	}
 
-	return this->getAction();
+	switch (action) {
+	case LEFT:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x - 1, monsterCoord.y));
+		break;
+	case RIGHT:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x + 1, monsterCoord.y));
+		break;
+	case UP:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y - 1));
+		break;
+	case DOWN:
+		mg->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y + 1));
+		break;
+	}
+
+	// only rotate for movement and attack actions
+	if (action == ATTACK)
+		this->rotateEntity(directionToAttack);
+	else if (action != STAY)
+		this->rotateEntity(action);
+
+	this->setAction(action);
 }
 
 void Ghost::rotateEntity(int direction) {
@@ -131,6 +204,14 @@ void Ghost::startWalkAnimation() {
 void Ghost::startAttackAnimation() {
 	this->setFrames(GHOST_ATK_START_FRAME, GHOST_ATK_END_FRAME);
 	this->setCurrentFrame(GHOST_ATK_START_FRAME);
+}
+
+void Ghost::startHurtAnimation() {
+	this->setCurrentFrame(GHOST_HURT_FRAME);
+}
+
+void Ghost::startDeathAnimation() {
+	this->setVisible(false);
 }
 
 bool Ghost::isValidMove(LevelGrid *levelGrid, int direction) {

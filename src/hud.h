@@ -10,6 +10,7 @@
 #include "image.h"
 #include "graphics.h"
 #include "player.h"
+#include "font.h"
 
 class Hud {
 private:
@@ -30,19 +31,21 @@ private:
 	std::vector<Image> halfHealthIcons;
 	std::vector<Image> emptyHealthIcons;
 	
+	Font* enemiesLeftFont;
+
 	bool initialized;
 
 public:
 	Hud();
 	~Hud();
 
-	void initializeTexture(Graphics *graphics);
+	void initializeTexture(Graphics *graphics, TextureManager* fontTM);
 	void setInitialPosition();
 	void resetMovesHud();
-	void update(float frameTime, Player* player);
-	void draw();
+	void update(float frameTime, Player* player, int enemiesLeft);
+	void draw(int enemiesLeft);
+	void drawEnemiesLeft(int enemiesLeft);
 	void releaseAll();
 	void resetAll();
-
 };
 #endif

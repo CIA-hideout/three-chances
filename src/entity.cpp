@@ -3,9 +3,13 @@
 int currentId = 0;
 
 Entity::Entity() : Image() {
+	timer = 0.0;
+	animating = false;
+	action = -1;
 }
 
-Entity::~Entity() {}
+Entity::~Entity() {
+}
 
 bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM, EntityData ed) {
@@ -77,7 +81,7 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setX(this->getX() - VELOCITY * frameTime);
 		}
 		else {
-			this->setAnimating(false);
+			//this->setAnimating(false);
 			this->setX(endPos.x);
 			reachedEndPoint = true;
 		}
@@ -87,7 +91,7 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setX(this->getX() + VELOCITY * frameTime);
 		}
 		else {
-			this->setAnimating(false);
+			//this->setAnimating(false);
 			this->setX(endPos.x);
 			reachedEndPoint = true;
 		}
@@ -98,7 +102,7 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setY(this->getY() - VELOCITY * frameTime);
 		}
 		else {
-			this->setAnimating(false);
+			//this->setAnimating(false);
 			this->setY(endPos.y);
 			reachedEndPoint = true;
 		}
@@ -109,7 +113,7 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 			this->setY(this->getY() + VELOCITY * frameTime);
 		}
 		else {
-			this->setAnimating(false);
+			//this->setAnimating(false);
 			this->setY(endPos.y);
 			reachedEndPoint = true;
 		}
@@ -120,12 +124,8 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 }
 
 bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) {
-	if (!this->getAnimating()) {
-		this->rotateEntity(direction);
-		this->setAnimating(true);
+	if (!this->getAnimating())
 		return false;
-	}
-	else {
+	else
 		return moveInDirection(frameTime, direction, endPos);
-	}
 }
