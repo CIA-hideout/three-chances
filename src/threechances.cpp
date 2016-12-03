@@ -260,7 +260,10 @@ void ThreeChances::enemyAi() {
 
 		if (entityPtr->getMovesLeft() > 0) {
 			if (!entityPtr->getAnimating()) {
-				mv[i]->initAi(monsterGrid, levelGrid, gameControl);
+				mv[i]->initAi(monsterGrid, levelGrid);
+
+				if (mv[i]->getAction() == ATTACK)
+					gameControl->damagePlayer(mv[i]->getId());
 			}
 			else {
 				mv[i]->animateAi(frameTime, monsterGrid, levelGrid->getCurrentTile());
