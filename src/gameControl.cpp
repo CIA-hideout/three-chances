@@ -1,7 +1,7 @@
 #include "gameControl.h"
 
 GameControl::GameControl() {
-	generalState = GENERAL_STATE::menu;
+	generalState = GENERAL_STATE::game;
 	gameState = GAME_STATE::player;
 	turnsElapsed = 0;
 	enemyAnimating = false;
@@ -21,6 +21,26 @@ void GameControl::damagePlayer(int id) {
 
 	player->setHealth(newHealth);
 	//printf("Health: %f", player->getHealth());
+}
+
+void GameControl::cleanupEnemy(MonsterGrid *mg) {
+	std::vector<Entity*> mv = this->getMonsterVec();
+	std::vector<int> indexToRemove;
+
+	for (size_t i = 0; i < mv.size(); i++) {
+		if (mv[i]->getHealth() <= 0.0f) {
+			mv[i]->setVisible(false);
+			mg->removeMonster(mv[i]->getId());
+			indexToRemove.push_back(i);
+			mv[i] = NULL;
+		}
+	}
+
+	for (size_t i = 0; i < indexToRemove.size(); i++) {
+		mv.erase(mv.begin() + indexToRemove[i]);
+	}
+
+	this->setMonsterVec(mv);
 }
 
 Entity* GameControl::getPtrToEntity(int id) {
@@ -46,4 +66,9 @@ bool GameControl::checkMonstersMovesCompleted() {
 	}
 
 	return true;
+}
+
+int GameControl::getMonstersLeft() {
+	std::vector<Entity*> monterVec = this->getMonsterVec();
+	return monsterVec.size();
 }

@@ -6,7 +6,7 @@ Hud::~Hud() {
 	releaseAll();
 }
 
-void Hud::initializeTexture(Graphics *graphics) {
+void Hud::initializeTexture(Graphics *graphics, TextureManager *fontTM) {
 	if (!movesHeaderTexture.initialize(graphics, MOVES_HEADER_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing moves header texture"));
 
@@ -80,6 +80,10 @@ void Hud::initializeTexture(Graphics *graphics) {
 		emptyHealthIcons.push_back(emptyHealthIcon);
 	}
 
+	enemiesLeftFont = new Font();
+	enemiesLeftFont->initialize(graphics, 128, 128, 16, fontTM);
+	enemiesLeftFont->loadTextData(FONT_TEXTURE_INFO);
+
 	initialized = true;
 }
 
@@ -131,7 +135,7 @@ void Hud::resetMovesHud() {
 	}
 }
 
-void Hud::update(float frameTime, Player *player) {
+void Hud::update(float frameTime, Player *player, int enemiesLeft) {
 	if (player->getMovesLeft() > -1) {
 		for (int i = moveIcons.size(); i > player->getMovesLeft(); i--) {
 			moveIcons[i - 1].setVisible(false);
@@ -151,9 +155,11 @@ void Hud::update(float frameTime, Player *player) {
 			}
 		}
 	}
+
+	this->drawEnemiesLeft(enemiesLeft);
 }
 
-void Hud::draw() {
+void Hud::draw(int enemiesLeft) {
 	movesHeader.draw();
 	healthHeader.draw();
 	enemiesLeftHeader.draw();
@@ -177,6 +183,36 @@ void Hud::draw() {
 
 	for (size_t i = 0; i < healthIcons.size(); i++) {
 		healthIcons[i].draw();
+	}
+
+	this->drawEnemiesLeft(enemiesLeft);
+}
+
+void Hud::drawEnemiesLeft(int enemiesLeft) {
+	// set scale based on global scale
+	if (SCALE == 1) {
+		enemiesLeftFont->setScale(0.15f);
+		enemiesLeftFont->Print(
+			TILE_SIZE * SCALE * 6 + 4,
+			TILE_SIZE - 17,
+			std::to_string(enemiesLeft)
+			);
+	}
+	else if (SCALE == 2) {
+		enemiesLeftFont->setScale(0.3f);
+		enemiesLeftFont->Print(
+			TILE_SIZE * SCALE * 6 + 5,
+			TILE_SIZE - 5,
+			std::to_string(enemiesLeft)
+			);
+	}
+	else if (SCALE == 3) {
+		enemiesLeftFont->setScale(0.5f);
+		enemiesLeftFont->Print(
+			TILE_SIZE * SCALE * 6 + 5,
+			TILE_SIZE + 7,
+			std::to_string(enemiesLeft)
+			);
 	}
 }
 

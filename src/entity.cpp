@@ -8,7 +8,8 @@ Entity::Entity() : Image() {
 	action = -1;
 }
 
-Entity::~Entity() {}
+Entity::~Entity() {
+}
 
 bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM, EntityData ed) {
@@ -123,16 +124,8 @@ bool Entity::moveInDirection(float frameTime, int direction, Position endPos) {
 }
 
 bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) {
-	if (!this->getAnimating()) {
-		//this->rotateEntity(direction);
-		//this->setAnimating(true);
+	if (!this->getAnimating())
 		return false;
-	}
-	else {
+	else
 		return moveInDirection(frameTime, direction, endPos);
-	}
-}
-
-void Entity::startDeathAnimation() {
-	this->setVisible(false);
 }

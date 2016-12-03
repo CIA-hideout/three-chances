@@ -18,6 +18,7 @@ public:
 	void startAttackAnimation();
 	void startWalkAnimation();
 	void startHurtAnimation();
+	void startDeathAnimation();
 	bool isValidMove(LevelGrid *levelGrid, int direction);
 	
 	// ai woes

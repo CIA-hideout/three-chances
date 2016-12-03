@@ -77,7 +77,7 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
 	hud = new Hud;
-	hud->initializeTexture(graphics);
+	hud->initializeTexture(graphics, &fontTexture);
 
 	// Set map position based off startTile
 	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
@@ -108,10 +108,9 @@ void ThreeChances::initializeFonts() {
 }
 
 void ThreeChances::initializeMonsters() {
-	// creating a
+	// creating a temporary ghost
 	//Ghost tempGhost;
 	//tempGhost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
@@ -161,6 +160,7 @@ int findKeyDown(std::map<int, bool> *keysPressed) {
 //=============================================================================
 void ThreeChances::update() {
 	GENERAL_STATE gs = gameControl->getGeneralState();
+	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
 	switch (gs) {
 		case GENERAL_STATE::menu: {
@@ -182,6 +182,8 @@ void ThreeChances::update() {
 
 			// Check no animation currently running
 			if (!player.getAnimating()) {
+				gameControl->cleanupEnemy(monsterGrid);
+
 				// Check if it's player's turn
 				if (gameControl->getGameState() == GAME_STATE::player) {
 					float endPoint;
@@ -238,19 +240,21 @@ void ThreeChances::update() {
 					}
 				}
 
-				// Loop the monster vec and run 1 by 1
-				//duck.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), duck.getId()));
-				ghost.moveInDirection(frameTime, oppDirection, monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), ghost.getId()));
-				// end loop
+				for (size_t i = 0; i < mv.size(); i++) {
+					mv[i]->moveInDirection(frameTime, oppDirection, 
+						monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), mv[i]->getId()));
+				}
+				
 				player.update(frameTime, gameControl);
 			}
 
-			// Loop thu monster vec
-			ghost.update(frameTime);
-			hud->update(frameTime, &player);
-			// end loop
-			resetKeysPressedMap(input, &keysPressed);
+			// Update monsters
+			for (size_t i = 0; i < mv.size(); i++) {
+				mv[i]->update(frameTime);
+			}
 
+			hud->update(frameTime, &player, gameControl->getMonstersLeft());
+			resetKeysPressedMap(input, &keysPressed);
 		} break;
 	}
 }
@@ -347,7 +351,7 @@ void ThreeChances::render() {
 			//duck.draw();
 			ghost.draw();
 			//slug.draw();
-			hud->draw();
+			hud->draw(gameControl->getMonstersLeft());
 			movesHeader.draw();
 			sword.draw();
 		} break;

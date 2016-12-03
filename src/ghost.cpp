@@ -210,6 +210,10 @@ void Ghost::startHurtAnimation() {
 	this->setCurrentFrame(GHOST_HURT_FRAME);
 }
 
+void Ghost::startDeathAnimation() {
+	this->setVisible(false);
+}
+
 bool Ghost::isValidMove(LevelGrid *levelGrid, int direction) {
 	int currentTileValue = levelGrid->getCurrentTileValue();
 	int nextTileValue = levelGrid->getNextTileValue(direction);

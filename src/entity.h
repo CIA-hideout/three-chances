@@ -80,7 +80,7 @@ public:
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void startHurtAnimation() {}
-	virtual void startDeathAnimation();
+	virtual void startDeathAnimation() {}
 	virtual void ai(float frameTime, Entity &ent);
 	
 	// To compensate for map movement

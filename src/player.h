@@ -11,7 +11,6 @@
 class Player : public Entity {
 private:
 	bool	animating;
-	int		action;
 	float	endPoint;
 
 public:

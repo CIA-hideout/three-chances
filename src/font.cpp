@@ -56,8 +56,10 @@ void Font::Print(int x, int y, std::string text) {
 	int fy = y;
 
 	for (int i = 0; i < text.length(); i++) {
-
 		int frame = (int)text[i] - '!' + 1;
+		if (isdigit(text[i]))
+			frame += 32;
+
 		setCurrentFrame(frame);
 		setX(fx);
 		setY(fy);

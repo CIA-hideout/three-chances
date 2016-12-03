@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "entity.h"
+#include "monsterGrid.h"
 
 enum class GAME_STATE : char {
 	player = 'p',
@@ -48,10 +49,12 @@ public:
 
 	void damagePlayer(int id);
 	void damageEnemy();
+	void cleanupEnemy(MonsterGrid* mg);
 
 	// helpers
 	Entity* getPtrToEntity(int id);
 	bool checkMonstersMovesCompleted();
+	int getMonstersLeft();
 };
 
 #endif

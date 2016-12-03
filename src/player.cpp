@@ -65,8 +65,8 @@ void Player::startWalkAnimation() {
 }
 
 void Player::startAttackAnimation() {
-	this->setFrames(PLAYER_ATTACK_START_FRAME, PLAYER_ATTACK_END_FRAME);
-	this->setCurrentFrame(PLAYER_ATTACK_START_FRAME);
+	this->setFrames(PLAYER_ATK_START_FRAME, PLAYER_ATK_END_FRAME);
+	this->setCurrentFrame(PLAYER_ATK_START_FRAME);
 }
 
 bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
