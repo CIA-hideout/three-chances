@@ -45,9 +45,9 @@ public:
 	// Getting tile value
 	int getTileValueAtCoordinates(Coordinates coordinates);
 	int getCurrentTileValue();
-	int getNextTileValue(int direction);
+	int getNextTileValue(Coordinates coordinates, int direction);
 
-	Coordinates getNextTileCoordinates(int direction);
+	Coordinates getNextTileCoordinates(Coordinates currCoord, int direction);
 	Coordinates convertXYToCoord(float x, float y);
 
 	std::string getCurrentTileType();

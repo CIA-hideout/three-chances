@@ -32,17 +32,19 @@ void Duck::startAttackAnimation() {
 }
 
 bool Duck::isValidMove(LevelGrid *levelGrid, int direction) {
-	int currentTileValue = levelGrid->getCurrentTileValue();
-	int nextTileValue = levelGrid->getNextTileValue(direction);
+	//int currentTileValue = levelGrid->getCurrentTileValue();
+	//int nextTileValue = levelGrid->getNextTileValue(direction);
 
-	bool valid = false;
+	//bool valid = false;
 
-	if (currentTileValue == 1)								// 1st floor
-		valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
-	else if (currentTileValue == 2)							// 2nd floor
-		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
-	else if (currentTileValue == 3)							// Stairs
-		valid = nextTileValue == 1 || nextTileValue == 2;	// 1st floor or 2nd floor
+	//if (currentTileValue == 1)								// 1st floor
+	//	valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
+	//else if (currentTileValue == 2)							// 2nd floor
+	//	valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
+	//else if (currentTileValue == 3)							// Stairs
+	//	valid = nextTileValue == 1 || nextTileValue == 2;	// 1st floor or 2nd floor
 
-	return valid;
+	//return valid;
+
+	return false;
 }

@@ -28,6 +28,32 @@ int MonsterGrid::getValueAtCoordinates(Coordinates coordinates) {
 	return grid[coordinates.y][coordinates.x];
 }
 
+int MonsterGrid::getNextTileValue(Coordinates coordinates, int direction) {
+	Coordinates nextCoord = this->getNextTileCoordinates(coordinates, direction);
+	return this->getValueAtCoordinates(nextCoord);
+}
+
+Coordinates MonsterGrid::getNextTileCoordinates(Coordinates currCoord, int direction) {
+	Coordinates nextCoord;
+
+	switch (direction) {
+	case LEFT:
+		nextCoord = { currCoord.x - 1, currCoord.y };
+		break;
+	case RIGHT:
+		nextCoord = { currCoord.x + 1, currCoord.y };
+		break;
+	case UP:
+		nextCoord = { currCoord.x, currCoord.y - 1 };
+		break;
+	case DOWN:
+		nextCoord = { currCoord.x, currCoord.y + 1 };
+		break;
+	}
+
+	return nextCoord;
+}
+
 Coordinates MonsterGrid::findMonsterCoord(int id) {
 	for (size_t i = 0; i < grid.size(); ++i) {
 		for (size_t j = 0; j < grid[i].size(); ++j) {
@@ -54,8 +80,6 @@ Position MonsterGrid::getMonsterPos(Coordinates currentTile, int id) {
 	
 	return Position(-1.0, -1.0);
 }
-
-
 
 void MonsterGrid::addMonster(Coordinates coord, int id) {
 	grid[coord.y][coord.x] = id;

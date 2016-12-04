@@ -71,7 +71,7 @@ void Player::startAttackAnimation() {
 
 bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 	int currentTileValue = levelGrid->getCurrentTileValue();
-	int nextTileValue = levelGrid->getNextTileValue(direction);
+	int nextTileValue = levelGrid->getNextTileValue(levelGrid->getCurrentTile(), direction);
 
 	bool valid = false;
 
@@ -80,7 +80,7 @@ bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 	else if (currentTileValue == 2)							// 2nd floor
 		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
 	else if (currentTileValue == 3)							// Stairs
-		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor
+		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor or stairs
 
 	return valid;
 }
@@ -88,23 +88,24 @@ bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
 void Player::moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, 
 	int direction, float endPoint, GameControl* gc) {
 	this->rotateEntity(direction);
-	Coordinates nextCoord = levelGrid->getNextTileCoordinates(direction);
+
+	Coordinates nextCoord = levelGrid->getNextTileCoordinates(levelGrid->getCurrentTile(), direction);
 	int nextTileMonsterId = monsterGrid->getValueAtCoordinates(nextCoord);
 
-	// Next tile is walkable
-	if (this->isValidMove(levelGrid, direction) && nextTileMonsterId == 0) {
-		levelGrid->moveCurrentTile(direction);
-		this->startWalkAnimation();
-		this->setAnimating(true);
-		this->setEndPoint(endPoint);
-	}
-
-	// Next tile is monster
+	// Check if there is a mosnter on the next tile
 	if (nextTileMonsterId > 0) {
 		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);
 		gc->setEnemyAttackedId(nextTileMonsterId);
 		printf("next monster tile: %i\n", nextTileMonsterId);
+	}
+
+	// Check if player can move to next tile
+	else if (this->isValidMove(levelGrid, direction) && nextTileMonsterId == 0) {
+		levelGrid->moveCurrentTile(direction);
+		this->startWalkAnimation();
+		this->setAnimating(true);
+		this->setEndPoint(endPoint);
 	}
 }

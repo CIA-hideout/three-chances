@@ -17,7 +17,11 @@ public:
 	std::vector<std::vector<int>> getGrid() { return grid; }
 
 	void logLayout();
+
 	int getValueAtCoordinates(Coordinates coordinates);
+	int getNextTileValue(Coordinates coordinates, int direction);
+
+	Coordinates getNextTileCoordinates(Coordinates currCoord, int direction);
 
 	Coordinates findMonsterCoord(int id);
 	Position getMonsterPos(Coordinates currentTile, int id);

@@ -1,12 +1,8 @@
 #ifndef _GHOST_H
 #define _GHOST_H
 
+#include <vector>
 #include "entity.h"
-#include "input.h"
-#include "player.h"
-#include "levelGrid.h"
-#include "monsterGrid.h"
-#include "gameControl.h"
 
 class Ghost : public Entity {
 public:
@@ -19,10 +15,7 @@ public:
 	void startWalkAnimation();
 	void startHurtAnimation();
 	void startDeathAnimation();
-	bool isValidMove(LevelGrid *levelGrid, int direction);
-	
-	// ai woes
-	void initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc);
-	bool animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord);
+
+	bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);
 };
 #endif

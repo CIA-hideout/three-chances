@@ -3,8 +3,10 @@
 
 #include <vector>
 #include <string>
-#include "image.h"
 #include "game.h"
+#include "image.h"
+#include "levelGrid.h"
+#include "monsterGrid.h"
 #include "levelConstants.h"
 
 class GameControl;
@@ -26,7 +28,7 @@ struct EntityData {
 class Entity: public Image {
 protected:
 	int id;
-	float health;	// there is 0.5 dmg
+	float health;
 	float damage;
 	int atkRange;
 	int moves;
@@ -75,23 +77,36 @@ public:
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM, EntityData ed);
 	virtual void update(float frameTime);
+	virtual void ai(float frameTime, Entity &ent);
 	virtual void setRect();
 	virtual void rotateEntity(int direction);
+	virtual void moveExecuted();
+	virtual void resetMovesLeft();
+
 	virtual void startAttackAnimation() {}
 	virtual void startWalkAnimation() {}
 	virtual void startHurtAnimation() {}
 	virtual void startDeathAnimation() {}
-	virtual void ai(float frameTime, Entity &ent);
 	
 	// To compensate for map movement
 	virtual bool moveInDirection(float frameTime, int direction, Position endPos);
+
 	// For AI moving
 	virtual bool aiMoveInDirection(float frameTime, int direction, Position endPos);
-	virtual void initAi(MonsterGrid *mg, Coordinates playerCoord, GameControl *gc) {};
-	virtual bool animateAi(float frameTime, MonsterGrid *mg, Coordinates playerCoord) { return true; };
 
-	virtual void moveExecuted();
-	virtual void resetMovesLeft();
+	virtual void logAction();
+
+	virtual void initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid);
+	virtual bool animateAi(float frameTime, MonsterGrid *monsterGrid, Coordinates playerCoord);
+	
+	virtual bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);
+	virtual bool isTileEmpty(MonsterGrid *monsterGrid, int direction);
+
+	virtual int getBestXmove(int monsterX, int playerX);
+	virtual int getBestYmove(int monsterY, int playerY);
+
+	virtual std::vector<int> getBestMoves(Coordinates monsterCoord, Coordinates playerCoord);
+	virtual std::vector<int> getAvailableMoves(MonsterGrid *monsterGrid, LevelGrid *levelGrid, Coordinates monsterCoord);
 };
 
 #endif
