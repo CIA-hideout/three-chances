@@ -86,6 +86,8 @@ bool Ghost::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int directi
 		valid = nextTileValue == 2 || nextTileValue == 3 || nextTileValue == 5;
 	else if (currentTileValue == 3)
 		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;
+	else if (currentTileValue == 5)
+		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3 || nextTileValue == 5;
 
 	return valid;
 }

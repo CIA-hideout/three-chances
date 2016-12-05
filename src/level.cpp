@@ -4,9 +4,10 @@ Level::Level() : Image() {}
 
 Level::~Level() {}
 
-bool Level::initialize(Game *gamePtr, TextureManager *textureM) {
+bool Level::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
+	pathBlocked = true;
 	this->setScale((float)SCALE);
-	return(Image::initialize(gamePtr->getGraphics(), 0, 0, 0, textureM));
+	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }
 
 void Level::finishAnimating(LevelGrid *lg, Player *p) {
@@ -62,4 +63,10 @@ bool Level::moveInDirection(float frameTime, int direction, float endPoint) {
 	}
 
 	return reachedEndPoint;
+}
+
+void Level::removeBlockage() {
+	printf("Blockage removed\n");
+	this->setPathBlocked(false);
+	this->setCurrentFrame(1);
 }

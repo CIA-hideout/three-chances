@@ -25,6 +25,7 @@
 //-----------------------------------------------
 const int SCALE = 2;
 const int TILE_SIZE = 32;
+const int LEVEL_SIZE = TILE_SIZE * 32;
 const int VIEW_RANGE = 7;
 
 // Window
@@ -62,7 +63,7 @@ const int ATTACK = 4;
 const int STAY = 5;
 
 // Sprites
-const char LEVEL_1_IMAGE[] = "sprites\\level 1 v2.png";
+const char LEVEL_1_IMAGE[] = "sprites\\LEVEL1_Final.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
 const char PLAYER_MALE_IMAGE[] = "sprites\\Male_Player.png";
 const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
@@ -84,12 +85,14 @@ const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
 const char MOVE_ICON[] = "sprites\\white-circle.png";
 const char MOVE_OVER_ICON[] = "sprites\\black-circle.png";
 
+const int LEVEL_COLS = 2;
+
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 4;
-const float PLAYER_ANIMATION_DELAY = 0.08f;
 const int PLAYER_ATK_START_FRAME = 0;
 const int PLAYER_ATK_END_FRAME = 3;
+const float PLAYER_ANIMATION_DELAY = 0.08f;
 const int PLAYER_COLS = 6;
 
 const int DUCK_STANDING_FRAME = 0;
