@@ -49,7 +49,7 @@ private:
 	Player			player;
 	Sword			sword;
 	Duck			duck;
-	Ghost			ghost;
+	//Ghost			ghost;
 	Slug			slug;
 	Image			movesHeader;
 
