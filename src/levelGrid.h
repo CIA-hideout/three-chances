@@ -53,6 +53,8 @@ public:
 	std::string getCurrentTileType();
 
 	void moveCurrentTile(int direction);
+
+	void removeBlockage() { layout = STAGE_1_LAYOUT_CLEAR; };
 };
 
 #endif

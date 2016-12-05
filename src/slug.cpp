@@ -9,39 +9,6 @@ Slug::~Slug() {}
 
 void Slug::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
 	Entity::update(frameTime);
-
-	if (this->getAnimationComplete()) {
-		// Clean up
-		this->setFrames(0, 0);
-		this->setCurrentFrame(SLUG_STANDING_FRAME);
-	}
-	if (input->isKeyDown(LEFT_KEY) && !(*keysPressed)["LEFT"]) {
-		if (player.isValidMove(levelGrid, LEFT)) {
-			this->setX(this->getX() + TILE_SIZE * SCALE);
-			this->rotateEntity("LEFT", true);
-		}
-	}
-
-	if (input->isKeyDown(RIGHT_KEY) && !(*keysPressed)["RIGHT"]) {
-		if (player.isValidMove(levelGrid, RIGHT)) {
-			this->setX(this->getX() - TILE_SIZE * SCALE);
-			this->rotateEntity("RIGHT", true);
-		}
-	}
-
-	if (input->isKeyDown(UP_KEY) && !(*keysPressed)["UP"]) {
-		if (player.isValidMove(levelGrid, UP)) {
-			this->setY(this->getY() + TILE_SIZE * SCALE);
-			this->rotateEntity("UP", true);
-		}
-	}
-
-	if (input->isKeyDown(DOWN_KEY) && !(*keysPressed)["DOWN"]) {
-		if (player.isValidMove(levelGrid, DOWN)) {
-			this->setY(this->getY() - TILE_SIZE * SCALE);
-			this->rotateEntity("DOWN", true);
-		}
-	}
 }
 
 void Slug::ai(float frameTime, Entity &ent) {

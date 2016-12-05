@@ -81,7 +81,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
-	if (!level.initialize(this, &levelTexture))
+	if (!level.initialize(this, LEVEL_SIZE, LEVEL_SIZE, LEVEL_COLS, &levelTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
@@ -247,6 +247,13 @@ void ThreeChances::update() {
 
 			player.update(frameTime, gameControl);
 			hud->update(frameTime, &player, gameControl->getMonstersLeft());
+
+			// Remove blockage on level if monsters left == 0
+			if (gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
+				level.removeBlockage();
+				levelGrid->removeBlockage();
+			}
+
 			resetKeysPressedMap(input, &keysPressed);
 		} break;
 	}
