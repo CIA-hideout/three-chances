@@ -68,6 +68,7 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+	void restartGame();
 	void initializeFonts();
 	void initializeMonsters();
 	void update();      // must override pure virtual from Game

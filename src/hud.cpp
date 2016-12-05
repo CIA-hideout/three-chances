@@ -135,6 +135,16 @@ void Hud::resetMovesHud() {
 	}
 }
 
+void Hud::resetHealthHud() {
+	for (int i = 0; i < healthIcons.size(); i++) {
+		healthIcons[i].setVisible(true);
+	}
+
+	for (int i = 0; i < halfHealthIcons.size(); i++) {
+		halfHealthIcons[i].setVisible(true);
+	}
+}
+
 void Hud::update(float frameTime, Player *player, int enemiesLeft) {
 	if (player->getMovesLeft() > -1) {
 		for (int i = moveIcons.size(); i > player->getMovesLeft(); i--) {
@@ -145,11 +155,13 @@ void Hud::update(float frameTime, Player *player, int enemiesLeft) {
 	if (player->getHealth() > -1) {
 		for (int i = healthIcons.size(); i > player->getHealth(); i--) {
 			healthIcons[i - 1].setVisible(false);
-			if (player->getHealth() == 0.5f || player->getHealth() == 1.5f || player->getHealth() == 2.5f) {
+
+			if (player->getHealth() - (long)player->getHealth() == 0.5f) {
 				if (i != healthIcons.size())
 					halfHealthIcons[i].setVisible(false);
 				halfHealthIcons[i - 1].setVisible(true);
 			}
+
 			else {
 				halfHealthIcons[i - 1].setVisible(false);
 			}
@@ -171,7 +183,7 @@ void Hud::draw(int enemiesLeft) {
 	for (size_t i = 0; i < moveIcons.size(); i++) {
 		moveIcons[i].draw();
 	}
-
+	
 	for (size_t i = 0; i < emptyHealthIcons.size(); i++) {
 		emptyHealthIcons[i].draw();
 	}

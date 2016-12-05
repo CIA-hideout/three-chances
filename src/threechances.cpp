@@ -102,10 +102,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
 
-	// Set map position based off startTile
-	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
-	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
-
 	//slug.setX(TILE_SIZE * SCALE * 2);
 	//slug.setY(TILE_SIZE * SCALE * 0);
 
@@ -114,8 +110,34 @@ void ThreeChances::initialize(HWND hwnd) {
 	hud->setInitialPosition();
 	//monsterGrid->logLayout();
 	sword.setDirection(DOWN);
-
+	
 	return;
+}
+
+void ThreeChances::restartGame() {
+	// Clear mv
+
+	std::vector<Entity*> mv;
+	gameControl->setGameState(GAME_STATE::player);
+	gameControl->setMonsterVec(mv);
+
+	// initialize level grid
+	levelGrid = new LevelGrid;
+	levelGrid->initialize(1);
+
+	// initialize monster grid
+	monsterGrid = new MonsterGrid;
+
+	player.setHealth(PLAYER_DATA.health);
+	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setAnimating(false);
+
+	level.setX(levelNS::X);
+	level.setY(levelNS::Y);
+	
+	hud->resetMovesHud();
+	hud->resetHealthHud();
+	this->initializeMonsters();
 }
 
 void ThreeChances::initializeFonts() {
@@ -189,13 +211,14 @@ void ThreeChances::update() {
 		case GENERAL_STATE::gameOver: {
 			if (input->isKeyDown(ESC_KEY)) {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
+				this->restartGame();
 			}
 		} break;
 		case GENERAL_STATE::game: {
 			if (input->isKeyDown(ESC_KEY)) {
 				gameControl->setGeneralState(GENERAL_STATE::paused);
 			}
-
+			
 			// Check no animation currently running
 			if (!player.getAnimating()) {
 				gameControl->cleanupEnemy(monsterGrid);

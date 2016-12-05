@@ -6,9 +6,8 @@ Player::Player() : Entity() {
 	animating = false;
 	endPoint = 0.0f;
 
-	// Place player in middle of screen
-	spriteData.x = TILE_SIZE * SCALE * 3;
-	spriteData.y = TILE_SIZE * SCALE * 3;
+	spriteData.x = playerNS::X;
+	spriteData.y = playerNS::Y;
 }
 
 Player::~Player() {}

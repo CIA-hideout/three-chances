@@ -5,6 +5,12 @@
 #include "player.h"
 #include "levelGrid.h"
 
+namespace levelNS
+{
+	const int X = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.x - 3));
+	const int Y = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.y - 3));
+}
+
 class Level : public Image {
 private:
 	bool pathBlocked;
