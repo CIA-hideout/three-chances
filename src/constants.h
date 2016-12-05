@@ -62,7 +62,7 @@ const int ATTACK = 4;
 const int STAY = 5;
 
 // Sprites
-const char LEVEL_1_IMAGE[] = "sprites\\level1 (w Grid).png";
+const char LEVEL_1_IMAGE[] = "sprites\\level 1 v2.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
 const char PLAYER_MALE_IMAGE[] = "sprites\\Male_Player.png";
 const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
