@@ -50,6 +50,6 @@ bool Sword::attack(float frameTime) {
 void Sword::finishAnimating(Player *p) {
 	p->setAnimating(false);
 	p->moveExecuted();
-	p->setFrameDelay(0.2);
+	p->setFrameDelay(PLAYER_ANIMATION_DELAY);
 	this->setVisible(false);
 }

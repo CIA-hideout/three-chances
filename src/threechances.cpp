@@ -119,7 +119,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
 
-	if (!sword.initialize(this, 128, 128, 4, &swordTexture))
+	if (!sword.initialize(this, SWORD_WIDTH, SWORD_HEIGHT, SWORD_COLS, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
 	// Initialize screens
@@ -262,9 +262,7 @@ void ThreeChances::update() {
 
 				// Check if it's player's turn
 				if (gameControl->getGameState() == GAME_STATE::player) {
-					float endPoint;
-					
-					//sword.setVisible(false);
+					float endPoint;			
 
 					if (input->isKeyDown(LEFT_KEY) && !keysPressed[LEFT]) {
 						keysPressed[LEFT] = true;

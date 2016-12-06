@@ -112,6 +112,10 @@ const int PLAYER_ATK_END_FRAME = 6;
 const int PLAYER_COLS = 7;
 const int PLAYER_ID = 1;
 
+const int SWORD_WIDTH = 128;
+const int SWORD_HEIGHT = 128;
+const int SWORD_COLS = 4;
+
 const int DUCK_STANDING_FRAME = 0;
 const int DUCK_WALK_START_FRAME = 0;
 const int DUCK_WALK_END_FRAME = 3;
