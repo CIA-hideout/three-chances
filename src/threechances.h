@@ -14,7 +14,7 @@
 #include "entityConstants.h"
 
 #include "levelGrid.h"
-#include "monsterGrid.h"
+#include "entityGrid.h"
 #include "gameControl.h"
 
 #include "hud.h"
@@ -30,8 +30,8 @@ class ThreeChances : public Game {
 private:
 	// Consts
 	GameControl*	gameControl;
+	EntityGrid*		entityGrid;
 	LevelGrid*		levelGrid;
-	MonsterGrid*	monsterGrid;
 	Hud*			hud;
 
 	// Game items
@@ -45,19 +45,19 @@ private:
 	TextureManager	fontTexture;
 
 	// Sprites
-	Level			level;
-	Player			player;
-	Sword			sword;
-	Duck			duck;
-	//Ghost			ghost;
-	Slug			slug;
-	Image			movesHeader;
+	Level		level;
+	Player	player;
+	Sword		sword;
+	Duck		duck;
+	//Ghost	ghost;
+	Slug		slug;
+	Image		movesHeader;
 
-	Font*			titleFont;
-	Font*			secondaryTitleFont;
+	Font*		titleFont;
+	Font*		secondaryTitleFont;
 
 	std::map<int, bool> keysPressed;
-	int				lastKeyPressed;
+	int			lastKeyPressed;
 
 public:
 	// Constructor
@@ -70,7 +70,7 @@ public:
 	void initialize(HWND hwnd);
 	void restartGame();
 	void initializeFonts();
-	void initializeMonsters();
+	void initializeEntities();
 	void update();      // must override pure virtual from Game
 	void enemyAi();
 	void ai();          // "

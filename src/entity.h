@@ -6,11 +6,8 @@
 #include "game.h"
 #include "image.h"
 #include "levelGrid.h"
-#include "monsterGrid.h"
+#include "entityGrid.h"
 #include "levelConstants.h"
-
-class GameControl;
-class MonsterGrid;
 
 namespace entityNS {
 	enum ABILITY_TYPE { TRAVEL_WATER, TRAVEL_LAVA, TRAVEL_WALL, BURNS_PLAYER, SHOOTS_FIRE };
@@ -96,17 +93,17 @@ public:
 
 	virtual void logAction();
 
-	virtual void initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid);
-	virtual bool animateAi(float frameTime, MonsterGrid *monsterGrid, Coordinates playerCoord);
+	virtual void initAi(EntityGrid *entityGrid, LevelGrid *levelGrid);
+	virtual bool animateAi(float frameTime, EntityGrid *entityGrid);
 	
 	virtual bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);
-	virtual bool isTileEmpty(MonsterGrid *monsterGrid, int direction);
+	virtual bool isTileEmpty(EntityGrid *entityGrid, int direction);
 
 	virtual int getBestXmove(int monsterX, int playerX);
 	virtual int getBestYmove(int monsterY, int playerY);
 
 	virtual std::vector<int> getBestMoves(Coordinates monsterCoord, Coordinates playerCoord);
-	virtual std::vector<int> getAvailableMoves(MonsterGrid *monsterGrid, LevelGrid *levelGrid, Coordinates monsterCoord);
+	virtual std::vector<int> getAvailableMoves(EntityGrid *entityGrid, LevelGrid *levelGrid, Coordinates monsterCoord);
 };
 
 #endif

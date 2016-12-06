@@ -9,52 +9,40 @@
 
 class LevelGrid {
 private:
-	std::vector<std::vector<int>> layout;	// 2D array representing stage layout
+	std::vector<std::vector<int>> grid;		// 2D array representing stage layout
 	Coordinates startTile;					// Coordinates of start tile
 	Coordinates endTile;					// Coordinates of end tile
-	Coordinates currentTile;				// Coordinates of current tile
 	int stageNo;							// Stage number
 
 public:
-	// Constructor
 	LevelGrid();
-
-	// Destructor
-	virtual ~LevelGrid();
+	~LevelGrid();
 
 	bool initialize(int stageNo);
 
 	// Getters
-	std::vector<std::vector<int>> getLayout() { return layout; }
+	std::vector<std::vector<int>> getGrid() { return grid; }
 	Coordinates getStartTile() { return startTile; }
 	Coordinates getEndTile() { return endTile; }
-	Coordinates getCurrentTile() { return currentTile; }
 	int getStageNo() { return stageNo; }
 
 	// Setters
-	void setLayout(std::vector<std::vector<int>> l) { layout = l; }
+	void setGrid(std::vector<std::vector<int>> g) { grid = g; }
 	void setStartTile(Coordinates st) { startTile = st; }
 	void setEndTile(Coordinates et) { endTile = et; }
-	void setCurrentTile(Coordinates ct) { currentTile = ct; }
 	void setStageNo(int sn) { stageNo = sn; }
 
 	// Logging
-	void logLayout();
-	void logTile(float x, float y);
+	void logGrid();
+	void logTile(Coordinates coordinates, float x, float y);
+	std::string getTileType(Coordinates coordinates);
 
-	// Getting tile value
 	int getTileValueAtCoordinates(Coordinates coordinates);
-	int getCurrentTileValue();
-	int getNextTileValue(Coordinates coordinates, int direction);
 
 	Coordinates getNextTileCoordinates(Coordinates currCoord, int direction);
-	Coordinates convertXYToCoord(float x, float y);
+	int getNextTileValue(Coordinates coordinates, int direction);
 
-	std::string getCurrentTileType();
-
-	void moveCurrentTile(int direction);
-
-	void removeBlockage() { layout = STAGE_1_LAYOUT_CLEAR; };
+	void removeBlockage() { grid = STAGE_1_LAYOUT_CLEAR; };
 };
 
 #endif

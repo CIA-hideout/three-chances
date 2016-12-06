@@ -53,7 +53,6 @@ void Player::rotateEntity(int direction) {
 			sampleRect.bottom = sampleRect.top + TILE_SIZE;
 		}
 
-		this->setAction(direction);
 		this->setSpriteDataRect(sampleRect);
 	}
 }
@@ -68,43 +67,47 @@ void Player::startAttackAnimation() {
 	this->setCurrentFrame(PLAYER_ATK_START_FRAME);
 }
 
-bool Player::isValidMove(LevelGrid *levelGrid, int direction) {
-	int currentTileValue = levelGrid->getCurrentTileValue();
-	int nextTileValue = levelGrid->getNextTileValue(levelGrid->getCurrentTile(), direction);
+bool Player::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
+	int currTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
 
 	bool valid = false;
 
-	if (currentTileValue == 1)								// 1st floor
+	if (currTileValue == 1)									// 1st floor
 		valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
-	else if (currentTileValue == 2)							// 2nd floor
+	else if (currTileValue == 2)							// 2nd floor
 		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
-	else if (currentTileValue == 3)							// Stairs
+	else if (currTileValue == 3)							// Stairs
 		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor or stairs
 
 	return valid;
 }
 
-void Player::moveInDirection(LevelGrid *levelGrid, MonsterGrid *monsterGrid, 
+void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid, 
 	int direction, float endPoint, GameControl* gc) {
 	this->rotateEntity(direction);
 
-	Coordinates nextCoord = levelGrid->getNextTileCoordinates(levelGrid->getCurrentTile(), direction);
-	int nextTileMonsterId = monsterGrid->getValueAtCoordinates(nextCoord);
+	Coordinates currCoord = entityGrid->getPlayerCoordinates();
+	Coordinates nextCoord = levelGrid->getNextTileCoordinates(currCoord, direction);
+	int nextTileValue = entityGrid->getTileValueAtCoordinates(nextCoord);
 
 	// Check if there is a mosnter on the next tile
-	if (nextTileMonsterId > 0) {
+	if (nextTileValue > PLAYER_ID) {
 		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);
-		gc->setEnemyAttackedId(nextTileMonsterId);
-		printf("next monster tile: %i\n", nextTileMonsterId);
+		gc->setEnemyAttackedId(nextTileValue);
+		printf("Monster attacked: %i\n", nextTileValue);
 	}
 
 	// Check if player can move to next tile
-	else if (this->isValidMove(levelGrid, direction) && nextTileMonsterId == 0) {
-		levelGrid->moveCurrentTile(direction);
+	else if (this->isValidMove(levelGrid, currCoord, direction) && nextTileValue == 0) {
+		entityGrid->moveEntity(currCoord, nextCoord);
+		this->setAction(direction);
 		this->startWalkAnimation();
 		this->setAnimating(true);
 		this->setEndPoint(endPoint);
 	}
+
+	this->logAction();
 }
