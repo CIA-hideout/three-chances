@@ -324,20 +324,32 @@ void ThreeChances::update() {
 
 void ThreeChances::enemyAi() {
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
+	std::queue<Entity*> aq = gameControl->getAnimationQueue();
+	Entity *entityPtr;
+	
+	if (!gameControl->getEnemyAiInitialized()) {
+		for (size_t i = 0; i < mv.size(); i++) {
+			aq.push(mv[i]);
+		}
 
-	for (size_t i = 0; i < mv.size(); i++) {
-		Entity* entityPtr = mv[i];
+		gameControl->setEnemyAiInitialized(true);
+	} 
 
+	if (gameControl->getEnemyAiInitialized()) {
+		entityPtr = aq.front();
 		if (entityPtr->getMovesLeft() > 0) {
 			if (!entityPtr->getAnimating()) {
-				mv[i]->initAi(entityGrid, levelGrid);
+				entityPtr->initAi(entityGrid, levelGrid);
 
-				if (mv[i]->getAction() == ATTACK)
-					gameControl->damagePlayer(mv[i]->getId());
+				if (entityPtr->getAction() == ATTACK) {
+					gameControl->damagePlayer(entityPtr->getId());
+				}
 			}
 			else {
-				mv[i]->animateAi(frameTime, entityGrid);
+				entityPtr->animateAi(frameTime, entityGrid);
 			}
+		} else {
+			aq.pop();
 		}
 	}
 
@@ -353,10 +365,13 @@ void ThreeChances::enemyAi() {
 		// Update game state
 		gameControl->setGameState(GAME_STATE::player);
 		gameControl->setEnemyAnimating(false);
+		gameControl->setEnemyAiInitialized(false);
 	}
 	else {
 		gameControl->setEnemyAnimating(true);
 	}
+
+	gameControl->setAnimationQueue(aq);
 }
 
 //=============================================================================

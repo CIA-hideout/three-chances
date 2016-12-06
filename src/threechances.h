@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <stdio.h>
+#include <queue>
 
 #include "game.h"
 #include "font.h"

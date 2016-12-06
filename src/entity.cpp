@@ -205,6 +205,7 @@ void Entity::initAi(EntityGrid *entityGrid, LevelGrid *levelGrid) {
 			action = ATTACK;
 			this->rotateEntity(directionToAttack);
 			this->startAttackAnimation();
+			
 		}
 		// Move if target is out of atk range
 		else {

@@ -6,6 +6,7 @@ GameControl::GameControl() {
 	gameState = GAME_STATE::player;
 	turnsElapsed = 0;
 	enemyAnimating = false;
+	enemyAiInitialized = false;
 }
 
 void GameControl::damageEnemy() {
