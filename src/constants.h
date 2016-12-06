@@ -74,11 +74,14 @@ const int SPACE = 101;
 // Sprites
 const char LEVEL_1_IMAGE[] = "sprites\\LEVEL1_Final.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
+
 const char PLAYER_MALE_IMAGE[] = "sprites\\Male_Player.png";
 const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char GHOST_IMAGE[] = "sprites\\Duskull.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
+const char MOON_IMAGE[] = "sprites\\Lunatone.png";
 const char SWORD_IMAGE[] = "sprites\\sword.png";
+
 const char MOVES_HEADER_IMAGE[] = "sprites\\Moves_Header.png";
 const char MOVE_IMAGE[] = "sprites\\Move_Circle.png";
 const char EMPTY_MOVE_IMAGE[] = "sprites\\Empty_Move_Circle.png";
@@ -142,5 +145,14 @@ const int SLUG_ATK_END_FRAME = 4;
 const float SLUG_ANIMATION_DELAY = 0.2f;
 const int SLUG_HURT_FRAME = 5;
 const int SLUG_COLS = 6;
+
+const int MOON_STANDING_FRAME = 0;
+const int MOON_WALK_START_FRAME = 0;
+const int MOON_WALK_END_FRAME = 2;
+const int MOON_ATK_START_FRAME = 3;
+const int MOON_ATK_END_FRAME = 4;
+const float MOON_ANIMATION_DELAY = 0.25f;
+const int MOON_HURT_FRAME = 5;
+const int MOON_COLS = 6;
 
 #endif

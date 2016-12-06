@@ -94,6 +94,7 @@
     <ClInclude Include="src\levelGrid.h" />
     <ClInclude Include="src\levelConstants.h" />
     <ClInclude Include="src\entityConstants.h" />
+    <ClInclude Include="src\moon.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\slug.h" />
     <ClInclude Include="src\sword.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\levelGrid.cpp" />
+    <ClCompile Include="src\moon.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\slug.cpp" />
     <ClCompile Include="src\sword.cpp" />

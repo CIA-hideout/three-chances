@@ -55,6 +55,7 @@ bool Duck::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int directio
 	
 	bool valid = false;
 
+	// Duck can move over water and land
 	if (currentTileValue == 1)
 		valid = nextTileValue == 1 || nextTileValue == 3 || nextTileValue == 4;
 	else if (currentTileValue == 2)

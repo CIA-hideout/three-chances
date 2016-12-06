@@ -25,6 +25,7 @@
 #include "duck.h"
 #include "ghost.h"
 #include "slug.h"
+#include "moon.h"
 #include "sword.h"
 
 bool operator==(const Coordinates& lhs, const Coordinates& rhs);
@@ -43,6 +44,7 @@ private:
 	TextureManager	duckTexture;
 	TextureManager	ghostTexture;
 	TextureManager	slugTexture;
+	TextureManager	moonTexture;
 	TextureManager	hudBgTexture;
 	TextureManager	swordTexture;
 	TextureManager	fontTexture;
@@ -59,17 +61,14 @@ private:
 	Image gameClearScreen;
 
 	// Sprites
-	Level		level;
+	Level	level;
 	Player	player;
-	Sword		sword;
-	Duck		duck;
-	//Ghost	ghost;
-	Slug		slug;
-	Image		movesHeader;
+	Sword	sword;
+	Image	movesHeader;
 
 	std::map<int, bool> keysPressed;
 	std::map<int, bool> screenKeysPressed;
-	int			lastKeyPressed;
+	int		lastKeyPressed;
 
 public:
 	// Constructor

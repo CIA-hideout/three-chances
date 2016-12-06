@@ -39,4 +39,13 @@ const EntityData SLUG_DATA = {
 	std::vector < entityNS::ABILITY_TYPE > { entityNS::TRAVEL_LAVA, entityNS::BURNS_PLAYER },
 };
 
+const EntityData MOON_DATA = {
+	4.0f,	// health
+	0.5f,	// dmg
+	1,		// atkRange
+	4,		// moves
+	std::vector < int > { 1 },
+	std::vector < entityNS::ABILITY_TYPE > { entityNS::TRAVEL_LAVA, entityNS::BURNS_PLAYER },
+};
+
 #endif

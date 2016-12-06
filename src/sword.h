@@ -16,12 +16,11 @@ public:
 
 	void setRect();
 
-	void setDirection(int direction);
+	void setDirection(int direction, float playerX, float playerY);
 
 	bool attack(float frameTime);
 
 	void finishAnimating(Player *p);
-
 };
 
 #endif
