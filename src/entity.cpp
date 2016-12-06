@@ -257,6 +257,7 @@ bool Entity::animateAi(float frameTime, EntityGrid *entityGrid) {
 		if (this->getAnimationComplete()) {
 			animationComplete = true;
 			this->moveExecuted();
+			PlaySound(ATTACK_SOUND, NULL, SND_ASYNC);
 		}
 	}
 	else if (action == STAY) {
