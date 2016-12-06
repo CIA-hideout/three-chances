@@ -7,7 +7,7 @@ Sword::Sword() : Image() {
 Sword::~Sword() {}
 
 bool Sword::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
-	this->setScale((float)0.4);
+	this->setScale((float)0.5);
 	return (Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }
 
@@ -37,6 +37,19 @@ void Sword::setDirection(int direction) {
 	}
 }
 
-void Sword::attack(float frameTime) {
+bool Sword::attack(float frameTime) {
+	
 	this->setDegrees(this->getDegrees() + frameTime * ROTATION_RATE);
+
+	if (this->getDegrees() > 360.0) {
+		return true;
+	}
+	return false;
+}
+
+void Sword::finishAnimating(Player *p) {
+	p->setAnimating(false);
+	p->moveExecuted();
+	p->setFrameDelay(0.2);
+	this->setVisible(false);
 }

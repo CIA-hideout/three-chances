@@ -98,8 +98,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	//if (!slugTexture.initialize(graphics, SLUG_IMAGE))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
 
-	//if (!swordTexture.initialize(graphics, SWORD_IMAGE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
+	if (!swordTexture.initialize(graphics, SWORD_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
 
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
@@ -119,8 +119,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
 
-	//if (!sword.initialize(this, 112, 112, 4, &swordTexture))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
+	if (!sword.initialize(this, 128, 128, 4, &swordTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
 	// Initialize screens
 	startScreen.initialize(graphics, 0, 0, 0, &startScreenTexture);
@@ -143,6 +143,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	hud->setInitialPosition();
 
 	sword.setVisible(false);
+	sword.setX(TILE_SIZE * SCALE * 3);
+	sword.setY(TILE_SIZE * SCALE * 4);
 
 	return;
 }
@@ -261,6 +263,8 @@ void ThreeChances::update() {
 				// Check if it's player's turn
 				if (gameControl->getGameState() == GAME_STATE::player) {
 					float endPoint;
+					
+					//sword.setVisible(false);
 
 					if (input->isKeyDown(LEFT_KEY) && !keysPressed[LEFT]) {
 						keysPressed[LEFT] = true;
@@ -320,7 +324,7 @@ void ThreeChances::update() {
 				else if (player.getAction() == DOWN)
 					oppDirection = UP;
 
-				if (player.getAction() != ATTACK) {
+				if (player.getAction() != ATTACK) {					
 					if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
@@ -331,7 +335,10 @@ void ThreeChances::update() {
 				}
 
 				if (player.getAction() == ATTACK) {
-					sword.attack(frameTime);
+					sword.setVisible(true);
+					if (sword.attack(frameTime)) {
+						sword.finishAnimating(&player);
+					}
 				}
 
 				for (size_t i = 0; i < mv.size(); i++) {
