@@ -1,11 +1,12 @@
 #include "gameControl.h"
 
 GameControl::GameControl() {
-	//generalState = GENERAL_STATE::menu;
-	generalState = GENERAL_STATE::game;
+	generalState = GENERAL_STATE::menu;
+	//generalState = GENERAL_STATE::game;
 	gameState = GAME_STATE::player;
 	turnsElapsed = 0;
 	enemyAnimating = false;
+	enemyAiInitialized = false;
 }
 
 void GameControl::damageEnemy() {

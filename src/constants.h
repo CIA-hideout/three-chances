@@ -24,6 +24,11 @@
 // Constants
 //-----------------------------------------------
 const int SCALE = 2;
+
+// Images are of 2x of screen size
+const int SCALE_2X_ARR[] = { 0.5, 1, 1.5 };
+const int SCALE_2X = SCALE_2X_ARR[SCALE - 1];
+
 const int TILE_SIZE = 32;
 const int LEVEL_SIZE = TILE_SIZE * 32;
 const int VIEW_RANGE = 7;
@@ -62,6 +67,10 @@ const int DOWN = 3;
 const int ATTACK = 4;
 const int STAY = 5;
 
+// Screen key pressed
+const int ESC = 100;
+const int SPACE = 101;
+
 // Sprites
 const char LEVEL_1_IMAGE[] = "sprites\\LEVEL1_Final.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
@@ -84,6 +93,13 @@ const char FONT_TEXTURE_INFO[] = "resources\\silkscreen.dat";
 const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
 const char MOVE_ICON[] = "sprites\\white-circle.png";
 const char MOVE_OVER_ICON[] = "sprites\\black-circle.png";
+
+const UINT PAUSE_SCREEN_WIDTH = 96 * SCALE;
+const UINT PAUSE_SCREEN_HEIGHT = 128 * SCALE;
+const char PAUSE_SCREEN_IMAGE[] = "resources\\Pause_Menu.png";
+const char START_SCREEN_IMAGE[] = "resources\\Start_Menu.png";
+const char GAME_OVER_SCREEN_IMAGE[] = "resources\\Game_Over.png";
+const char GAME_CLEAR_SCREEN_IMAGE[] = "resources\\Game_Clear.png";
 
 const int LEVEL_COLS = 2;
 
