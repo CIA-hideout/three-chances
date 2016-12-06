@@ -5,6 +5,8 @@
 #include "game.h"
 
 class Sword : public Image {
+private:
+	int count = 0;
 public:
 	Sword();
 	~Sword();
@@ -15,10 +17,11 @@ public:
 
 	void setDirection(int direction);
 
-	void rotateSwordCW(float frameTime);
-	void rotateSwordACW(float frameTime);
+	//void rotateSwordCW(float frameTime);
+	//void rotateSwordACW(float frameTime);
 
 	void attack(float frameTime);
+
 };
 
 #endif
