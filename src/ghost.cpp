@@ -32,28 +32,6 @@ void Ghost::update(float frameTime) {
 	Entity::update(frameTime);
 }
 
-void Ghost::rotateEntity(int direction) {
-	RECT sampleRect = this->getSpriteDataRect();
-
-	if (direction != -1) {
-		sampleRect.left = 0;
-		sampleRect.right = TILE_SIZE;
-
-		if (direction == LEFT)
-			sampleRect.top = 32;
-		if (direction == RIGHT)
-			sampleRect.top = 96;
-		if (direction == UP)
-			sampleRect.top = 64;
-		if (direction == DOWN)
-			sampleRect.top = 0;
-
-		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-	}
-
-	this->setSpriteDataRect(sampleRect);
-}
-
 void Ghost::startAttackAnimation() {
 	this->setFrames(GHOST_ATK_START_FRAME, GHOST_ATK_END_FRAME);
 	this->setCurrentFrame(GHOST_ATK_START_FRAME);

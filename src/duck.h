@@ -2,13 +2,19 @@
 #define _DUCK_H
 
 #include "entity.h"
-#include "input.h"
-#include "player.h"
-#include "levelGrid.h"
 
 class Duck : public Entity {
 public:
 	Duck();
 	~Duck();
+
+	void update(float frameTime);
+	void startAttackAnimation();
+	void startWalkAnimation();
+	void startHurtAnimation();
+	void startDeathAnimation();
+
+	bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);
 };
+
 #endif

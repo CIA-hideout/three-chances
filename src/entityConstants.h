@@ -16,7 +16,7 @@ const EntityData DUCK_DATA = {
 	2.0f,	// health
 	0.5f,	// dmg
 	1,		// atkRange
-	2,		// moves
+	3,		// moves
 	std::vector < int > { 1, 2 },
 	std::vector < entityNS::ABILITY_TYPE > {},
 };
@@ -32,7 +32,7 @@ const EntityData GHOST_DATA = {
 
 const EntityData SLUG_DATA = {
 	2.0f,	// health
-	0.5f,	// dmg
+	1.0f,	// dmg
 	1,		// atkRange
 	2,		// moves
 	std::vector < int > { 1 },

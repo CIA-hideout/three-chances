@@ -32,7 +32,6 @@ public:
 	void setEndPoint(float ep) { endPoint = ep; }
 
 	void update(float frameTime, GameControl* gc);
-	void rotateEntity(int direction);
 	void startAttackAnimation();
 	void startWalkAnimation();
 	bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);

@@ -95,8 +95,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!ghostTexture.initialize(graphics, GHOST_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost texture"));
 
-	//if (!slugTexture.initialize(graphics, SLUG_IMAGE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
+	if (!slugTexture.initialize(graphics, SLUG_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
 
 	if (!swordTexture.initialize(graphics, SWORD_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
@@ -109,12 +109,6 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
-
-	//if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
-
-	//if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost monster"));
 
 	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
@@ -191,14 +185,28 @@ void ThreeChances::initializeEntities() {
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
+
+	std::vector<Coordinates> duckStartCoords = {
+		Coordinates(8, 28),
+	};
+
 	std::vector<Coordinates> ghostStartCoords = {
 		Coordinates(5, 25),
 		Coordinates(7, 25),
 		Coordinates(7, 20),
 	};
-	std::vector<Coordinates> duckStartCoords = {};
+
+	std::vector<Coordinates> slugStartCoords = {
+		Coordinates(6, 27),
+	};
 
 	Entity *tempMonster;
+
+	for (int i = 0; i < duckStartCoords.size(); i++) {
+		tempMonster = new Duck;
+		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), duckStartCoords[i]);
+	}
 
 	for (int i = 0; i < ghostStartCoords.size(); i++) {
 		tempMonster = new Ghost;
@@ -206,12 +214,12 @@ void ThreeChances::initializeEntities() {
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
 	}
 
-	for (int i = 0; i < duckStartCoords.size(); i++) {
-		tempMonster = new Duck;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
+	for (int i = 0; i < slugStartCoords.size(); i++) {
+		tempMonster = new Slug;
+		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), slugStartCoords[i]);
 	}
-
+	
 	gameControl->setPlayer(&player);
 	gameControl->setMonsterVec(mv);
 }
@@ -451,9 +459,6 @@ void ThreeChances::render() {
 		case GENERAL_STATE::game: {
 			level.draw();
 			player.draw();
-			//duck.draw();
-			//ghost.draw();
-			//slug.draw();
 
 			for (size_t i = 0; i < mv.size(); i++) {
 				mv[i]->draw();
@@ -475,7 +480,7 @@ void ThreeChances::render() {
 void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
-	//duckTexture.onLostDevice();
+	duckTexture.onLostDevice();
 	ghostTexture.onLostDevice();
 	//slugTexture.onLostDevice();
 	swordTexture.onLostDevice();
@@ -493,7 +498,7 @@ void ThreeChances::releaseAll() {
 void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
-	//duckTexture.onResetDevice();
+	duckTexture.onResetDevice();
 	ghostTexture.onResetDevice();
 	//slugTexture.onResetDevice();
 	swordTexture.onResetDevice();

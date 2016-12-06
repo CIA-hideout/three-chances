@@ -7,37 +7,32 @@ Slug::Slug() : Entity() {
 
 Slug::~Slug() {}
 
-void Slug::update(float frameTime, LevelGrid *levelGrid, Player player, Input *input, std::map<std::string, bool> *keysPressed) {
-	Entity::update(frameTime);
-}
+void Slug::update(float frameTime) {
+	if (this->getAnimationComplete()) {
+		this->setFrames(0, 0);
+		this->setCurrentFrame(SLUG_STANDING_FRAME);
+		this->setAnimationComplete(false);
 
-void Slug::ai(float frameTime, Entity &ent) {
-}
-
-void Slug::rotateEntity(std::string direction, bool moveValid) {
-	RECT sampleRect = this->getSpriteDataRect();
-
-	if (direction != "") {
-		sampleRect.left = 0;
-		sampleRect.right = TILE_SIZE;
-
-		if (direction == "LEFT")
-			sampleRect.top = 64;
-		if (direction == "RIGHT")
-			sampleRect.top = 96;
-		if (direction == "UP")
-			sampleRect.top = 32;
-		if (direction == "DOWN")
-			sampleRect.top = 0;
-
-		sampleRect.bottom = sampleRect.top + TILE_SIZE;
-
-		if (moveValid) {
-			startWalkAnimation();
+		if (this->getHealth() <= 0.0) {
+			this->startDeathAnimation();
 		}
 	}
 
-	this->setSpriteDataRect(sampleRect);
+	if (this->getCurrentFrame() == SLUG_HURT_FRAME) {
+		this->setTimer(this->getTimer() + frameTime);
+
+		if (this->getTimer() > 0.2) {
+			this->setTimer(0.0f);
+			this->setAnimationComplete(true);
+		}
+	}
+
+	Entity::update(frameTime);
+}
+
+void Slug::startAttackAnimation() {
+	this->setFrames(SLUG_ATK_START_FRAME, SLUG_ATK_END_FRAME);
+	this->setCurrentFrame(SLUG_ATK_START_FRAME);
 }
 
 void Slug::startWalkAnimation() {
@@ -45,7 +40,27 @@ void Slug::startWalkAnimation() {
 	this->setCurrentFrame(SLUG_WALK_START_FRAME);
 }
 
-void Slug::startAttackAnimation() {
-	this->setFrames(SLUG_ATK_START_FRAME, SLUG_ATK_END_FRAME);
-	this->setCurrentFrame(SLUG_ATK_START_FRAME);
+void Slug::startHurtAnimation() {
+	this->setCurrentFrame(SLUG_HURT_FRAME);
 }
+
+void Slug::startDeathAnimation() {
+	this->setVisible(false);
+}
+
+bool Slug::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
+	int currTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
+
+	bool valid = false;
+
+	if (currTileValue == 1)									// 1st floor
+		valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
+	else if (currTileValue == 2)							// 2nd floor
+		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
+	else if (currTileValue == 3)							// Stairs
+		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor or stairs
+
+	return valid;
+}
+

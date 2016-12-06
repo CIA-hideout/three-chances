@@ -122,6 +122,7 @@ const int DUCK_WALK_END_FRAME = 3;
 const int DUCK_ATK_START_FRAME = 4;
 const int DUCK_ATK_END_FRAME = 5;
 const float DUCK_ANIMATION_DELAY = 0.2f;
+const int DUCK_HURT_FRAME = 6;
 const int DUCK_COLS = 7;
 
 const int GHOST_STANDING_FRAME = 0;
@@ -139,6 +140,7 @@ const int SLUG_WALK_END_FRAME = 2;
 const int SLUG_ATK_START_FRAME = 3;
 const int SLUG_ATK_END_FRAME = 4;
 const float SLUG_ANIMATION_DELAY = 0.2f;
+const int SLUG_HURT_FRAME = 5;
 const int SLUG_COLS = 6;
 
 #endif
