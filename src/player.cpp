@@ -30,30 +30,6 @@ void Player::update(float frameTime, GameControl* gc) {
 
 	Entity::update(frameTime);
 }
- 
-void Player::rotateEntity(int direction) {
-	if (this->getAction() != direction) {
-		RECT sampleRect = this->getSpriteDataRect();
-
-		if (direction != -1) {
-			sampleRect.left = 0;
-			sampleRect.right = TILE_SIZE;
-
-			if (direction == LEFT)
-				sampleRect.top = 32;
-			if (direction == RIGHT)
-				sampleRect.top = 96;
-			if (direction == UP)
-				sampleRect.top = 64;
-			if (direction == DOWN)
-				sampleRect.top = 0;
-
-			sampleRect.bottom = sampleRect.top + TILE_SIZE;
-		}
-
-		this->setSpriteDataRect(sampleRect);
-	}
-}
 
 void Player::startWalkAnimation() {
 	this->setFrames(PLAYER_WALK_START_FRAME, PLAYER_WALK_END_FRAME);
@@ -96,6 +72,8 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 		this->startAttackAnimation();
 		this->setAnimating(true);
 		gc->setEnemyAttackedId(nextTileValue);
+
+		this->logAction();
 		printf("Monster attacked: %i\n", nextTileValue);
 	}
 
@@ -106,7 +84,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 		this->startWalkAnimation();
 		this->setAnimating(true);
 		this->setEndPoint(endPoint);
-	}
 
-	this->logAction();
+		this->logAction();
+	}
 }

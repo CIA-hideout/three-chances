@@ -95,8 +95,11 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!ghostTexture.initialize(graphics, GHOST_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost texture"));
 
-	//if (!slugTexture.initialize(graphics, SLUG_IMAGE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
+	if (!slugTexture.initialize(graphics, SLUG_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing slug texture"));
+
+	if (!moonTexture.initialize(graphics, MOON_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing moon texture"));
 
 	if (!swordTexture.initialize(graphics, SWORD_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
@@ -109,15 +112,6 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
-
-	//if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
-
-	//if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost monster"));
-
-	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
 
 	if (!sword.initialize(this, SWORD_WIDTH, SWORD_HEIGHT, SWORD_COLS, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
@@ -132,9 +126,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	pausedScreen.setScale(SCALE_2X);
 	gameOverScreen.setScale(SCALE_2X);
 	gameClearScreen.setScale(SCALE_2X);
-	
+
 	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
-	pausedScreen.setY(GAME_HEIGHT /2 - PAUSE_SCREEN_HEIGHT / 2);
+	pausedScreen.setY(GAME_HEIGHT / 2 - PAUSE_SCREEN_HEIGHT / 2);
 
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
@@ -142,16 +136,11 @@ void ThreeChances::initialize(HWND hwnd) {
 	this->initializeEntities();
 	hud->setInitialPosition();
 
-	sword.setVisible(false);
-	sword.setX(TILE_SIZE * SCALE * 3);
-	sword.setY(TILE_SIZE * SCALE * 4);
-
 	return;
 }
 
 void ThreeChances::restartGame() {
 	// Clear mv
-
 	std::vector<Entity*> mv;
 	gameControl->setGameState(GAME_STATE::player);
 	gameControl->setMonsterVec(mv);
@@ -191,14 +180,28 @@ void ThreeChances::initializeEntities() {
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
+
+	std::vector<Coordinates> duckStartCoords = {
+		Coordinates(8, 28),
+	};
+
 	std::vector<Coordinates> ghostStartCoords = {
 		Coordinates(5, 25),
 		Coordinates(7, 25),
 		Coordinates(7, 20),
 	};
-	std::vector<Coordinates> duckStartCoords = {};
+
+	std::vector<Coordinates> moonStartCoords = {
+		Coordinates(6, 27),
+	};
 
 	Entity *tempMonster;
+
+	for (int i = 0; i < duckStartCoords.size(); i++) {
+		tempMonster = new Duck;
+		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), duckStartCoords[i]);
+	}
 
 	for (int i = 0; i < ghostStartCoords.size(); i++) {
 		tempMonster = new Ghost;
@@ -206,10 +209,10 @@ void ThreeChances::initializeEntities() {
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
 	}
 
-	for (int i = 0; i < duckStartCoords.size(); i++) {
-		tempMonster = new Duck;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
+	for (int i = 0; i < moonStartCoords.size(); i++) {
+		tempMonster = new Moon;
+		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), moonStartCoords[i]);
 	}
 
 	gameControl->setPlayer(&player);
@@ -262,16 +265,14 @@ void ThreeChances::update() {
 
 				// Check if it's player's turn
 				if (gameControl->getGameState() == GAME_STATE::player) {
-					float endPoint;			
+					float endPoint;
 
 					if (input->isKeyDown(LEFT_KEY) && !keysPressed[LEFT]) {
 						keysPressed[LEFT] = true;
 						lastKeyPressed = LEFT;
 						endPoint = level.getX() + TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, entityGrid, LEFT, endPoint, gameControl);
-						sword.setDirection(LEFT);
-						sword.setX(player.getX() - TILE_SIZE * SCALE * 1);
-						sword.setY(player.getY());
+						sword.setDirection(LEFT, player.getX(), player.getY());
 					}
 
 					if (input->isKeyDown(RIGHT_KEY) && !keysPressed[RIGHT]) {
@@ -279,9 +280,7 @@ void ThreeChances::update() {
 						lastKeyPressed = RIGHT;
 						endPoint = level.getX() - TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, entityGrid, RIGHT, endPoint, gameControl);
-						sword.setDirection(RIGHT);
-						sword.setX(player.getX() + TILE_SIZE * SCALE * 1);
-						sword.setY(player.getY());
+						sword.setDirection(RIGHT, player.getX(), player.getY());
 					}
 
 					if (input->isKeyDown(UP_KEY) && !keysPressed[UP]) {
@@ -289,9 +288,7 @@ void ThreeChances::update() {
 						lastKeyPressed = UP;
 						endPoint = level.getY() + TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, entityGrid, UP, endPoint, gameControl);
-						sword.setDirection(UP);
-						sword.setX(player.getX());
-						sword.setY(player.getY() - TILE_SIZE * SCALE * 1);
+						sword.setDirection(UP, player.getX(), player.getY());
 					}
 
 					if (input->isKeyDown(DOWN_KEY) && !keysPressed[DOWN]) {
@@ -299,9 +296,7 @@ void ThreeChances::update() {
 						lastKeyPressed = DOWN;
 						endPoint = level.getY() - TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, entityGrid, DOWN, endPoint, gameControl);
-						sword.setDirection(DOWN);
-						sword.setX(player.getX());
-						sword.setY(player.getY() + TILE_SIZE * SCALE * 1);
+						sword.setDirection(DOWN, player.getX(), player.getY());
 					}
 				}
 				// Enemy's turn
@@ -322,7 +317,8 @@ void ThreeChances::update() {
 				else if (player.getAction() == DOWN)
 					oppDirection = UP;
 
-				if (player.getAction() != ATTACK) {					
+				// If action is a movement
+				if (player.getAction() != ATTACK) {
 					if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
@@ -331,8 +327,8 @@ void ThreeChances::update() {
 							gameControl->setGeneralState(GENERAL_STATE::gameClear);
 					}
 				}
-
-				if (player.getAction() == ATTACK) {
+				// If action is ATTACK
+				else {
 					sword.setVisible(true);
 					if (sword.attack(frameTime)) {
 						sword.finishAnimating(&player);
@@ -342,17 +338,7 @@ void ThreeChances::update() {
 				for (size_t i = 0; i < mv.size(); i++) {
 					mv[i]->moveInDirection(frameTime, oppDirection, entityGrid->getEntityPosition(mv[i]->getId()));
 				}
-
-				player.update(frameTime, gameControl);
 			}
-
-			// Update sprites
-			for (size_t i = 0; i < mv.size(); i++) {
-				mv[i]->update(frameTime);
-			}
-
-			player.update(frameTime, gameControl);
-			hud->update(frameTime, &player, gameControl->getMonstersLeft());
 
 			// Remove blockage on level if monsters left == 0
 			if (gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
@@ -360,10 +346,17 @@ void ThreeChances::update() {
 				levelGrid->removeBlockage();
 			}
 
+			// Update and reset
+			for (size_t i = 0; i < mv.size(); i++) {
+				mv[i]->update(frameTime);
+			}
+			player.update(frameTime, gameControl);
+			hud->update(frameTime, &player, gameControl->getMonstersLeft());
+
 			resetKeysPressedMap(input, &keysPressed);
 		} break;
 	}
-	
+
 	resetScreenKeysPressedMap(input, &screenKeysPressed);
 }
 
@@ -371,6 +364,7 @@ void ThreeChances::enemyAi() {
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::queue<Entity*> aq = gameControl->getAnimationQueue();
 	Entity *entityPtr;
+
 	if (!gameControl->getEnemyAiInitialized() && mv.size() > 0) {
 		for (size_t i = 0; i < mv.size(); i++) {
 			aq.push(mv[i]);
@@ -418,14 +412,8 @@ void ThreeChances::enemyAi() {
 	gameControl->setAnimationQueue(aq);
 }
 
-//=============================================================================
-// Artificial Intelligence
-//=============================================================================
 void ThreeChances::ai() {}
 
-//=============================================================================
-// Handle collisions
-//=============================================================================
 void ThreeChances::collisions() {}
 
 //=============================================================================
@@ -451,9 +439,6 @@ void ThreeChances::render() {
 		case GENERAL_STATE::game: {
 			level.draw();
 			player.draw();
-			//duck.draw();
-			//ghost.draw();
-			//slug.draw();
 
 			for (size_t i = 0; i < mv.size(); i++) {
 				mv[i]->draw();
@@ -475,9 +460,10 @@ void ThreeChances::render() {
 void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
-	//duckTexture.onLostDevice();
+	duckTexture.onLostDevice();
 	ghostTexture.onLostDevice();
-	//slugTexture.onLostDevice();
+	slugTexture.onLostDevice();
+	moonTexture.onLostDevice();
 	swordTexture.onLostDevice();
 	fontTexture.onLostDevice();
 
@@ -493,9 +479,10 @@ void ThreeChances::releaseAll() {
 void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
-	//duckTexture.onResetDevice();
+	duckTexture.onResetDevice();
 	ghostTexture.onResetDevice();
-	//slugTexture.onResetDevice();
+	slugTexture.onResetDevice();
+	moonTexture.onResetDevice();
 	swordTexture.onResetDevice();
 	fontTexture.onResetDevice();
 

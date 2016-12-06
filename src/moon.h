@@ -1,12 +1,12 @@
-#ifndef _GHOST_H
-#define _GHOST_H
+#ifndef _MOON_H
+#define _MOON_H
 
 #include "entity.h"
 
-class Ghost : public Entity {
+class Moon : public Entity {
 public:
-	Ghost();
-	~Ghost();
+	Moon();
+	~Moon();
 
 	void update(float frameTime);
 	void startAttackAnimation();
