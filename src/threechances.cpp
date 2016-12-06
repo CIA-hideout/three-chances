@@ -231,12 +231,14 @@ void ThreeChances::update() {
 		if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
 				screenKeysPressed[SPACE] = true;
+				PlaySound(START_GAME_SOUND, NULL, SND_SYNC);				
 			}
 		} break;
 		case GENERAL_STATE::paused: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
 				screenKeysPressed[SPACE] = true;
+				PlaySound(UNPAUSE_SOUND, NULL, SND_ASYNC);
 			}
 		} break;
 		case GENERAL_STATE::gameOver: {
@@ -244,6 +246,7 @@ void ThreeChances::update() {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
+				PlaySound(CLICK_SOUND, NULL, SND_ASYNC);
 			}
 		} break;
 		case GENERAL_STATE::gameClear: {
@@ -251,12 +254,14 @@ void ThreeChances::update() {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
+				PlaySound(CLICK_SOUND, NULL, SND_ASYNC);
 			}
 		} break;
 		case GENERAL_STATE::game: {
 			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
 				gameControl->setGeneralState(GENERAL_STATE::paused);
 				screenKeysPressed[ESC] = true;
+				PlaySound(PAUSE_SOUND, NULL, SND_ASYNC);
 			}
 
 			// Check no animation currently running

@@ -2,6 +2,7 @@
 #define _CONSTANTS_H
 #define WIN32_LEAN_AND_MEAN
 
+#include <windowsx.h>
 #include <Windows.h>
 
 //-----------------------------------------------
@@ -103,6 +104,17 @@ const char PAUSE_SCREEN_IMAGE[] = "resources\\Pause_Menu.png";
 const char START_SCREEN_IMAGE[] = "resources\\Start_Menu.png";
 const char GAME_OVER_SCREEN_IMAGE[] = "resources\\Game_Over.png";
 const char GAME_CLEAR_SCREEN_IMAGE[] = "resources\\Game_Clear.png";
+
+// Sounds
+const char PAUSE_SOUND[] = "resources\\pause.wav";
+const char UNPAUSE_SOUND[] = "resources\\unpause.wav";
+const char HIT_SOUND[] = "resources\\hit.wav";
+const char SLASH_SOUND[] = "resources\\slash.wav";
+const char ATTACK_SOUND[] = "resources\\attack.wav";
+const char CLICK_SOUND[] = "resources\\click.wav";
+const char DIE_SOUND[] = "resources\\die.wav";
+const char GAME_OVER_SOUND[] = "resources\\Game_Over.wav";
+const char START_GAME_SOUND[] = "resources\\Start_Game.wav";
 
 const int LEVEL_COLS = 2;
 

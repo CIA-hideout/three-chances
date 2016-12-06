@@ -15,6 +15,9 @@ void GameControl::damageEnemy() {
 
 	entityPtr->startHurtAnimation();
 	entityPtr->setHealth(newHealth);
+
+	if (entityPtr->getHealth() > 0)
+		PlaySound(HIT_SOUND, NULL, SND_ASYNC);
 }
 
 void GameControl::damagePlayer(int id) {
@@ -22,10 +25,12 @@ void GameControl::damagePlayer(int id) {
 	float newHealth = player->getHealth() - entityPtr->getDamage();
 
 	player->setHealth(newHealth);
-	if (newHealth <= 0)
-		generalState = GENERAL_STATE::gameOver;
 
-	//printf("Health: %f", player->getHealth());
+	if (newHealth <= 0)
+	{
+		generalState = GENERAL_STATE::gameOver;
+		PlaySound(GAME_OVER_SOUND, NULL, SND_ASYNC);
+	}		
 }
 
 void GameControl::cleanupEnemy(EntityGrid *entityGrid) {
@@ -38,6 +43,7 @@ void GameControl::cleanupEnemy(EntityGrid *entityGrid) {
 			entityGrid->removeEntity(mv[i]->getId());
 			indexToRemove.push_back(i);
 			mv[i] = NULL;
+			PlaySound(DIE_SOUND, NULL, SND_ASYNC);
 		}
 	}
 

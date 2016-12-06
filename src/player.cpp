@@ -71,6 +71,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);
+		PlaySound(SLASH_SOUND, NULL, SND_ASYNC);
 		gc->setEnemyAttackedId(nextTileValue);
 
 		this->logAction();
