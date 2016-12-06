@@ -7,8 +7,8 @@
 
 namespace levelNS
 {
-	const int X = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.x - 3));
-	const int Y = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.y - 3));
+	const float X = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.x - 3));
+	const float Y = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.y - 3));
 }
 
 class Level : public Image {

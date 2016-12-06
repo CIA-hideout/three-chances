@@ -51,11 +51,10 @@ bool Font::loadTextData(std::string fileName) {
 }
 
 void Font::Print(int x, int y, std::string text) {
+	float fx = (float)x;
+	float fy = (float)y;
 
-	int fx = x;
-	int fy = y;
-
-	for (int i = 0; i < text.length(); i++) {
+	for (size_t i = 0; i < text.length(); i++) {
 		int frame = (int)text[i] - '!' + 1;
 		if (isdigit(text[i]))
 			frame += 32;
@@ -71,17 +70,16 @@ void Font::Print(int x, int y, std::string text) {
 }
 
 int Font::getTotalWidth(std::string text) {
+	float fx = 0;
 
-	int fx = 0;
-
-	for (int i = 0; i < text.length(); i++) {
+	for (size_t i = 0; i < text.length(); i++) {
 
 		int frame = (int)text[i] - '!' + 1;
 		fx += widths[frame] * getScale();
 
 	}
 
-	return fx;
+	return (int)fx;
 }
 
 void Font::draw() {

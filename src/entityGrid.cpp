@@ -73,8 +73,8 @@ Position EntityGrid::getEntityPosition(int id) {
 	if (entityCoord.x != -1 && entityCoord.y != -1) {
 		Coordinates startCoord = Coordinates(playerCoord.x - 3, playerCoord.y - 3);
 
-		float entityXPos = (entityCoord.x - startCoord.x) * TILE_SIZE * SCALE;
-		float entityYPos = (entityCoord.y - startCoord.y) * TILE_SIZE * SCALE;
+		float entityXPos = (float)(entityCoord.x - startCoord.x) * TILE_SIZE * SCALE;
+		float entityYPos = (float)(entityCoord.y - startCoord.y) * TILE_SIZE * SCALE;
 
 		return Position(entityXPos, entityYPos);
 	}

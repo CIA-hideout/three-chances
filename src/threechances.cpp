@@ -181,38 +181,24 @@ void ThreeChances::initializeEntities() {
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
-	std::vector<Coordinates> duckStartCoords = {
-		Coordinates(8, 28),
-	};
-
-	std::vector<Coordinates> ghostStartCoords = {
-		Coordinates(5, 25),
-		Coordinates(7, 25),
-		Coordinates(7, 20),
-	};
-
-	std::vector<Coordinates> moonStartCoords = {
-		Coordinates(6, 27),
-	};
-
 	Entity *tempMonster;
 
-	for (int i = 0; i < duckStartCoords.size(); i++) {
+	for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
 		tempMonster = new Duck;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), duckStartCoords[i]);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
 	}
 
-	for (int i = 0; i < ghostStartCoords.size(); i++) {
+	for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
 		tempMonster = new Ghost;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
 	}
 
-	for (int i = 0; i < moonStartCoords.size(); i++) {
+	for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
 		tempMonster = new Moon;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), moonStartCoords[i]);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
 	}
 
 	gameControl->setPlayer(&player);
