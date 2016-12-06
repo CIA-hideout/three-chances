@@ -11,6 +11,13 @@ void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[DOWN] = false;
 }
 
+void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
+	if (!input->isKeyDown(SPACE_KEY))
+		(*keysPressed)[SPACE] = false;
+	if (!input->isKeyDown(ESC_KEY))
+		(*keysPressed)[ESC] = false;
+}
+
 int findKeyDown(std::map<int, bool> *keysPressed) {
 	if ((*keysPressed)[LEFT])
 		return LEFT;
@@ -31,6 +38,9 @@ ThreeChances::ThreeChances() {
 	keysPressed[RIGHT] = false;
 	keysPressed[UP] = false;
 	keysPressed[DOWN] = false;
+
+	screenKeysPressed[ESC] = false;
+	screenKeysPressed[SPACE] = false;
 
 	gameControl = new GameControl;
 }
@@ -58,6 +68,19 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
+
+	// game screens
+	if (!startScreenTexture.initialize(graphics, START_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing startScreen texture"));
+
+	if (!pauseScreenTexture.initialize(graphics, PAUSE_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pauseScreen texture"));
+
+	if (!gameOverScreenTexture.initialize(graphics, GAME_OVER_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameOverScreen texture"));
+
+	if (!gameClearScreenTexture.initialize(graphics, GAME_CLEAR_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
 	// map texture
 	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
@@ -99,10 +122,23 @@ void ThreeChances::initialize(HWND hwnd) {
 	//if (!sword.initialize(this, 112, 112, 4, &swordTexture))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
+	// Initialize screens
+	startScreen.initialize(graphics, 0, 0, 0, &startScreenTexture);
+	pausedScreen.initialize(graphics, 0, 0, 0, &pauseScreenTexture);
+	gameOverScreen.initialize(graphics, 0, 0, 0, &gameOverScreenTexture);
+	gameClearScreen.initialize(graphics, 0, 0, 0, &gameClearScreenTexture);
+
+	startScreen.setScale(SCALE);
+	pausedScreen.setScale(SCALE);
+	gameOverScreen.setScale(SCALE);
+	gameClearScreen.setScale(SCALE_2X);
+	
+	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
+	pausedScreen.setY(GAME_HEIGHT /2 - PAUSE_SCREEN_HEIGHT / 2);
+
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
 
-	this->initializeFonts();
 	this->initializeEntities();
 	hud->setInitialPosition();
 
@@ -137,18 +173,6 @@ void ThreeChances::restartGame() {
 	this->initializeEntities();
 }
 
-void ThreeChances::initializeFonts() {
-	titleFont = new Font();
-	titleFont->initialize(graphics, 128, 128, 16, &fontTexture);
-	titleFont->loadTextData(FONT_TEXTURE_INFO);
-	titleFont->setScale(0.45f);
-
-	secondaryTitleFont = new Font();
-	secondaryTitleFont->initialize(graphics, 128, 128, 16, &fontTexture);
-	secondaryTitleFont->loadTextData(FONT_TEXTURE_INFO);
-	secondaryTitleFont->setScale(0.3f);
-}
-
 std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
 	Entity* entity, Coordinates currentTile, Coordinates startCoord) {
 
@@ -166,9 +190,9 @@ void ThreeChances::initializeEntities() {
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::vector<Coordinates> ghostStartCoords = {
-		Coordinates(5, 25),
-		Coordinates(7, 25),
-		Coordinates(7, 20),
+		//Coordinates(5, 25),
+		//Coordinates(7, 25),
+		//Coordinates(7, 20),
 	};
 	std::vector<Coordinates> duckStartCoords = {};
 
@@ -199,24 +223,35 @@ void ThreeChances::update() {
 
 	switch (gs) {
 		case GENERAL_STATE::menu: {
-			if (input->isKeyDown(SPACE_KEY)) {
+		if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
+				screenKeysPressed[SPACE] = true;
 			}
 		} break;
 		case GENERAL_STATE::paused: {
-			if (input->isKeyDown(SPACE_KEY)) {
+			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
+				screenKeysPressed[SPACE] = true;
 			}
 		} break;
 		case GENERAL_STATE::gameOver: {
-			if (input->isKeyDown(ESC_KEY)) {
+			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
+				screenKeysPressed[ESC] = true;
+			}
+		} break;
+		case GENERAL_STATE::gameClear: {
+			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
+				gameControl->setGeneralState(GENERAL_STATE::menu);
+				this->restartGame();
+				screenKeysPressed[SPACE] = true;
 			}
 		} break;
 		case GENERAL_STATE::game: {
-			if (input->isKeyDown(ESC_KEY)) {
+			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
 				gameControl->setGeneralState(GENERAL_STATE::paused);
+				screenKeysPressed[ESC] = true;
 			}
 
 			// Check no animation currently running
@@ -289,6 +324,9 @@ void ThreeChances::update() {
 					if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
+
+						if (entityGrid->getPlayerCoordinates() == STAGE_1_END_TILE)
+							gameControl->setGeneralState(GENERAL_STATE::gameClear);
 					}
 				}
 
@@ -320,20 +358,21 @@ void ThreeChances::update() {
 			resetKeysPressedMap(input, &keysPressed);
 		} break;
 	}
+	
+	resetScreenKeysPressedMap(input, &screenKeysPressed);
 }
 
 void ThreeChances::enemyAi() {
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::queue<Entity*> aq = gameControl->getAnimationQueue();
 	Entity *entityPtr;
-	
-	if (!gameControl->getEnemyAiInitialized()) {
+	if (!gameControl->getEnemyAiInitialized() && mv.size() > 0) {
 		for (size_t i = 0; i < mv.size(); i++) {
 			aq.push(mv[i]);
 		}
 
 		gameControl->setEnemyAiInitialized(true);
-	} 
+	}
 
 	if (gameControl->getEnemyAiInitialized()) {
 		entityPtr = aq.front();
@@ -393,53 +432,16 @@ void ThreeChances::render() {
 
 	switch (gameControl->getGeneralState()) {
 		case GENERAL_STATE::menu: {
-			titleFont->Print(
-				GAME_WIDTH / 2 - titleFont->getTotalWidth("three") / 2 - 10,
-				GAME_HEIGHT / 4,
-				"three"
-				);
-			titleFont->Print(
-				GAME_WIDTH / 2 - titleFont->getTotalWidth("chances") / 2 - 10,
-				GAME_HEIGHT /4 + 45,
-				"chances"
-				);
-			secondaryTitleFont->Print(
-				GAME_WIDTH / 2 - secondaryTitleFont->getTotalWidth("press space to start") / 2 - 10,
-				GAME_HEIGHT - 120,
-				"press space to start"
-				);
+			startScreen.draw();
 		} break;
 		case GENERAL_STATE::paused: {
-			titleFont->setScale(0.8f);
-			titleFont->Print(
-				GAME_WIDTH / 2 - titleFont->getTotalWidth("paused") / 2 - 10,
-				GAME_HEIGHT / 4,
-				"paused"
-				);
-			secondaryTitleFont->Print(
-				GAME_WIDTH / 2 - secondaryTitleFont->getTotalWidth("press space to") / 2 - 10,
-				GAME_HEIGHT - 120,
-				"press space to"
-				);
-			secondaryTitleFont->Print(
-				GAME_WIDTH / 2 - secondaryTitleFont->getTotalWidth("continue") / 2 - 10,
-				GAME_HEIGHT - 120 + 45,
-				"continue"
-				);
+			pausedScreen.draw();
 		} break;
 		case GENERAL_STATE::gameOver: {
-			titleFont->setScale(0.6f);
-			titleFont->Print(
-				GAME_WIDTH / 2 - titleFont->getTotalWidth("game over") / 2 - 10,
-				GAME_HEIGHT / 4,
-				"game over"
-				);
-			secondaryTitleFont->setScale(0.2);
-			secondaryTitleFont->Print(
-				GAME_WIDTH / 2 - secondaryTitleFont->getTotalWidth("press esc to restart") / 2 - 10,
-				GAME_HEIGHT - 120,
-				"press esc to restart"
-				);
+			gameOverScreen.draw();
+		} break;
+		case GENERAL_STATE::gameClear: {
+			gameClearScreen.draw();
 		} break;
 		case GENERAL_STATE::game: {
 			level.draw();

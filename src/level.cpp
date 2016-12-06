@@ -1,5 +1,9 @@
 #include "level.h"
 
+bool operator==(const Coordinates& lhs, const Coordinates& rhs) {
+	return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 Level::Level() : Image() {
 	// Set map position based off startTile
 	spriteData.x = levelNS::X;

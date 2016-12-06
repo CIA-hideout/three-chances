@@ -17,6 +17,7 @@ enum class GENERAL_STATE : int {
 	game = 2,
 	paused = 3,
 	gameOver = 4,
+	gameClear = 5,
 };
 
 class GameControl {

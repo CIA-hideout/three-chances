@@ -27,6 +27,8 @@
 #include "slug.h"
 #include "sword.h"
 
+bool operator==(const Coordinates& lhs, const Coordinates& rhs);
+
 class ThreeChances : public Game {
 private:
 	// Consts
@@ -44,6 +46,17 @@ private:
 	TextureManager	hudBgTexture;
 	TextureManager	swordTexture;
 	TextureManager	fontTexture;
+	
+	// Screens
+	TextureManager	startScreenTexture;
+	TextureManager  pauseScreenTexture;
+	TextureManager	gameOverScreenTexture;
+	TextureManager	gameClearScreenTexture;
+
+	Image startScreen;
+	Image pausedScreen;
+	Image gameOverScreen;
+	Image gameClearScreen;
 
 	// Sprites
 	Level		level;
@@ -54,10 +67,8 @@ private:
 	Slug		slug;
 	Image		movesHeader;
 
-	Font*		titleFont;
-	Font*		secondaryTitleFont;
-
 	std::map<int, bool> keysPressed;
+	std::map<int, bool> screenKeysPressed;
 	int			lastKeyPressed;
 
 public:
@@ -70,7 +81,6 @@ public:
 	// Initialize the game
 	void initialize(HWND hwnd);
 	void restartGame();
-	void initializeFonts();
 	void initializeEntities();
 	void update();      // must override pure virtual from Game
 	void enemyAi();
