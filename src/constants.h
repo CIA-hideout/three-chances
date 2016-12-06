@@ -26,8 +26,8 @@
 const int SCALE = 2;
 
 // Images are of 2x of screen size
-const int SCALE_2X_ARR[] = { 0.5, 1, 1.5 };
-const int SCALE_2X = SCALE_2X_ARR[SCALE - 1];
+const float SCALE_2X_ARR[] = { 0.5, 1.0, 1.5 };
+const float SCALE_2X = SCALE_2X_ARR[SCALE - 1];
 
 const int TILE_SIZE = 32;
 const int LEVEL_SIZE = TILE_SIZE * 32;

@@ -1,9 +1,7 @@
 #ifndef _ENTITYCONST_H
 #define _ENTITYCONST_H
 
-#include <vector>
 #include "entity.h"
-#include "levelConstants.h"
 
 const EntityData PLAYER_DATA = {
 	3.0f,	// health

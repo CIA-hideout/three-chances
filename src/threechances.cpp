@@ -183,19 +183,19 @@ void ThreeChances::initializeEntities() {
 
 	Entity *tempMonster;
 
-	for (int i = 0; i < DUCK_START_COORDS.size(); i++) {
+	for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
 		tempMonster = new Duck;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
 	}
 
-	for (int i = 0; i < GHOST_START_COORDS.size(); i++) {
+	for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
 		tempMonster = new Ghost;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
 	}
 
-	for (int i = 0; i < MOON_START_COORDS.size(); i++) {
+	for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
 		tempMonster = new Moon;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
