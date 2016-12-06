@@ -27,7 +27,6 @@ void Ghost::update(float frameTime) {
 			this->setTimer(0.0f);
 			this->setAnimationComplete(true);
 		}
-
 	}
 
 	Entity::update(frameTime);

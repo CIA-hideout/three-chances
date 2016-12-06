@@ -27,14 +27,14 @@ void GameControl::damagePlayer(int id) {
 	//printf("Health: %f", player->getHealth());
 }
 
-void GameControl::cleanupEnemy(MonsterGrid *mg) {
+void GameControl::cleanupEnemy(EntityGrid *entityGrid) {
 	std::vector<Entity*> mv = this->getMonsterVec();
 	std::vector<int> indexToRemove;
 
 	for (size_t i = 0; i < mv.size(); i++) {
 		if (mv[i]->getHealth() <= 0.0f) {
 			mv[i]->setVisible(false);
-			mg->removeMonster(mv[i]->getId());
+			entityGrid->removeEntity(mv[i]->getId());
 			indexToRemove.push_back(i);
 			mv[i] = NULL;
 		}

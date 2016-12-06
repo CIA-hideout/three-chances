@@ -87,10 +87,10 @@
     <ClInclude Include="src\gameControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\monsterGrid.h">
+    <ClInclude Include="src\font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\font.h">
+    <ClInclude Include="src\entityGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -149,10 +149,10 @@
     <ClCompile Include="src\gameControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\monsterGrid.cpp">
+    <ClCompile Include="src\font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\font.cpp">
+    <ClCompile Include="src\entityGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -56,8 +56,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	levelGrid = new LevelGrid;
 	levelGrid->initialize(1);
 
-	// initialize monster grid
-	monsterGrid = new MonsterGrid;
+	// initialize entity grid
+	entityGrid = new EntityGrid;
 
 	// map texture
 	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
@@ -102,13 +102,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
 
-	//slug.setX(TILE_SIZE * SCALE * 2);
-	//slug.setY(TILE_SIZE * SCALE * 0);
-
 	this->initializeFonts();
-	this->initializeMonsters();
+	this->initializeEntities();
 	hud->setInitialPosition();
-	//monsterGrid->logLayout();
 
 	sword.setVisible(false);
 
@@ -126,8 +122,8 @@ void ThreeChances::restartGame() {
 	levelGrid = new LevelGrid;
 	levelGrid->initialize(1);
 
-	// initialize monster grid
-	monsterGrid = new MonsterGrid;
+	// initialize entity grid
+	entityGrid = new EntityGrid;
 
 	player.setHealth(PLAYER_DATA.health);
 	player.setMovesLeft(PLAYER_DATA.moves);
@@ -135,10 +131,10 @@ void ThreeChances::restartGame() {
 
 	level.setX(levelNS::X);
 	level.setY(levelNS::Y);
-	
+
 	hud->resetMovesHud();
 	hud->resetHealthHud();
-	this->initializeMonsters();
+	this->initializeEntities();
 }
 
 void ThreeChances::initializeFonts() {
@@ -153,18 +149,21 @@ void ThreeChances::initializeFonts() {
 	secondaryTitleFont->setScale(0.3f);
 }
 
-std::vector<Entity*> setInitPos(std::vector<Entity*> mv, MonsterGrid* mg, 
-	Entity* monster, Coordinates currentTile, Coordinates startCoord) {
+std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
+	Entity* entity, Coordinates currentTile, Coordinates startCoord) {
 
-	mg->addMonster(startCoord, monster->getId());
-	Position tempPos = mg->getMonsterPos(currentTile, monster->getId());
-	monster->setX(tempPos.x);
-	monster->setY(tempPos.y);
-	mv.push_back(monster);
+	entityGrid->addEntity(startCoord, entity->getId());
+	Position startPos = entityGrid->getEntityPosition(entity->getId());
+	entity->setX(startPos.x);
+	entity->setY(startPos.y);
+	mv.push_back(entity);
 	return mv;
 }
 
-void ThreeChances::initializeMonsters() {
+void ThreeChances::initializeEntities() {
+	// Add to entity grid
+	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
+
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::vector<Coordinates> ghostStartCoords = {
 		Coordinates(5, 25),
@@ -178,13 +177,13 @@ void ThreeChances::initializeMonsters() {
 	for (int i = 0; i < ghostStartCoords.size(); i++) {
 		tempMonster = new Ghost;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-		mv = setInitPos(mv, monsterGrid, tempMonster, levelGrid->getCurrentTile(), ghostStartCoords[i]);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
 	}
 
 	for (int i = 0; i < duckStartCoords.size(); i++) {
 		tempMonster = new Duck;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-		mv = setInitPos(mv, monsterGrid, tempMonster, levelGrid->getCurrentTile(), ghostStartCoords[i]);
+		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), ghostStartCoords[i]);
 	}
 
 	gameControl->setPlayer(&player);
@@ -219,10 +218,10 @@ void ThreeChances::update() {
 			if (input->isKeyDown(ESC_KEY)) {
 				gameControl->setGeneralState(GENERAL_STATE::paused);
 			}
-			
+
 			// Check no animation currently running
 			if (!player.getAnimating()) {
-				gameControl->cleanupEnemy(monsterGrid);
+				gameControl->cleanupEnemy(entityGrid);
 
 				// Check if it's player's turn
 				if (gameControl->getGameState() == GAME_STATE::player) {
@@ -232,17 +231,17 @@ void ThreeChances::update() {
 						keysPressed[LEFT] = true;
 						lastKeyPressed = LEFT;
 						endPoint = level.getX() + TILE_SIZE * SCALE;
-						player.moveInDirection(levelGrid, monsterGrid, LEFT, endPoint, gameControl);
+						player.moveInDirection(levelGrid, entityGrid, LEFT, endPoint, gameControl);
 						sword.setDirection(LEFT);
 						sword.setX(player.getX() - TILE_SIZE * SCALE * 1);
-						sword.setY(player.getY());						
+						sword.setY(player.getY());
 					}
 
 					if (input->isKeyDown(RIGHT_KEY) && !keysPressed[RIGHT]) {
 						keysPressed[RIGHT] = true;
 						lastKeyPressed = RIGHT;
 						endPoint = level.getX() - TILE_SIZE * SCALE;
-						player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint, gameControl);
+						player.moveInDirection(levelGrid, entityGrid, RIGHT, endPoint, gameControl);
 						sword.setDirection(RIGHT);
 						sword.setX(player.getX() + TILE_SIZE * SCALE * 1);
 						sword.setY(player.getY());
@@ -252,7 +251,7 @@ void ThreeChances::update() {
 						keysPressed[UP] = true;
 						lastKeyPressed = UP;
 						endPoint = level.getY() + TILE_SIZE * SCALE;
-						player.moveInDirection(levelGrid, monsterGrid, UP, endPoint, gameControl);
+						player.moveInDirection(levelGrid, entityGrid, UP, endPoint, gameControl);
 						sword.setDirection(UP);
 						sword.setX(player.getX());
 						sword.setY(player.getY() - TILE_SIZE * SCALE * 1);
@@ -262,7 +261,7 @@ void ThreeChances::update() {
 						keysPressed[DOWN] = true;
 						lastKeyPressed = DOWN;
 						endPoint = level.getY() - TILE_SIZE * SCALE;
-						player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint, gameControl);
+						player.moveInDirection(levelGrid, entityGrid, DOWN, endPoint, gameControl);
 						sword.setDirection(DOWN);
 						sword.setX(player.getX());
 						sword.setY(player.getY() + TILE_SIZE * SCALE * 1);
@@ -289,16 +288,16 @@ void ThreeChances::update() {
 				if (player.getAction() != ATTACK) {
 					if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 						level.finishAnimating(levelGrid, &player);
+						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
 					}
 				}
 
 				if (player.getAction() == ATTACK) {
-					sword.attack(frameTime); 
+					sword.attack(frameTime);
 				}
 
 				for (size_t i = 0; i < mv.size(); i++) {
-					mv[i]->moveInDirection(frameTime, oppDirection,
-						monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), mv[i]->getId()));
+					mv[i]->moveInDirection(frameTime, oppDirection, entityGrid->getEntityPosition(mv[i]->getId()));
 				}
 
 				player.update(frameTime, gameControl);
@@ -331,13 +330,13 @@ void ThreeChances::enemyAi() {
 
 		if (entityPtr->getMovesLeft() > 0) {
 			if (!entityPtr->getAnimating()) {
-				mv[i]->initAi(monsterGrid, levelGrid);
+				mv[i]->initAi(entityGrid, levelGrid);
 
 				if (mv[i]->getAction() == ATTACK)
 					gameControl->damagePlayer(mv[i]->getId());
 			}
 			else {
-				mv[i]->animateAi(frameTime, monsterGrid, levelGrid->getCurrentTile());
+				mv[i]->animateAi(frameTime, entityGrid);
 			}
 		}
 	}
@@ -347,7 +346,7 @@ void ThreeChances::enemyAi() {
 		for (size_t i = 0; i < mv.size(); i++) {
 			mv[i]->resetMovesLeft();
 		}
-			
+
 		player.resetMovesLeft();
 		hud->resetMovesHud();
 
@@ -427,7 +426,7 @@ void ThreeChances::render() {
 				"press esc to restart"
 				);
 		} break;
-		case GENERAL_STATE::game: {			
+		case GENERAL_STATE::game: {
 			level.draw();
 			player.draw();
 			//duck.draw();
@@ -437,7 +436,7 @@ void ThreeChances::render() {
 			for (size_t i = 0; i < mv.size(); i++) {
 				mv[i]->draw();
 			}
-			
+
 			hud->draw(gameControl->getMonstersLeft());
 			movesHeader.draw();
 			sword.draw();

@@ -94,6 +94,7 @@ const float PLAYER_ANIMATION_DELAY = 0.08f;
 const int PLAYER_ATK_START_FRAME = 4;
 const int PLAYER_ATK_END_FRAME = 5;
 const int PLAYER_COLS = 6;
+const int PLAYER_ID = 1;
 
 const int DUCK_STANDING_FRAME = 0;
 const int DUCK_WALK_START_FRAME = 0;

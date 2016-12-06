@@ -2,11 +2,11 @@
 
 int currentId = 0;
 
-bool targetWithinRange(Coordinates monsterCoord, Coordinates playerCoord, int range) {
+bool targetWithinRange(Coordinates entityCoord, Coordinates playerCoord, int range) {
 	// Check x coordinate within range
-	if (playerCoord.x <= monsterCoord.x + range && playerCoord.x >= monsterCoord.x - range) {
+	if (playerCoord.x <= entityCoord.x + range && playerCoord.x >= entityCoord.x - range) {
 		// Check y coordinate within range
-		if (playerCoord.y <= monsterCoord.y + range && playerCoord.y >= monsterCoord.y - range) {
+		if (playerCoord.y <= entityCoord.y + range && playerCoord.y >= entityCoord.y - range) {
 			return true;
 		}
 	}
@@ -14,26 +14,26 @@ bool targetWithinRange(Coordinates monsterCoord, Coordinates playerCoord, int ra
 	return false;
 }
 
-int targetWithinAtkRange(Coordinates monsterCoord, Coordinates playerCoord, int atkRange) {
+int targetWithinAtkRange(Coordinates entityCoord, Coordinates playerCoord, int atkRange) {
 	// True if player is on the same row as monster
-	if (playerCoord.y == monsterCoord.y) {
+	if (playerCoord.y == entityCoord.y) {
 		// Check if player is within LEFT atk range
-		if (playerCoord.x < monsterCoord.x && playerCoord.x >= monsterCoord.x - atkRange) {
+		if (playerCoord.x < entityCoord.x && playerCoord.x >= entityCoord.x - atkRange) {
 			return LEFT;
 		}
 		// Check if player is within RIGHT atk range
-		if (playerCoord.x > monsterCoord.x && playerCoord.x <= monsterCoord.x + atkRange) {
+		if (playerCoord.x > entityCoord.x && playerCoord.x <= entityCoord.x + atkRange) {
 			return RIGHT;
 		}
 	}
 	// True if player is on the same column as monster
-	if (playerCoord.x == monsterCoord.x) {
+	if (playerCoord.x == entityCoord.x) {
 		// Check if player is within UP atk range
-		if (playerCoord.y < monsterCoord.y && playerCoord.y >= monsterCoord.y - atkRange) {
+		if (playerCoord.y < entityCoord.y && playerCoord.y >= entityCoord.y - atkRange) {
 			return UP;
 		}
 		// Check if player is within DOWN atk range
-		if (playerCoord.y > monsterCoord.y && playerCoord.y <= monsterCoord.y + atkRange) {
+		if (playerCoord.y > entityCoord.y && playerCoord.y <= entityCoord.y + atkRange) {
 			return DOWN;
 		}
 	}
@@ -166,7 +166,8 @@ bool Entity::aiMoveInDirection(float frameTime, int direction, Position endPos) 
 }
 
 void Entity::logAction() {
-	printf("Enemy %d action: ", this->getId());
+	int id = this->getId();
+	printf("%s %d action: ", id == 1 ? "Player" : "Enemy", id);
 	switch (this->getAction()) {
 	case 0:
 		printf("LEFT\n");
@@ -191,14 +192,13 @@ void Entity::logAction() {
 	}
 }
 
-void Entity::initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid) {
+void Entity::initAi(EntityGrid *entityGrid, LevelGrid *levelGrid) {
 	int action = -1;
-	int directionToAttack;
-	Coordinates monsterCoord = monsterGrid->findMonsterCoord(this->getId());
-	Coordinates playerCoord = levelGrid->getCurrentTile();
+	Coordinates entityCoord = entityGrid->getEntityCoordinates(this->getId());
+	Coordinates playerCoord = entityGrid->getPlayerCoordinates();
 
-	if (targetWithinRange(monsterCoord, playerCoord, 3)) {
-		directionToAttack = targetWithinAtkRange(monsterCoord, playerCoord, this->getAtkRange());
+	if (targetWithinRange(entityCoord, playerCoord, 3)) {
+		int directionToAttack = targetWithinAtkRange(entityCoord, playerCoord, this->getAtkRange());
 
 		// Attack if target is directly beside
 		if (directionToAttack != -1) {
@@ -208,14 +208,14 @@ void Entity::initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid) {
 		}
 		// Move if target is out of atk range
 		else {
-			std::vector<int> availableMoves = this->getAvailableMoves(monsterGrid, levelGrid, monsterCoord);
+			std::vector<int> availableMoves = this->getAvailableMoves(entityGrid, levelGrid, entityCoord);
 
 			// All directions are blocked. Stay.
 			if (availableMoves.size() == 0) {
 				action = STAY;
 			}
 			else {
-				std::vector<int> bestMoves = this->getBestMoves(monsterCoord, playerCoord);
+				std::vector<int> bestMoves = this->getBestMoves(entityCoord, playerCoord);
 
 				// Get best available move
 				for (size_t i = 0; i < bestMoves.size(); ++i) {
@@ -230,6 +230,8 @@ void Entity::initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid) {
 				}
 
 				// Best move found, move in direction
+				Coordinates nextCoord = entityGrid->getNextTileCoordinates(entityCoord, action);
+				entityGrid->moveEntity(entityCoord, nextCoord);
 				this->rotateEntity(action);
 				this->startWalkAnimation();
 			}
@@ -240,30 +242,15 @@ void Entity::initAi(MonsterGrid *monsterGrid, LevelGrid *levelGrid) {
 		action = STAY;
 	}
 
-	switch (action) {
-	case LEFT:
-		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x - 1, monsterCoord.y));
-		break;
-	case RIGHT:
-		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x + 1, monsterCoord.y));
-		break;
-	case UP:
-		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y - 1));
-		break;
-	case DOWN:
-		monsterGrid->moveMonster(monsterCoord, Coordinates(monsterCoord.x, monsterCoord.y + 1));
-		break;
-	}
-
 	this->setAnimating(true);
 	this->setAction(action);
 	this->logAction();
 }
 
-bool Entity::animateAi(float frameTime, MonsterGrid *monsterGrid, Coordinates playerCoord) {
+bool Entity::animateAi(float frameTime, EntityGrid *entityGrid) {
 	int action = this->getAction();
 	bool animationComplete = false;
-	Position endPos = monsterGrid->getMonsterPos(playerCoord, this->getId());
+	Position endPos = entityGrid->getEntityPosition(this->getId());
 
 	if (action == ATTACK) {
 		if (this->getAnimationComplete()) {
@@ -275,7 +262,7 @@ bool Entity::animateAi(float frameTime, MonsterGrid *monsterGrid, Coordinates pl
 		animationComplete = true;
 		this->setMovesLeft(0);
 	}
-	else if (action > -1) {
+	else if (action != -1) {
 		if (this->aiMoveInDirection(frameTime, action, endPos)) {
 			animationComplete = true;
 			this->moveExecuted();
@@ -292,51 +279,51 @@ bool Entity::animateAi(float frameTime, MonsterGrid *monsterGrid, Coordinates pl
 }
 
 bool Entity::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
-	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	int currTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
 	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
 
 	bool valid = false;
 
-	if (currentTileValue == 1)								// 1st floor
+	if (currTileValue == 1)									// 1st floor
 		valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
-	else if (currentTileValue == 2)							// 2nd floor
+	else if (currTileValue == 2)							// 2nd floor
 		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
-	else if (currentTileValue == 3)							// Stairs
+	else if (currTileValue == 3)							// Stairs
 		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor or stairs
 
 	return valid;
 }
 
-bool Entity::isTileEmpty(MonsterGrid *monsterGrid, int direction) {
-	Coordinates currCoord = monsterGrid->findMonsterCoord(this->getId());
-	int nextTileValue = monsterGrid->getNextTileValue(currCoord, direction);
+bool Entity::isTileEmpty(EntityGrid *entityGrid, int direction) {
+	Coordinates currCoord = entityGrid->getEntityCoordinates(this->getId());
+	int nextTileValue = entityGrid->getNextTileValue(currCoord, direction);
 
 	return nextTileValue == 0;
 }
 
-int Entity::getBestXmove(int monsterX, int playerX) {
-	if (monsterX > playerX)
+int Entity::getBestXmove(int entityX, int playerX) {
+	if (entityX > playerX)
 		return LEFT;
-	else if (monsterX < playerX)
+	else if (entityX < playerX)
 		return RIGHT;
 
 	return STAY;
 }
 
-int Entity::getBestYmove(int monsterY, int playerY) {
-	if (monsterY > playerY)
+int Entity::getBestYmove(int entityY, int playerY) {
+	if (entityY > playerY)
 		return UP;
-	else if (monsterY < playerY)
+	else if (entityY < playerY)
 		return DOWN;
 
 	return STAY;
 }
 
-std::vector<int> Entity::getBestMoves(Coordinates monsterCoord, Coordinates playerCoord) {
+std::vector<int> Entity::getBestMoves(Coordinates entityCoord, Coordinates playerCoord) {
 	std::vector<int> bestMoves;
 
-	int bestXmove = this->getBestXmove(monsterCoord.x, playerCoord.x);
-	int bestYmove = this->getBestYmove(monsterCoord.y, playerCoord.y);
+	int bestXmove = this->getBestXmove(entityCoord.x, playerCoord.x);
+	int bestYmove = this->getBestYmove(entityCoord.y, playerCoord.y);
 
 	if (bestXmove != STAY && bestYmove != STAY) {
 		bestMoves.push_back(bestXmove);
@@ -360,12 +347,13 @@ std::vector<int> Entity::getBestMoves(Coordinates monsterCoord, Coordinates play
 	return bestMoves;
 }
 
-std::vector<int> Entity::getAvailableMoves(MonsterGrid *monsterGrid, LevelGrid *levelGrid, Coordinates monsterCoord) {
+std::vector<int> Entity::getAvailableMoves(EntityGrid *entityGrid, LevelGrid *levelGrid, Coordinates entityCoord) {
 	std::vector<int> moves = { LEFT, RIGHT, UP, DOWN };
 	std::vector<int> availableMoves;
+
 	for (size_t i = 0; i < moves.size(); ++i) {
-		if (this->isValidMove(levelGrid, monsterCoord, moves[i])
-			&& this->isTileEmpty(monsterGrid, moves[i]))
+		if (this->isValidMove(levelGrid, entityCoord, moves[i])
+			&& this->isTileEmpty(entityGrid, moves[i]))
 			availableMoves.push_back(moves[i]);
 	}
 
