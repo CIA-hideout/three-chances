@@ -28,7 +28,7 @@ private:
 	bool enemyAnimating;
 	std::vector<Entity*> monsterVec;
 	std::queue<Entity*> animationQueue;
-	int enemyAttackedId;
+	//int enemyAttackedId;
 	Entity* player;
 	bool enemyAiInitialized;
 
@@ -43,7 +43,7 @@ public:
 	std::vector<Entity*> getMonsterVec() { return monsterVec; }
 	std::queue<Entity*> getAnimationQueue() { return animationQueue; }
 	bool getEnemyAiInitialized() { return enemyAiInitialized; }
-	int getEnemyAttackedId() { return enemyAttackedId; }
+	//int getEnemyAttackedId() { return enemyAttackedId; }
 	Entity* getPlayer() { return player; }
 	
 	// setters
@@ -53,11 +53,11 @@ public:
 	void setMonsterVec(std::vector<Entity*> mv) { monsterVec = mv; }
 	void setAnimationQueue(std::queue<Entity*> aq) { animationQueue = aq; }
 	void setEnemyAiInitialized(bool initialized) { enemyAiInitialized = initialized; }
-	void setEnemyAttackedId(int id) { enemyAttackedId = id; }
+	//void setEnemyAttackedId(int id) { enemyAttackedId = id; }
 	void setPlayer(Entity* p) { player = p; }
 
 	void damagePlayer(int id);
-	void damageEnemy();
+	void damageEnemy(int id);
 	void cleanupEnemy(EntityGrid *entityGrid);
 
 	// helpers

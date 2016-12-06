@@ -19,9 +19,9 @@ void Player::update(float frameTime, GameControl* gc) {
 		this->setCurrentFrame(PLAYER_STANDING_FRAME);
 
 		// Attack loop is done
-		if (this->getAction() == ATTACK) {
-			gc->damageEnemy();
-		}
+		//if (this->getAction() == ATTACK) {
+		//	gc->damageEnemy();
+		//}
 	}
 
 	if (this->getMovesLeft() == 0) {
@@ -72,7 +72,8 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 		this->startAttackAnimation();
 		this->setAnimating(true);
 		PlaySound(SLASH_SOUND, NULL, SND_ASYNC);
-		gc->setEnemyAttackedId(nextTileValue);
+		//gc->setEnemyAttackedId(nextTileValue);
+		gc->damageEnemy(nextTileValue);
 
 		this->logAction();
 		printf("Monster attacked: %i\n", nextTileValue);

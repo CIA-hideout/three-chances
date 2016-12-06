@@ -9,8 +9,8 @@ GameControl::GameControl() {
 	enemyAiInitialized = false;
 }
 
-void GameControl::damageEnemy() {
-	Entity* entityPtr = this->getPtrToEntity(this->getEnemyAttackedId());
+void GameControl::damageEnemy(int id) {
+	Entity* entityPtr = this->getPtrToEntity(id);
 	float newHealth = entityPtr->getHealth() - player->getDamage();
 
 	entityPtr->startHurtAnimation();
