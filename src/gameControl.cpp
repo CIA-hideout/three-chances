@@ -21,6 +21,10 @@ void GameControl::damagePlayer(int id) {
 	float newHealth = player->getHealth() - entityPtr->getDamage();
 
 	player->setHealth(newHealth);
+	if (newHealth <= 0)
+		generalState = GENERAL_STATE::gameOver;
+
+	//printf("Health: %f", player->getHealth());
 }
 
 void GameControl::cleanupEnemy(MonsterGrid *mg) {

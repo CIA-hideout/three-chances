@@ -42,6 +42,7 @@ public:
 	void initializeTexture(Graphics *graphics, TextureManager* fontTM);
 	void setInitialPosition();
 	void resetMovesHud();
+	void resetHealthHud();
 	void update(float frameTime, Player* player, int enemiesLeft);
 	void draw(int enemiesLeft);
 	void drawEnemiesLeft(int enemiesLeft);

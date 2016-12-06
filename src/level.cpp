@@ -1,6 +1,10 @@
 #include "level.h"
 
-Level::Level() : Image() {}
+Level::Level() : Image() {
+	// Set map position based off startTile
+	spriteData.x = levelNS::X;
+	spriteData.y = levelNS::Y;
+}
 
 Level::~Level() {}
 

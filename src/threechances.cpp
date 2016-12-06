@@ -75,8 +75,8 @@ void ThreeChances::initialize(HWND hwnd) {
 	//if (!slugTexture.initialize(graphics, SLUG_IMAGE))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug texture"));
 
-	if (!swordTexture.initialize(graphics, SWORD_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
+	//if (!swordTexture.initialize(graphics, SWORD_IMAGE))
+	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
 
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
@@ -87,24 +87,20 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
-	if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
+	//if (!duck.initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA))
+	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck monster"));
 
-	if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost monster"));
+	//if (!ghost.initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA))
+	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost monster"));
 
 	//if (!slug.initialize(this, TILE_SIZE, TILE_SIZE, SLUG_COLS, &slugTexture, SLUG_DATA))
 	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising slug monster"));
 
-	if (!sword.initialize(this, 112, 112, 4, &swordTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
+	//if (!sword.initialize(this, 112, 112, 4, &swordTexture))
+	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
-
-	// Set map position based off startTile
-	level.setX(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().x - 3)));
-	level.setY(-(TILE_SIZE * SCALE * ((float)levelGrid->getStartTile().y - 3)));
 
 	//slug.setX(TILE_SIZE * SCALE * 2);
 	//slug.setY(TILE_SIZE * SCALE * 0);
@@ -114,8 +110,34 @@ void ThreeChances::initialize(HWND hwnd) {
 	hud->setInitialPosition();
 	//monsterGrid->logLayout();
 	sword.setDirection(DOWN);
-
+	
 	return;
+}
+
+void ThreeChances::restartGame() {
+	// Clear mv
+
+	std::vector<Entity*> mv;
+	gameControl->setGameState(GAME_STATE::player);
+	gameControl->setMonsterVec(mv);
+
+	// initialize level grid
+	levelGrid = new LevelGrid;
+	levelGrid->initialize(1);
+
+	// initialize monster grid
+	monsterGrid = new MonsterGrid;
+
+	player.setHealth(PLAYER_DATA.health);
+	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setAnimating(false);
+
+	level.setX(levelNS::X);
+	level.setY(levelNS::Y);
+	
+	hud->resetMovesHud();
+	hud->resetHealthHud();
+	this->initializeMonsters();
 }
 
 void ThreeChances::initializeFonts() {
@@ -130,22 +152,39 @@ void ThreeChances::initializeFonts() {
 	secondaryTitleFont->setScale(0.3f);
 }
 
+std::vector<Entity*> setInitPos(std::vector<Entity*> mv, MonsterGrid* mg, 
+	Entity* monster, Coordinates currentTile, Coordinates startCoord) {
+
+	mg->addMonster(startCoord, monster->getId());
+	Position tempPos = mg->getMonsterPos(currentTile, monster->getId());
+	monster->setX(tempPos.x);
+	monster->setY(tempPos.y);
+	mv.push_back(monster);
+	return mv;
+}
+
 void ThreeChances::initializeMonsters() {
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
+	std::vector<Coordinates> ghostStartCoords = {
+		Coordinates(5, 25),
+		Coordinates(7, 25),
+		Coordinates(7, 20),
+	};
+	std::vector<Coordinates> duckStartCoords = {};
 
-	// Add to monster grid
-	//monsterGrid->addMonster(Coordinates(6, 25), duck.getId());
-	monsterGrid->addMonster(Coordinates(5, 25), ghost.getId());
+	Entity *tempMonster;
 
-	// Add to monster vec
-	//mv.push_back(&duck);
-	mv.push_back(&ghost);
+	for (int i = 0; i < ghostStartCoords.size(); i++) {
+		tempMonster = new Ghost;
+		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+		mv = setInitPos(mv, monsterGrid, tempMonster, levelGrid->getCurrentTile(), ghostStartCoords[i]);
+	}
 
-	//duck.setX(TILE_SIZE * SCALE * 4);
-	//duck.setY(TILE_SIZE * SCALE * 0);
-
-	ghost.setX(TILE_SIZE * SCALE * 3);
-	ghost.setY(TILE_SIZE * SCALE * 0);
+	for (int i = 0; i < duckStartCoords.size(); i++) {
+		tempMonster = new Duck;
+		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+		mv = setInitPos(mv, monsterGrid, tempMonster, levelGrid->getCurrentTile(), ghostStartCoords[i]);
+	}
 
 	gameControl->setPlayer(&player);
 	gameControl->setMonsterVec(mv);
@@ -169,11 +208,17 @@ void ThreeChances::update() {
 				gameControl->setGeneralState(GENERAL_STATE::game);
 			}
 		} break;
+		case GENERAL_STATE::gameOver: {
+			if (input->isKeyDown(ESC_KEY)) {
+				gameControl->setGeneralState(GENERAL_STATE::menu);
+				this->restartGame();
+			}
+		} break;
 		case GENERAL_STATE::game: {
 			if (input->isKeyDown(ESC_KEY)) {
 				gameControl->setGeneralState(GENERAL_STATE::paused);
 			}
-
+			
 			// Check no animation currently running
 			if (!player.getAnimating()) {
 				gameControl->cleanupEnemy(monsterGrid);
@@ -235,9 +280,11 @@ void ThreeChances::update() {
 				}
 
 				for (size_t i = 0; i < mv.size(); i++) {
-					mv[i]->moveInDirection(frameTime, oppDirection, 
+					mv[i]->moveInDirection(frameTime, oppDirection,
 						monsterGrid->getMonsterPos(levelGrid->getCurrentTile(), mv[i]->getId()));
 				}
+
+				player.update(frameTime, gameControl);
 			}
 
 			// Update sprites
@@ -311,6 +358,7 @@ void ThreeChances::collisions() {}
 //=============================================================================
 void ThreeChances::render() {
 	graphics->spriteBegin();
+	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
 	switch (gameControl->getGeneralState()) {
 		case GENERAL_STATE::menu: {
@@ -329,7 +377,6 @@ void ThreeChances::render() {
 				GAME_HEIGHT - 120,
 				"press space to start"
 				);
-
 		} break;
 		case GENERAL_STATE::paused: {
 			titleFont->setScale(0.8f);
@@ -349,12 +396,31 @@ void ThreeChances::render() {
 				"continue"
 				);
 		} break;
-		case GENERAL_STATE::game: {
+		case GENERAL_STATE::gameOver: {
+			titleFont->setScale(0.6f);
+			titleFont->Print(
+				GAME_WIDTH / 2 - titleFont->getTotalWidth("game over") / 2 - 10,
+				GAME_HEIGHT / 4,
+				"game over"
+				);
+			secondaryTitleFont->setScale(0.2);
+			secondaryTitleFont->Print(
+				GAME_WIDTH / 2 - secondaryTitleFont->getTotalWidth("press esc to restart") / 2 - 10,
+				GAME_HEIGHT - 120,
+				"press esc to restart"
+				);
+		} break;
+		case GENERAL_STATE::game: {			
 			level.draw();
 			player.draw();
 			//duck.draw();
-			ghost.draw();
+			//ghost.draw();
 			//slug.draw();
+
+			for (size_t i = 0; i < mv.size(); i++) {
+				mv[i]->draw();
+			}
+			
 			hud->draw(gameControl->getMonstersLeft());
 			movesHeader.draw();
 			sword.draw();

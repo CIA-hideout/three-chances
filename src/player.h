@@ -3,10 +3,18 @@
 
 #include <map>
 
+#include "constants.h"
 #include "entity.h"
 #include "levelGrid.h"
 #include "monsterGrid.h"
 #include "gameControl.h"
+
+namespace playerNS
+{
+	// Place player in middle of screen
+	const int X = TILE_SIZE * SCALE * 3;
+	const int Y = TILE_SIZE * SCALE * 3;
+}
 
 class Player : public Entity {
 private:
