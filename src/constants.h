@@ -47,7 +47,7 @@ const float MIN_FRAME_RATE = 10.0f;
 const float MIN_FRAME_TIME = 1.0f / FRAME_RATE;
 const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_RATE;
 const float VELOCITY = 200.0f;
-const float ROTATION_RATE = 2245.0f;
+const float ROTATION_RATE = 720.0f;
 
 // Key Mappings
 const UCHAR ESC_KEY = VK_ESCAPE;
@@ -106,18 +106,22 @@ const int LEVEL_COLS = 2;
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 4;
-const float PLAYER_ANIMATION_DELAY = 0.08f;
-const int PLAYER_ATK_START_FRAME = 4;
-const int PLAYER_ATK_END_FRAME = 5;
-const int PLAYER_COLS = 6;
+const float PLAYER_ANIMATION_DELAY = 0.2f;
+const int PLAYER_ATK_START_FRAME = 5;
+const int PLAYER_ATK_END_FRAME = 6;
+const int PLAYER_COLS = 7;
 const int PLAYER_ID = 1;
+
+const int SWORD_WIDTH = 128;
+const int SWORD_HEIGHT = 128;
+const int SWORD_COLS = 4;
 
 const int DUCK_STANDING_FRAME = 0;
 const int DUCK_WALK_START_FRAME = 0;
 const int DUCK_WALK_END_FRAME = 3;
 const int DUCK_ATK_START_FRAME = 4;
 const int DUCK_ATK_END_FRAME = 5;
-const float DUCK_ANIMATION_DELAY = 0.25f;
+const float DUCK_ANIMATION_DELAY = 0.2f;
 const int DUCK_COLS = 7;
 
 const int GHOST_STANDING_FRAME = 0;
@@ -125,7 +129,7 @@ const int GHOST_WALK_START_FRAME = 0;
 const int GHOST_WALK_END_FRAME = 3;
 const int GHOST_ATK_START_FRAME = 4;
 const int GHOST_ATK_END_FRAME = 5;
-const float GHOST_ANIMATION_DELAY = 0.25f;
+const float GHOST_ANIMATION_DELAY = 0.2f;
 const int GHOST_HURT_FRAME = 6;
 const int GHOST_COLS = 7;
 
@@ -134,7 +138,7 @@ const int SLUG_WALK_START_FRAME = 0;
 const int SLUG_WALK_END_FRAME = 2;
 const int SLUG_ATK_START_FRAME = 3;
 const int SLUG_ATK_END_FRAME = 4;
-const float SLUG_ANIMATION_DELAY = 0.25f;
+const float SLUG_ANIMATION_DELAY = 0.2f;
 const int SLUG_COLS = 6;
 
 #endif

@@ -20,8 +20,6 @@ void Player::update(float frameTime, GameControl* gc) {
 
 		// Attack loop is done
 		if (this->getAction() == ATTACK) {
-			this->setAnimating(false);
-			this->moveExecuted();
 			gc->damageEnemy();
 		}
 	}
@@ -63,6 +61,7 @@ void Player::startWalkAnimation() {
 }
 
 void Player::startAttackAnimation() {
+	this->setFrameDelay(1.0);
 	this->setFrames(PLAYER_ATK_START_FRAME, PLAYER_ATK_END_FRAME);
 	this->setCurrentFrame(PLAYER_ATK_START_FRAME);
 }

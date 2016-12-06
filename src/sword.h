@@ -3,6 +3,7 @@
 
 #include "image.h"
 #include "game.h"
+#include "player.h"
 
 class Sword : public Image {
 private:
@@ -17,10 +18,9 @@ public:
 
 	void setDirection(int direction);
 
-	//void rotateSwordCW(float frameTime);
-	//void rotateSwordACW(float frameTime);
+	bool attack(float frameTime);
 
-	void attack(float frameTime);
+	void finishAnimating(Player *p);
 
 };
 
