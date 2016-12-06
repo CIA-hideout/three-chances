@@ -128,9 +128,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	gameOverScreen.initialize(graphics, 0, 0, 0, &gameOverScreenTexture);
 	gameClearScreen.initialize(graphics, 0, 0, 0, &gameClearScreenTexture);
 
-	startScreen.setScale(SCALE);
-	pausedScreen.setScale(SCALE);
-	gameOverScreen.setScale(SCALE);
+	startScreen.setScale(SCALE_2X);
+	pausedScreen.setScale(SCALE_2X);
+	gameOverScreen.setScale(SCALE_2X);
 	gameClearScreen.setScale(SCALE_2X);
 	
 	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
@@ -190,9 +190,9 @@ void ThreeChances::initializeEntities() {
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::vector<Coordinates> ghostStartCoords = {
-		//Coordinates(5, 25),
-		//Coordinates(7, 25),
-		//Coordinates(7, 20),
+		Coordinates(5, 25),
+		Coordinates(7, 25),
+		Coordinates(7, 20),
 	};
 	std::vector<Coordinates> duckStartCoords = {};
 
@@ -235,10 +235,10 @@ void ThreeChances::update() {
 			}
 		} break;
 		case GENERAL_STATE::gameOver: {
-			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
+			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
-				screenKeysPressed[ESC] = true;
+				screenKeysPressed[SPACE] = true;
 			}
 		} break;
 		case GENERAL_STATE::gameClear: {
