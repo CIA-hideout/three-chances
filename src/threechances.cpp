@@ -109,8 +109,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	this->initializeMonsters();
 	hud->setInitialPosition();
 	//monsterGrid->logLayout();
-	sword.setDirection(DOWN);
-	
+
+	sword.setVisible(false);
+
 	return;
 }
 
@@ -232,6 +233,9 @@ void ThreeChances::update() {
 						lastKeyPressed = LEFT;
 						endPoint = level.getX() + TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, monsterGrid, LEFT, endPoint, gameControl);
+						sword.setDirection(LEFT);
+						sword.setX(player.getX() - TILE_SIZE * SCALE * 1);
+						sword.setY(player.getY());						
 					}
 
 					if (input->isKeyDown(RIGHT_KEY) && !keysPressed[RIGHT]) {
@@ -239,6 +243,9 @@ void ThreeChances::update() {
 						lastKeyPressed = RIGHT;
 						endPoint = level.getX() - TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, monsterGrid, RIGHT, endPoint, gameControl);
+						sword.setDirection(RIGHT);
+						sword.setX(player.getX() + TILE_SIZE * SCALE * 1);
+						sword.setY(player.getY());
 					}
 
 					if (input->isKeyDown(UP_KEY) && !keysPressed[UP]) {
@@ -246,6 +253,9 @@ void ThreeChances::update() {
 						lastKeyPressed = UP;
 						endPoint = level.getY() + TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, monsterGrid, UP, endPoint, gameControl);
+						sword.setDirection(UP);
+						sword.setX(player.getX());
+						sword.setY(player.getY() - TILE_SIZE * SCALE * 1);
 					}
 
 					if (input->isKeyDown(DOWN_KEY) && !keysPressed[DOWN]) {
@@ -253,6 +263,9 @@ void ThreeChances::update() {
 						lastKeyPressed = DOWN;
 						endPoint = level.getY() - TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, monsterGrid, DOWN, endPoint, gameControl);
+						sword.setDirection(DOWN);
+						sword.setX(player.getX());
+						sword.setY(player.getY() + TILE_SIZE * SCALE * 1);
 					}
 				}
 				// Enemy's turn
@@ -277,6 +290,10 @@ void ThreeChances::update() {
 					if (level.moveInDirection(frameTime, oppDirection, player.getEndPoint())) {
 						level.finishAnimating(levelGrid, &player);
 					}
+				}
+
+				if (player.getAction() == ATTACK) {
+					sword.attack(frameTime); 
 				}
 
 				for (size_t i = 0; i < mv.size(); i++) {
