@@ -142,8 +142,10 @@ void ThreeChances::initialize(HWND hwnd) {
 void ThreeChances::restartGame() {
 	// Clear mv
 	std::vector<Entity*> mv;
+	std::queue<Entity*> aq;
 	gameControl->setGameState(GAME_STATE::player);
 	gameControl->setMonsterVec(mv);
+	gameControl->setAnimationQueue(aq);
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -162,6 +164,8 @@ void ThreeChances::restartGame() {
 	hud->resetMovesHud();
 	hud->resetHealthHud();
 	this->initializeEntities();
+
+	gameControl->setEnemyAiInitialized(false);
 }
 
 std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
@@ -393,11 +397,7 @@ void ThreeChances::enemyAi() {
 
 		// Update game state
 		gameControl->setGameState(GAME_STATE::player);
-		gameControl->setEnemyAnimating(false);
 		gameControl->setEnemyAiInitialized(false);
-	}
-	else {
-		gameControl->setEnemyAnimating(true);
 	}
 
 	gameControl->setAnimationQueue(aq);

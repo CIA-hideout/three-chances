@@ -5,12 +5,11 @@ GameControl::GameControl() {
 	//generalState = GENERAL_STATE::game;
 	gameState = GAME_STATE::player;
 	turnsElapsed = 0;
-	enemyAnimating = false;
 	enemyAiInitialized = false;
 }
 
-void GameControl::damageEnemy() {
-	Entity* entityPtr = this->getPtrToEntity(this->getEnemyAttackedId());
+void GameControl::damageEnemy(int id) {
+	Entity* entityPtr = this->getPtrToEntity(id);
 	float newHealth = entityPtr->getHealth() - player->getDamage();
 
 	entityPtr->startHurtAnimation();
