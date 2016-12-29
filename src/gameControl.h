@@ -3,9 +3,9 @@
 
 #include <queue>
 #include <vector>
+#include "audio.h"
 #include "entity.h"
 #include "entityGrid.h"
-
 
 enum class GAME_STATE : char {
 	player = 'p',
@@ -24,6 +24,7 @@ class GameControl {
 private:
 	GENERAL_STATE generalState;
 	GAME_STATE gameState;
+	Audio* audio;	// pointer to audio 
 	int turnsElapsed;
 	std::vector<Entity*> monsterVec;
 	std::queue<Entity*> animationQueue;
@@ -31,7 +32,7 @@ private:
 	bool enemyAiInitialized;
 
 public:
-	GameControl();
+	GameControl(Audio* audio);
 	~GameControl();
 	
 	// getters

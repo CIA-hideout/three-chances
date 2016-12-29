@@ -64,11 +64,14 @@ private:
 	Level	level;
 	Player	player;
 	Sword	sword;
-	Image	movesHeader;
 
 	std::map<int, bool> keysPressed;
 	std::map<int, bool> screenKeysPressed;
 	int		lastKeyPressed;
+
+	bool startBtnPressed;
+	XACT_CUE* startCue;
+	bool muted;
 
 public:
 	// Constructor
