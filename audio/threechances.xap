@@ -16,8 +16,8 @@ Global Settings
     Header File = threechances.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 355057657;
-    Last Modified High = 30564822;
+    Last Modified Low = 897028063;
+    Last Modified High = 30564825;
 
     Category
     {
@@ -447,6 +447,10 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Bank Last Modified Low = 897248622;
+    Bank Last Modified High = 30564825;
+    Header Last Modified High = 0;
+    Header Last Modified Low = 0;
 
     Sound
     {

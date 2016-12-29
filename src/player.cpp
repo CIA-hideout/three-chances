@@ -27,6 +27,7 @@ void Player::update(float frameTime, GameControl* gc) {
 }
 
 void Player::startWalkAnimation() {
+	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
 	this->setFrames(PLAYER_WALK_START_FRAME, PLAYER_WALK_END_FRAME);
 	this->setCurrentFrame(PLAYER_WALK_START_FRAME);
 }

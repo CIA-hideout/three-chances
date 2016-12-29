@@ -107,17 +107,6 @@ const char START_SCREEN_IMAGE[] = "resources\\Start_Menu.png";
 const char GAME_OVER_SCREEN_IMAGE[] = "resources\\Game_Over.png";
 const char GAME_CLEAR_SCREEN_IMAGE[] = "resources\\Game_Clear.png";
 
-// Sounds
-const char PAUSE_SOUND[] = "resources\\pause.wav";
-const char UNPAUSE_SOUND[] = "resources\\unpause.wav";
-const char HIT_SOUND[] = "resources\\hit.wav";
-const char SLASH_SOUND[] = "resources\\slash.wav";
-const char ATTACK_SOUND[] = "resources\\attack.wav";
-const char CLICK_SOUND[] = "resources\\click.wav";
-const char DIE_SOUND[] = "resources\\die.wav";
-const char GAME_OVER_SOUND[] = "resources\\Game_Over.wav";
-const char START_GAME_SOUND[] = "resources\\Start_Game.wav";
-
 // audio files required by audio.cpp
 // WAVE_BANK must be location of .xwb file.
 const char WAVE_BANK[] = "audio\\Win\\Wave Bank.xwb";
@@ -142,7 +131,7 @@ const int LEVEL_COLS = 2;
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 4;
-const float PLAYER_ANIMATION_DELAY = 0.2f;
+const float PLAYER_ANIMATION_DELAY = 0.1f;
 const int PLAYER_ATK_START_FRAME = 5;
 const int PLAYER_ATK_END_FRAME = 6;
 const int PLAYER_COLS = 7;

@@ -163,6 +163,7 @@ void ThreeChances::restartGame() {
 	player.setHealth(PLAYER_DATA.health);
 	player.setMovesLeft(PLAYER_DATA.moves);
 	player.setAnimating(false);
+	player.rotateEntity(DOWN);
 
 	level.setX(levelNS::X);
 	level.setY(levelNS::Y);
@@ -256,6 +257,7 @@ void ThreeChances::update() {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
+				audio->stopCue(GAME_OVER_CUE);
 				audio->playCue(CLICK_CUE);
 			}
 		} break;

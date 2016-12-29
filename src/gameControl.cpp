@@ -17,7 +17,7 @@ void GameControl::damageEnemy(int id) {
 	entityPtr->setHealth(newHealth);
 
 	if (entityPtr->getHealth() > 0)
-		audio->playCue(HIT_SOUND);
+		audio->playCue(HIT_CUE);
 }
 
 void GameControl::damagePlayer(int id) {
