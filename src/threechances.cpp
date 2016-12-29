@@ -9,6 +9,8 @@ void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[UP] = false;
 	if (!input->isKeyDown(DOWN_KEY))
 		(*keysPressed)[DOWN] = false;
+	if (!input->isKeyDown(SPACE_KEY))
+		(*keysPressed)[SPACE] = false;
 }
 
 void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
@@ -221,7 +223,7 @@ void ThreeChances::update() {
 		if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
 				screenKeysPressed[SPACE] = true;
-				PlaySound(START_GAME_SOUND, NULL, SND_SYNC);				
+				PlaySound(START_GAME_SOUND, NULL, SND_SYNC);
 			}
 		} break;
 		case GENERAL_STATE::paused: {
@@ -292,6 +294,11 @@ void ThreeChances::update() {
 						endPoint = level.getY() - TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, entityGrid, DOWN, endPoint, gameControl);
 						sword.setDirection(DOWN, player.getX(), player.getY());
+					}
+
+					if (input->isKeyDown(SPACE_KEY) && !keysPressed[SPACE]) {
+						keysPressed[SPACE] = true;
+						player.setMovesLeft(0);
 					}
 				}
 				// Enemy's turn
