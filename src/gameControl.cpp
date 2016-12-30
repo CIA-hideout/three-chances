@@ -1,9 +1,10 @@
 #include "gameControl.h"
 
-GameControl::GameControl() {
+GameControl::GameControl(Audio* a) {
 	generalState = GENERAL_STATE::menu;
 	//generalState = GENERAL_STATE::game;
 	gameState = GAME_STATE::player;
+	audio = a;
 	turnsElapsed = 0;
 	enemyAiInitialized = false;
 }
@@ -16,7 +17,7 @@ void GameControl::damageEnemy(int id) {
 	entityPtr->setHealth(newHealth);
 
 	if (entityPtr->getHealth() > 0)
-		PlaySound(HIT_SOUND, NULL, SND_ASYNC);
+		audio->playCue(HIT_CUE);
 }
 
 void GameControl::damagePlayer(int id) {
@@ -28,7 +29,7 @@ void GameControl::damagePlayer(int id) {
 	if (newHealth <= 0)
 	{
 		generalState = GENERAL_STATE::gameOver;
-		PlaySound(GAME_OVER_SOUND, NULL, SND_ASYNC);
+		audio->playCue(GAME_OVER_CUE);
 	}		
 }
 
@@ -42,7 +43,7 @@ void GameControl::cleanupEnemy(EntityGrid *entityGrid) {
 			entityGrid->removeEntity(mv[i]->getId());
 			indexToRemove.push_back(i);
 			mv[i] = NULL;
-			PlaySound(DIE_SOUND, NULL, SND_ASYNC);
+			audio->playCue(DIE_CUE);
 		}
 	}
 

@@ -59,6 +59,7 @@ const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR DOWN_KEY = VK_DOWN;
 const UCHAR SPACE_KEY = VK_SPACE;
+const UCHAR Q_KEY = 0x51;
 
 // Action integers
 const int LEFT = 0;
@@ -67,6 +68,7 @@ const int UP = 2;
 const int DOWN = 3;
 const int ATTACK = 4;
 const int STAY = 5;
+const int END = 6;
 
 // Screen key pressed
 const int ESC = 100;
@@ -105,23 +107,31 @@ const char START_SCREEN_IMAGE[] = "resources\\Start_Menu.png";
 const char GAME_OVER_SCREEN_IMAGE[] = "resources\\Game_Over.png";
 const char GAME_CLEAR_SCREEN_IMAGE[] = "resources\\Game_Clear.png";
 
-// Sounds
-const char PAUSE_SOUND[] = "resources\\pause.wav";
-const char UNPAUSE_SOUND[] = "resources\\unpause.wav";
-const char HIT_SOUND[] = "resources\\hit.wav";
-const char SLASH_SOUND[] = "resources\\slash.wav";
-const char ATTACK_SOUND[] = "resources\\attack.wav";
-const char CLICK_SOUND[] = "resources\\click.wav";
-const char DIE_SOUND[] = "resources\\die.wav";
-const char GAME_OVER_SOUND[] = "resources\\Game_Over.wav";
-const char START_GAME_SOUND[] = "resources\\Start_Game.wav";
+// audio files required by audio.cpp
+// WAVE_BANK must be location of .xwb file.
+const char WAVE_BANK[] = "audio\\Win\\Wave Bank.xwb";
+// SOUND_BANK must be location of .xsb file.
+const char SOUND_BANK[] = "audio\\Win\\Sound Bank.xsb";
+// XGS_FILE must be location of .xgs file.
+const char XGS_FILE[] = "audio\\Win\\threechances.xgs";
+
+// audio cues
+const char PAUSE_CUE[] = "pause";
+const char UNPAUSE_CUE[] = "unpause";
+const char HIT_CUE[] = "hit";
+const char SLASH_CUE[] = "slash";
+const char ATTACK_CUE[] = "attack";
+const char CLICK_CUE[] = "click";
+const char DIE_CUE[] = "die";
+const char GAME_OVER_CUE[] = "game_over";
+const char START_GAME_CUE[] = "start_game";
 
 const int LEVEL_COLS = 2;
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;
 const int PLAYER_WALK_END_FRAME = 4;
-const float PLAYER_ANIMATION_DELAY = 0.2f;
+const float PLAYER_ANIMATION_DELAY = 0.1f;
 const int PLAYER_ATK_START_FRAME = 5;
 const int PLAYER_ATK_END_FRAME = 6;
 const int PLAYER_COLS = 7;

@@ -96,6 +96,9 @@
     <ClInclude Include="src\moon.h">
       <Filter>Header Files\monsters</Filter>
     </ClInclude>
+    <ClInclude Include="src\audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game.cpp">
@@ -160,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="src\moon.cpp">
       <Filter>Source Files\monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audio.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

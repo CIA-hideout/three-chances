@@ -37,6 +37,7 @@ protected:
 	bool animating;
 	int action;
 	float timer;
+	Audio *audio;	// pointer to audio system
 
 public:
 	Entity();

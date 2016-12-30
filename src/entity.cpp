@@ -65,6 +65,7 @@ bool Entity::initialize(Game *gamePtr, int width, int height, int ncols,
 	action = -1;
 
 	this->setScale((float)SCALE);
+	audio = gamePtr->getAudio();
 
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }
@@ -205,7 +206,7 @@ void Entity::initAi(EntityGrid *entityGrid, LevelGrid *levelGrid) {
 			action = ATTACK;
 			this->rotateEntity(directionToAttack);
 			this->startAttackAnimation();
-			
+			audio->playCue(ATTACK_CUE);
 		}
 		// Move if target is out of atk range
 		else {
@@ -257,7 +258,6 @@ bool Entity::animateAi(float frameTime, EntityGrid *entityGrid) {
 		if (this->getAnimationComplete()) {
 			animationComplete = true;
 			this->moveExecuted();
-			PlaySound(ATTACK_SOUND, NULL, SND_ASYNC);
 		}
 	}
 	else if (action == STAY) {

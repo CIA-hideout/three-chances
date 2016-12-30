@@ -27,6 +27,7 @@ void Player::update(float frameTime, GameControl* gc) {
 }
 
 void Player::startWalkAnimation() {
+	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
 	this->setFrames(PLAYER_WALK_START_FRAME, PLAYER_WALK_END_FRAME);
 	this->setCurrentFrame(PLAYER_WALK_START_FRAME);
 }
@@ -66,7 +67,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);
-		PlaySound(SLASH_SOUND, NULL, SND_ASYNC);
+		audio->playCue(SLASH_CUE);
 		gc->damageEnemy(nextTileValue);
 
 		this->logAction();

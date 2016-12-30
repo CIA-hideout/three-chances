@@ -9,6 +9,8 @@ void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[UP] = false;
 	if (!input->isKeyDown(DOWN_KEY))
 		(*keysPressed)[DOWN] = false;
+	if (!input->isKeyDown(Q_KEY))
+		(*keysPressed)[END] = false;
 }
 
 void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
@@ -38,11 +40,13 @@ ThreeChances::ThreeChances() {
 	keysPressed[RIGHT] = false;
 	keysPressed[UP] = false;
 	keysPressed[DOWN] = false;
+	keysPressed[END] = false;
 
 	screenKeysPressed[ESC] = false;
 	screenKeysPressed[SPACE] = false;
 
-	gameControl = new GameControl;
+	startBtnPressed = false;
+	muted = false;
 }
 
 //=============================================================================
@@ -61,6 +65,8 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	Game::initialize(hwnd);
 	graphics->setBackColor(graphicsNS::BLACK);
+
+	gameControl = new GameControl(audio);
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -157,6 +163,7 @@ void ThreeChances::restartGame() {
 	player.setHealth(PLAYER_DATA.health);
 	player.setMovesLeft(PLAYER_DATA.moves);
 	player.setAnimating(false);
+	player.rotateEntity(DOWN);
 
 	level.setX(levelNS::X);
 	level.setY(levelNS::Y);
@@ -213,22 +220,36 @@ void ThreeChances::initializeEntities() {
 // Update all game items
 //=============================================================================
 void ThreeChances::update() {
+	if (muted)
+		audio->pauseCategory("Music");
+	else
+		audio->resumeCategory("Music");
+
 	GENERAL_STATE gs = gameControl->getGeneralState();
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 
 	switch (gs) {
 		case GENERAL_STATE::menu: {
-		if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
-				gameControl->setGeneralState(GENERAL_STATE::game);
-				screenKeysPressed[SPACE] = true;
-				PlaySound(START_GAME_SOUND, NULL, SND_SYNC);				
+			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
+				screenKeysPressed[SPACE] = true;			
+				startBtnPressed = true;
+				startCue = audio->playCue(START_GAME_CUE);
+			}
+
+			if (startBtnPressed) {
+				DWORD* tempCueState = new DWORD;
+				startCue->GetState(tempCueState);
+
+				if (*tempCueState == XACT_CUESTATE_STOPPED) {
+					gameControl->setGeneralState(GENERAL_STATE::game);
+				}
 			}
 		} break;
 		case GENERAL_STATE::paused: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
 				gameControl->setGeneralState(GENERAL_STATE::game);
 				screenKeysPressed[SPACE] = true;
-				PlaySound(UNPAUSE_SOUND, NULL, SND_ASYNC);
+				audio->playCue(UNPAUSE_CUE);
 			}
 		} break;
 		case GENERAL_STATE::gameOver: {
@@ -236,7 +257,8 @@ void ThreeChances::update() {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
-				PlaySound(CLICK_SOUND, NULL, SND_ASYNC);
+				audio->stopCue(GAME_OVER_CUE);
+				audio->playCue(CLICK_CUE);
 			}
 		} break;
 		case GENERAL_STATE::gameClear: {
@@ -244,14 +266,14 @@ void ThreeChances::update() {
 				gameControl->setGeneralState(GENERAL_STATE::menu);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
-				PlaySound(CLICK_SOUND, NULL, SND_ASYNC);
+				audio->playCue(CLICK_CUE);
 			}
 		} break;
 		case GENERAL_STATE::game: {
 			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
 				gameControl->setGeneralState(GENERAL_STATE::paused);
 				screenKeysPressed[ESC] = true;
-				PlaySound(PAUSE_SOUND, NULL, SND_ASYNC);
+				audio->playCue(PAUSE_CUE);
 			}
 
 			// Check no animation currently running
@@ -292,6 +314,11 @@ void ThreeChances::update() {
 						endPoint = level.getY() - TILE_SIZE * SCALE;
 						player.moveInDirection(levelGrid, entityGrid, DOWN, endPoint, gameControl);
 						sword.setDirection(DOWN, player.getX(), player.getY());
+					}
+
+					if (input->isKeyDown(Q_KEY) && !keysPressed[END]) {
+						keysPressed[END] = true;
+						player.setMovesLeft(0);
 					}
 				}
 				// Enemy's turn
@@ -436,7 +463,6 @@ void ThreeChances::render() {
 			}
 
 			hud->draw(gameControl->getMonstersLeft());
-			movesHeader.draw();
 			sword.draw();
 		} break;
 	}
