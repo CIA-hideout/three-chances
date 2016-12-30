@@ -47,7 +47,7 @@ ThreeChances::ThreeChances() {
 
 	startBtnPressed = false;
 	muted = false;
-	gameMode = GAME_MODE::normal;
+	gameMode = GAME_MODE::demo;
 }
 
 //=============================================================================
@@ -190,15 +190,72 @@ std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
 	return mv;
 }
 
+void log3dGrid(std::vector<std::vector<Coordinates>> coordSet) {
+	for (int i = 0; i < coordSet.size(); i++) {
+		printf("Start of Box %d\n", i);
+		for (int j = 0; j < coordSet[i].size(); j++) {
+			printf("X: %d, Y: %d\n", coordSet[i][j].x, coordSet[i][j].y);
+		}
+		printf("End of Box %d\n", i);
+	}
+}
+
 void ThreeChances::initializeEntities() {
+	srand(time(NULL));
+
 	// Add to entity grid
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
-
+	std::vector<std::vector<int>> gameGrid = levelGrid->getGrid();
+	
 	Entity *tempMonster;
 
 	if (gameMode == GAME_MODE::demo) {
+		int gridSize = gameGrid.size();
+
+		// initialize the 4 boxes
+		std::vector<std::vector<Coordinates>> coordSet;
+		for (int i = 0; i < 4; i++) {
+			std::vector<Coordinates> tempVec;
+			coordSet.push_back(tempVec);
+		}
+
+		// Add coordinates to that 4 boxes
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				
+				if (i < gridSize / 2 && j < gridSize / 2)
+					coordSet[0].push_back(Coordinates(j, i));
+				else if (i < gridSize / 2 && j >= gridSize / 2)
+					coordSet[1].push_back(Coordinates(j, i));
+				else if (i >= gridSize / 2 && j < gridSize / 2)
+					coordSet[2].push_back(Coordinates(j, i));
+				else 
+					coordSet[3].push_back(Coordinates(j, i));
+			}
+		}
+
+		// Spawn 5 monsters in each box
+		for (size_t i = 0; i < coordSet.size(); i++) {
+			int monsterCounter = 0;
+
+			do {
+				//std::cout << coordSet[i].size() << std::endl;
+				int randIndex = rand() % coordSet[i].size();
+				std::cout << randIndex << std::endl;
+				Coordinates startCoord = coordSet[i][randIndex];
+			
+				// try spawn at random index
+				tempMonster = new Ghost;
+
+				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isEntityOnGrid(startCoord)) {
+					tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+					mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+					monsterCounter++;
+				}
+			} while (monsterCounter != 5);
+		}
 		
 	}
 	else {

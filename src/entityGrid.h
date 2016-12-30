@@ -32,6 +32,8 @@ public:
 	void addEntity(Coordinates coordinates, int id);
 	void moveEntity(Coordinates currCoord, Coordinates nextCoord);
 	void removeEntity(int id);
+
+	bool isEntityOnGrid(Coordinates coord);
 };
 
 #endif

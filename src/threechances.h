@@ -8,6 +8,7 @@
 #include <vector>
 #include <stdio.h>
 #include <queue>
+#include <time.h>
 
 #include "game.h"
 #include "font.h"

@@ -98,6 +98,7 @@ public:
 	virtual bool animateAi(float frameTime, EntityGrid *entityGrid);
 	
 	virtual bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);
+	virtual bool isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord) { return false; };
 	virtual bool isTileEmpty(EntityGrid *entityGrid, int direction);
 
 	virtual int getBestXmove(int monsterX, int playerX);

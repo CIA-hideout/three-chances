@@ -101,3 +101,7 @@ void EntityGrid::removeEntity(int id) {
 	if (coordinates.x != -1 && coordinates.y != -1)
 		grid[coordinates.y][coordinates.x] = 0;
 }
+
+bool EntityGrid::isEntityOnGrid(Coordinates coord) {
+	return grid[coord.y][coord.x] != 0;
+}
