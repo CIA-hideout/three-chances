@@ -47,6 +47,7 @@ ThreeChances::ThreeChances() {
 
 	startBtnPressed = false;
 	muted = false;
+	gameMode = GAME_MODE::demo;
 }
 
 //=============================================================================
@@ -70,7 +71,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
-	levelGrid->initialize(1);
+	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
@@ -89,7 +90,7 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
 	// map texture
-	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
+	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_IMAGE : LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
@@ -113,7 +114,10 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
-	if (!level.initialize(this, LEVEL_SIZE, LEVEL_SIZE, LEVEL_COLS, &levelTexture))
+	//if (!level.initialize(this, LEVEL_SIZE, LEVEL_SIZE, LEVEL_COLS, &levelTexture))
+	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
+
+	if (!level.initialize(this, 0, 0, 0, &levelTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
@@ -155,7 +159,7 @@ void ThreeChances::restartGame() {
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
-	levelGrid->initialize(1);
+	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
@@ -194,7 +198,7 @@ void ThreeChances::initializeEntities() {
 
 	Entity *tempMonster;
 
-	for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
+	/*for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
 		tempMonster = new Duck;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
@@ -210,7 +214,7 @@ void ThreeChances::initializeEntities() {
 		tempMonster = new Moon;
 		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
 		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
-	}
+	}*/
 
 	gameControl->setPlayer(&player);
 	gameControl->setMonsterVec(mv);
@@ -345,6 +349,7 @@ void ThreeChances::update() {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
 
+						// CHANGE HERE 
 						if (entityGrid->getPlayerCoordinates() == STAGE_1_END_TILE)
 							gameControl->setGeneralState(GENERAL_STATE::gameClear);
 					}
@@ -362,10 +367,11 @@ void ThreeChances::update() {
 				}
 			}
 
+			// HERE TOO
 			// Remove blockage on level if monsters left == 0
 			if (gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
-				level.removeBlockage();
-				levelGrid->removeBlockage();
+				//level.removeBlockage();
+				//levelGrid->removeBlockage();
 			}
 
 			// Update and reset

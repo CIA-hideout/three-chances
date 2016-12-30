@@ -30,9 +30,15 @@
 
 bool operator==(const Coordinates& lhs, const Coordinates& rhs);
 
+enum class GAME_MODE : int {
+	demo = 0,
+	normal = 1,
+};
+
 class ThreeChances : public Game {
 private:
 	// Consts
+	GAME_MODE		gameMode;
 	GameControl*	gameControl;
 	EntityGrid*		entityGrid;
 	LevelGrid*		levelGrid;
