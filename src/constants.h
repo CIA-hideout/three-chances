@@ -31,9 +31,17 @@ const float SCALE_2X_ARR[] = { 0.5, 1.0, 1.5 };
 const float SCALE_2X = SCALE_2X_ARR[SCALE - 1];
 
 const int TILE_SIZE = 32;
-//const int LEVEL_SIZE = TILE_SIZE * 32;
-const int LEVEL_SIZE = TILE_SIZE * 18;
 const int VIEW_RANGE = 7;
+
+namespace DEMO_LEVEL {
+	const int LEVEL_SIZE = TILE_SIZE * 18;
+	const int LEVEL_COLS = 1;
+};
+
+namespace NORMAL_LEVEL {
+	const int LEVEL_SIZE = TILE_SIZE * 32;
+	const int LEVEL_COLS = 2;
+}
 
 // Window
 const char CLASS_NAME[] = "ThreeChances";
@@ -127,9 +135,6 @@ const char CLICK_CUE[] = "click";
 const char DIE_CUE[] = "die";
 const char GAME_OVER_CUE[] = "game_over";
 const char START_GAME_CUE[] = "start_game";
-
-//const int LEVEL_COLS = 2;
-const int LEVEL_COLS = 1;
 
 const int PLAYER_STANDING_FRAME = 0;
 const int PLAYER_WALK_START_FRAME = 0;

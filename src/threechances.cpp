@@ -47,7 +47,7 @@ ThreeChances::ThreeChances() {
 
 	startBtnPressed = false;
 	muted = false;
-	gameMode = GAME_MODE::demo;
+	gameMode = GAME_MODE::normal;
 }
 
 //=============================================================================
@@ -114,10 +114,10 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
-	//if (!level.initialize(this, LEVEL_SIZE, LEVEL_SIZE, LEVEL_COLS, &levelTexture))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
+	int levelSize = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_SIZE : NORMAL_LEVEL::LEVEL_SIZE;
+	int levelCols = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_COLS : NORMAL_LEVEL::LEVEL_COLS;
 
-	if (!level.initialize(this, 0, 0, 0, &levelTexture))
+	if (!level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile()))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
@@ -169,8 +169,8 @@ void ThreeChances::restartGame() {
 	player.setAnimating(false);
 	player.rotateEntity(DOWN);
 
-	level.setX(levelNS::X);
-	level.setY(levelNS::Y);
+	level.setX(level.getStartX());
+	level.setY(level.getStartY());
 
 	hud->resetMovesHud();
 	hud->resetHealthHud();
@@ -198,23 +198,28 @@ void ThreeChances::initializeEntities() {
 
 	Entity *tempMonster;
 
-	/*for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
-		tempMonster = new Duck;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
+	if (gameMode == GAME_MODE::demo) {
+		
 	}
+	else {
+		for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
+			tempMonster = new Duck;
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
+		}
 
-	for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
-		tempMonster = new Ghost;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
+		for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
+			tempMonster = new Ghost;
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
+		}
+
+		for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
+			tempMonster = new Moon;
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
+			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
+		}
 	}
-
-	for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
-		tempMonster = new Moon;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
-	}*/
 
 	gameControl->setPlayer(&player);
 	gameControl->setMonsterVec(mv);
@@ -349,8 +354,7 @@ void ThreeChances::update() {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
 
-						// CHANGE HERE 
-						if (entityGrid->getPlayerCoordinates() == STAGE_1_END_TILE)
+						if (entityGrid->getPlayerCoordinates() == levelGrid->getEndTile())
 							gameControl->setGeneralState(GENERAL_STATE::gameClear);
 					}
 				}
@@ -365,13 +369,12 @@ void ThreeChances::update() {
 				for (size_t i = 0; i < mv.size(); i++) {
 					mv[i]->moveInDirection(frameTime, oppDirection, entityGrid->getEntityPosition(mv[i]->getId()));
 				}
-			}
+			} 
 
-			// HERE TOO
 			// Remove blockage on level if monsters left == 0
-			if (gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
-				//level.removeBlockage();
-				//levelGrid->removeBlockage();
+			if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
+				level.removeBlockage();
+				levelGrid->removeBlockage();
 			}
 
 			// Update and reset

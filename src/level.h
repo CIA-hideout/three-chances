@@ -5,20 +5,10 @@
 #include "player.h"
 #include "levelGrid.h"
 
-//namespace levelNS
-//{
-//	const float X = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.x - 3));
-//	const float Y = -(TILE_SIZE * SCALE * ((float)STAGE_1_START_TILE.y - 3));
-//}
-
-namespace levelNS
-{
-	const float X = -(TILE_SIZE * SCALE * ((float)DEMO_START_TILE.x - 3));
-	const float Y = -(TILE_SIZE * SCALE * ((float)DEMO_START_TILE.y - 3));
-}
-
 class Level : public Image {
 private:
+	float startX;
+	float startY;
 	bool pathBlocked;
 
 public:
@@ -28,7 +18,10 @@ public:
 	bool getPathBlocked() const { return pathBlocked; }
 	void setPathBlocked(bool pb) { pathBlocked = pb; }
 
-	virtual bool initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM);
+	float getStartX() { return startX; }
+	float getStartY() { return startY; }
+
+	bool initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM, Coordinates startCoord);
 	void finishAnimating(LevelGrid *levelGrid, Player *player);
 	bool moveInDirection(float frameTime, int direction, float endPoint);
 	void removeBlockage();

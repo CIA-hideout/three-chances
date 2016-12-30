@@ -4,15 +4,22 @@ bool operator==(const Coordinates& lhs, const Coordinates& rhs) {
 	return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-Level::Level() : Image() {
-	// Set map position based off startTile
-	spriteData.x = levelNS::X;
-	spriteData.y = levelNS::Y;
-}
+Level::Level() : Image() {}
 
 Level::~Level() {}
 
-bool Level::initialize(Game *gamePtr, int width, int height, int ncols, TextureManager *textureM) {
+bool Level::initialize(Game *gamePtr, int width, int height, int ncols, 
+	TextureManager *textureM, Coordinates startTile) {
+	// Set map position based off startTile
+	float x = -(TILE_SIZE * SCALE * ((float)startTile.x - 3));
+	float y = -(TILE_SIZE * SCALE * ((float)startTile.y - 3));
+
+	spriteData.x = x;
+	spriteData.y = y;
+
+	startX = x;
+	startY = y;
+
 	pathBlocked = true;
 	this->setScale((float)SCALE);
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
