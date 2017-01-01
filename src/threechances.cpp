@@ -32,6 +32,8 @@ int findKeyDown(std::map<int, bool> *keysPressed) {
 	return -1;
 }
 
+
+
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -190,17 +192,8 @@ std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
 	return mv;
 }
 
-void log3dGrid(std::vector<std::vector<Coordinates>> coordSet) {
-	for (int i = 0; i < coordSet.size(); i++) {
-		printf("Start of Box %d\n", i);
-		for (int j = 0; j < coordSet[i].size(); j++) {
-			printf("X: %d, Y: %d\n", coordSet[i][j].x, coordSet[i][j].y);
-		}
-		printf("End of Box %d\n", i);
-	}
-}
-
 void ThreeChances::initializeEntities() {
+	// reset random seed
 	srand(time(NULL));
 
 	// Add to entity grid
@@ -241,19 +234,40 @@ void ThreeChances::initializeEntities() {
 			int monsterCounter = 0;
 
 			do {
-				//std::cout << coordSet[i].size() << std::endl;
+				// try spawn random monster at random index
 				int randIndex = rand() % coordSet[i].size();
-				std::cout << randIndex << std::endl;
+				double randNo = ((double)rand()) / RAND_MAX;
 				Coordinates startCoord = coordSet[i][randIndex];
-			
-				// try spawn at random index
-				tempMonster = new Ghost;
 
-				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isEntityOnGrid(startCoord)) {
-					tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-					mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
-					monsterCounter++;
+				if (randNo < 0.5) {
+					// ghost 50%
+					tempMonster = new Ghost;
+					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+						monsterCounter++;
+					}
 				}
+				else if (randNo > 0.5 && randNo < 0.8) {
+					// duck 30%
+					tempMonster = new Duck;
+					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+						monsterCounter++;
+					}
+				}
+				else {
+					// moon 20%
+					tempMonster = new Moon;
+					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
+						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+						monsterCounter++;
+					}
+				}
+			
+
 			} while (monsterCounter != 5);
 		}
 		

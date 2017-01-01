@@ -102,6 +102,6 @@ void EntityGrid::removeEntity(int id) {
 		grid[coordinates.y][coordinates.x] = 0;
 }
 
-bool EntityGrid::isEntityOnGrid(Coordinates coord) {
+bool EntityGrid::isCoordOccupied(Coordinates coord) {
 	return grid[coord.y][coord.x] != 0;
 }

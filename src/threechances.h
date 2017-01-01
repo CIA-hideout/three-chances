@@ -76,10 +76,11 @@ private:
 	std::map<int, bool> screenKeysPressed;
 	int		lastKeyPressed;
 
+	// audio
 	bool startBtnPressed;
 	XACT_CUE* startCue;
 	bool muted;
-
+	
 public:
 	// Constructor
 	ThreeChances();

@@ -33,7 +33,7 @@ public:
 	void moveEntity(Coordinates currCoord, Coordinates nextCoord);
 	void removeEntity(int id);
 
-	bool isEntityOnGrid(Coordinates coord);
+	bool isCoordOccupied(Coordinates coord);
 };
 
 #endif
