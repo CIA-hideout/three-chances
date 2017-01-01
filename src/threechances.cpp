@@ -209,6 +209,7 @@ void ThreeChances::incrementStage() {
 
 	hud->resetMovesHud();
 	this->initializeEntities();
+
 	gameControl->setEnemyAiInitialized(false);
 }
 
@@ -239,77 +240,79 @@ void ThreeChances::initializeEntities() {
 	EntityData monsterData;
 
 	if (gameMode == GAME_MODE::demo) {
-		//int gridSize = gameGrid.size();
+		int gridSize = gameGrid.size();
 
-		//// initialize the 4 boxes
-		//std::vector<std::vector<Coordinates>> coordSet;
-		//for (int i = 0; i < 4; i++) {
-		//	std::vector<Coordinates> tempVec;
-		//	coordSet.push_back(tempVec);
-		//}
+		// initialize the 4 boxes
+		std::vector<std::vector<Coordinates>> coordSet;
+		for (int i = 0; i < 4; i++) {
+			std::vector<Coordinates> tempVec;
+			coordSet.push_back(tempVec);
+		}
 
-		//// Add coordinates to that 4 boxes
-		//for (int i = 0; i < gridSize; i++) {
-		//	for (int j = 0; j < gridSize; j++) {
-		//		
-		//		if (i < gridSize / 2 && j < gridSize / 2)
-		//			coordSet[0].push_back(Coordinates(j, i));
-		//		else if (i < gridSize / 2 && j >= gridSize / 2)
-		//			coordSet[1].push_back(Coordinates(j, i));
-		//		else if (i >= gridSize / 2 && j < gridSize / 2)
-		//			coordSet[2].push_back(Coordinates(j, i));
-		//		else 
-		//			coordSet[3].push_back(Coordinates(j, i));
-		//	}
-		//}
+		// Add coordinates to that 4 boxes
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				
+				if (i < gridSize / 2 && j < gridSize / 2)
+					coordSet[0].push_back(Coordinates(j, i));
+				else if (i < gridSize / 2 && j >= gridSize / 2)
+					coordSet[1].push_back(Coordinates(j, i));
+				else if (i >= gridSize / 2 && j < gridSize / 2)
+					coordSet[2].push_back(Coordinates(j, i));
+				else 
+					coordSet[3].push_back(Coordinates(j, i));
+			}
+		}
 
-		//// Spawn 5 monsters in each box
-		//for (size_t i = 0; i < coordSet.size(); i++) {
-		//	int monsterCounter = 0;
+		// Spawn 5 monsters in each box
+		for (size_t i = 0; i < coordSet.size(); i++) {
+			int monsterCounter = 0;
 
-		//	do {
-		//		// try spawn random monster at random index
-		//		int randIndex = rand() % coordSet[i].size();
-		//		double randNo = ((double)rand()) / RAND_MAX;
-		//		Coordinates startCoord = coordSet[i][randIndex];
+			do {
+				// try spawn random monster at random index
+				int randIndex = rand() % coordSet[i].size();
+				double randNo = ((double)rand()) / RAND_MAX;
+				Coordinates startCoord = coordSet[i][randIndex];
 
-		//		if (randNo < 0.5) {
-		//			// ghost 50%
-		//			tempMonster = new Ghost;
-		//			monsterCols = GHOST_COLS;
-		//			monsterTexture = &ghostTexture;
-		//			monsterData = GHOST_DATA;
-		//		}
-		//		else if (randNo > 0.5 && randNo < 0.8) {
-		//			// duck 30%
-		//			tempMonster = new Duck;
-		//			monsterCols = DUCK_COLS;
-		//			monsterTexture = &duckTexture;
-		//			monsterData = DUCK_DATA;
+				if (randNo < 0.5) {
+					// ghost 50%
+					tempMonster = new Ghost;
+					monsterCols = GHOST_COLS;
+					monsterTexture = &ghostTexture;
+					monsterData = GHOST_DATA;
+				}
+				else if (randNo > 0.5 && randNo < 0.8) {
+					// water monsters 30%
+					if (levelGrid->getMapType() == MAP_TYPE::water) {
+						tempMonster = new Duck;
+						monsterCols = DUCK_COLS;
+						monsterTexture = &duckTexture;
+						monsterData = DUCK_DATA;
+					}
+					else if (levelGrid->getMapType() == MAP_TYPE::lava) {
+						 tempMonster = new Slug;
+						 monsterCols = SLUG_COLS;
+						 monsterTexture = &slugTexture;
+						 monsterData = SLUG_DATA;
+					}
+				}
+				else {
+					// moon 20%
+					tempMonster = new Moon;
+					monsterCols = MOON_COLS;
+					monsterTexture = &moonTexture;
+					monsterData = MOON_DATA;
+				}
 
-		//			// TODO: Check if water or lava
-		//			// tempMonster = new Slug;
-		//			// monsterCols = SLUG_COLS;
-		//			// monsterTexture = &slugTexture;
-		//			// monsterData = SLUG_Data;
-		//		}
-		//		else {
-		//			// moon 20%
-		//			tempMonster = new Moon;
-		//			monsterCols = MOON_COLS;
-		//			monsterTexture = &moonTexture;
-		//			monsterData = MOON_DATA;
-		//		}
+				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+					tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, monsterCols, monsterTexture, monsterData);
+					mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+					monsterCounter++;
+				}
+			
 
-		//		if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
-		//			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, monsterCols, monsterTexture, monsterData);
-		//			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
-		//			monsterCounter++;
-		//		}
-		//	
-
-		//	} while (monsterCounter != 4);
-		//}
+			} while (monsterCounter != MAX_NO_OF_MONSTERS_PER_SQUARE);
+		}
 		
 	}
 	else {

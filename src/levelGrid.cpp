@@ -19,11 +19,13 @@ void LevelGrid::initialize(GAME_MODE gameMode) {
 		grid = DEMO_STAGE_1_LAYOUT;
 		startTile = DEMO_STAGE_1_START_TILE;
 		endTile = DEMO_STAGE_1_END_TILE;
+		mapType = DEMO_STAGE_1_MAP_TYPE;
 	}
 	else {
 		grid = STAGE_1_LAYOUT;
 		startTile = STAGE_1_START_TILE;
 		endTile = STAGE_1_END_TILE;
+		mapType = STAGE_1_MAP_TYPE;
 	}
 }
 
@@ -34,6 +36,7 @@ void LevelGrid::switchLayout(GAME_MODE gameMode, int stageNo) {
 				grid = DEMO_STAGE_2_LAYOUT;
 				startTile = DEMO_STAGE_2_START_TILE;
 				endTile = DEMO_STAGE_2_END_TILE;
+				mapType = DEMO_STAGE_2_MAP_TYPE;
 			}	break;
 		}
 	}

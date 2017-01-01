@@ -45,6 +45,8 @@ namespace NORMAL_LEVEL {
 	const int NO_OF_STAGE = 1;
 }
 
+const int MAX_NO_OF_MONSTERS_PER_SQUARE = 4;
+
 // Window
 const char CLASS_NAME[] = "ThreeChances";
 const char GAME_TITLE[] = "ThreeChances";

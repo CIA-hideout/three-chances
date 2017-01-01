@@ -22,6 +22,11 @@ enum class GAME_MODE : int {
 	normal = 1,
 };
 
+enum class MAP_TYPE : int {
+	water = 0,
+	lava = 1,
+};
+
 // Legend
 // 0 - border
 // 1 - 1st floor path
@@ -145,11 +150,14 @@ const std::vector<std::vector<int>> DEMO_STAGE_2_LAYOUT = {
 
 const Coordinates STAGE_1_START_TILE(5, 28);
 const Coordinates STAGE_1_END_TILE(16, 4);
+const MAP_TYPE STAGE_1_MAP_TYPE = MAP_TYPE::water;
 
-//const Coordinates DEMO_STAGE_1_START_TILE(5, 14);
-const Coordinates DEMO_STAGE_1_START_TILE(8, 9);
+const Coordinates DEMO_STAGE_1_START_TILE(5, 14);
 const Coordinates DEMO_STAGE_1_END_TILE(8, 10);
+const MAP_TYPE DEMO_STAGE_1_MAP_TYPE = MAP_TYPE::water;
 
 const Coordinates DEMO_STAGE_2_START_TILE(3, 4);
 const Coordinates DEMO_STAGE_2_END_TILE(13, 15);
+const MAP_TYPE DEMO_STAGE_2_MAP_TYPE = MAP_TYPE::lava;
+
 #endif
