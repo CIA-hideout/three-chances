@@ -229,7 +229,7 @@ void ThreeChances::initializeEntities() {
 	srand(time(NULL));
 
 	// Add player to entity grid
-	entityGrid->addEntity(levelGrid->getStartTile(), playerNS::PLAYER_ID);
+	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::vector<std::vector<int>> gameGrid = levelGrid->getGrid();

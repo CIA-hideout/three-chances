@@ -63,7 +63,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 	int nextTileValue = entityGrid->getTileValueAtCoordinates(nextCoord);
 
 	// Check if there is a monster on the next tile
-	if (nextTileValue > playerNS::PLAYER_ID) {
+	if (nextTileValue > PLAYER_ID) {
 		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);

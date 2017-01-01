@@ -21,7 +21,6 @@ namespace playerNS
 	const int PLAYER_ATK_START_FRAME = 5;
 	const int PLAYER_ATK_END_FRAME = 6;
 	const int PLAYER_COLS = 7;
-	const int PLAYER_ID = 1;
 }
 
 class Player : public Entity {

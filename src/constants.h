@@ -46,6 +46,7 @@ namespace NORMAL_LEVEL {
 }
 
 const int MAX_NO_OF_MONSTERS_PER_SQUARE = 4;
+const int PLAYER_ID = 1;
 
 // Window
 const char CLASS_NAME[] = "ThreeChances";
