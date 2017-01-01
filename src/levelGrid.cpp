@@ -15,6 +15,11 @@ LevelGrid::~LevelGrid() {}
 //=============================================================================
 bool LevelGrid::initialize(int stageNo) {
 	switch (stageNo) {
+	case 0:
+		grid = DEMO_LAYOUT;
+		startTile = DEMO_START_TILE;
+		endTile = DEMO_END_TILE;
+		break;
 	case 1:
 		grid = STAGE_1_LAYOUT;
 		startTile = STAGE_1_START_TILE;

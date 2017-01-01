@@ -60,3 +60,7 @@ bool Moon::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int directio
 	return valid;
 }
 
+bool Moon::isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord) {
+	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	return currentTileValue != 0;
+}

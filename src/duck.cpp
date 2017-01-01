@@ -67,3 +67,9 @@ bool Duck::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int directio
 
 	return valid;
 }
+
+bool Duck::isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord) {
+	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	return currentTileValue != 0 && currentTileValue != 5;
+}
+

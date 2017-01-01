@@ -8,6 +8,7 @@
 #include <vector>
 #include <stdio.h>
 #include <queue>
+#include <time.h>
 
 #include "game.h"
 #include "font.h"
@@ -30,9 +31,15 @@
 
 bool operator==(const Coordinates& lhs, const Coordinates& rhs);
 
+enum class GAME_MODE : int {
+	demo = 0,
+	normal = 1,
+};
+
 class ThreeChances : public Game {
 private:
 	// Consts
+	GAME_MODE		gameMode;
 	GameControl*	gameControl;
 	EntityGrid*		entityGrid;
 	LevelGrid*		levelGrid;
@@ -69,10 +76,11 @@ private:
 	std::map<int, bool> screenKeysPressed;
 	int		lastKeyPressed;
 
+	// audio
 	bool startBtnPressed;
 	XACT_CUE* startCue;
 	bool muted;
-
+	
 public:
 	// Constructor
 	ThreeChances();

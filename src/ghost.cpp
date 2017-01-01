@@ -50,7 +50,7 @@ void Ghost::startDeathAnimation() {
 	this->setVisible(false);
 }
 
-// Ghost can pass through obstacles
+// Ghost can pass through obstacles but cannot move pass floors and cannot float on water
 bool Ghost::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
 	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
 	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
@@ -67,4 +67,9 @@ bool Ghost::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int directi
 		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3 || nextTileValue == 5;
 
 	return valid;
+}
+
+bool Ghost::isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord) {
+	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	return currentTileValue != 0 && currentTileValue != 4;
 }

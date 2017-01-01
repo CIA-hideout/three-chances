@@ -32,6 +32,8 @@ int findKeyDown(std::map<int, bool> *keysPressed) {
 	return -1;
 }
 
+
+
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -47,6 +49,7 @@ ThreeChances::ThreeChances() {
 
 	startBtnPressed = false;
 	muted = false;
+	gameMode = GAME_MODE::demo;
 }
 
 //=============================================================================
@@ -70,7 +73,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
-	levelGrid->initialize(1);
+	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
@@ -89,7 +92,7 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
 	// map texture
-	if (!levelTexture.initialize(graphics, LEVEL_1_IMAGE))
+	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_IMAGE : LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
@@ -113,7 +116,10 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
-	if (!level.initialize(this, LEVEL_SIZE, LEVEL_SIZE, LEVEL_COLS, &levelTexture))
+	int levelSize = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_SIZE : NORMAL_LEVEL::LEVEL_SIZE;
+	int levelCols = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_COLS : NORMAL_LEVEL::LEVEL_COLS;
+
+	if (!level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile()))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
 	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
@@ -155,7 +161,7 @@ void ThreeChances::restartGame() {
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
-	levelGrid->initialize(1);
+	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
@@ -165,8 +171,8 @@ void ThreeChances::restartGame() {
 	player.setAnimating(false);
 	player.rotateEntity(DOWN);
 
-	level.setX(levelNS::X);
-	level.setY(levelNS::Y);
+	level.setX(level.getStartX());
+	level.setY(level.getStartY());
 
 	hud->resetMovesHud();
 	hud->resetHealthHud();
@@ -187,29 +193,103 @@ std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
 }
 
 void ThreeChances::initializeEntities() {
+	// reset random seed
+	srand(time(NULL));
+
 	// Add to entity grid
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
-
+	std::vector<std::vector<int>> gameGrid = levelGrid->getGrid();
+	
 	Entity *tempMonster;
 
-	for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
-		tempMonster = new Duck;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
-	}
+	if (gameMode == GAME_MODE::demo) {
+		int gridSize = gameGrid.size();
 
-	for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
-		tempMonster = new Ghost;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
-	}
+		// initialize the 4 boxes
+		std::vector<std::vector<Coordinates>> coordSet;
+		for (int i = 0; i < 4; i++) {
+			std::vector<Coordinates> tempVec;
+			coordSet.push_back(tempVec);
+		}
 
-	for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
-		tempMonster = new Moon;
-		tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
-		mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
+		// Add coordinates to that 4 boxes
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				
+				if (i < gridSize / 2 && j < gridSize / 2)
+					coordSet[0].push_back(Coordinates(j, i));
+				else if (i < gridSize / 2 && j >= gridSize / 2)
+					coordSet[1].push_back(Coordinates(j, i));
+				else if (i >= gridSize / 2 && j < gridSize / 2)
+					coordSet[2].push_back(Coordinates(j, i));
+				else 
+					coordSet[3].push_back(Coordinates(j, i));
+			}
+		}
+
+		// Spawn 5 monsters in each box
+		for (size_t i = 0; i < coordSet.size(); i++) {
+			int monsterCounter = 0;
+
+			do {
+				// try spawn random monster at random index
+				int randIndex = rand() % coordSet[i].size();
+				double randNo = ((double)rand()) / RAND_MAX;
+				Coordinates startCoord = coordSet[i][randIndex];
+
+				if (randNo < 0.5) {
+					// ghost 50%
+					tempMonster = new Ghost;
+					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+						monsterCounter++;
+					}
+				}
+				else if (randNo > 0.5 && randNo < 0.8) {
+					// duck 30%
+					tempMonster = new Duck;
+					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+						monsterCounter++;
+					}
+				}
+				else {
+					// moon 20%
+					tempMonster = new Moon;
+					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
+						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+						monsterCounter++;
+					}
+				}
+			
+
+			} while (monsterCounter != 5);
+		}
+		
+	}
+	else {
+		for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
+			tempMonster = new Duck;
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
+		}
+
+		for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
+			tempMonster = new Ghost;
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
+		}
+
+		for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
+			tempMonster = new Moon;
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
+			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
+		}
 	}
 
 	gameControl->setPlayer(&player);
@@ -345,7 +425,7 @@ void ThreeChances::update() {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
 
-						if (entityGrid->getPlayerCoordinates() == STAGE_1_END_TILE)
+						if (entityGrid->getPlayerCoordinates() == levelGrid->getEndTile())
 							gameControl->setGeneralState(GENERAL_STATE::gameClear);
 					}
 				}
@@ -360,10 +440,10 @@ void ThreeChances::update() {
 				for (size_t i = 0; i < mv.size(); i++) {
 					mv[i]->moveInDirection(frameTime, oppDirection, entityGrid->getEntityPosition(mv[i]->getId()));
 				}
-			}
+			} 
 
 			// Remove blockage on level if monsters left == 0
-			if (gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
+			if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
 				level.removeBlockage();
 				levelGrid->removeBlockage();
 			}
