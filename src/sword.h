@@ -5,6 +5,12 @@
 #include "game.h"
 #include "player.h"
 
+namespace swordNS {
+	const int SWORD_WIDTH = 128;
+	const int SWORD_HEIGHT = 128;
+	const int SWORD_COLS = 4;
+}
+
 class Sword : public Image {
 private:
 	int count = 0;

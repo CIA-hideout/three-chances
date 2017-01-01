@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player() : Entity() {
-	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
+	this->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 	this->setLoop(false);
 	animating = false;
 	endPoint = 0.0f;
@@ -16,7 +16,7 @@ void Player::update(float frameTime, GameControl* gc) {
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
-		this->setCurrentFrame(PLAYER_STANDING_FRAME);
+		this->setCurrentFrame(playerNS::PLAYER_STANDING_FRAME);
 	}
 
 	if (this->getMovesLeft() == 0) {
@@ -27,15 +27,15 @@ void Player::update(float frameTime, GameControl* gc) {
 }
 
 void Player::startWalkAnimation() {
-	this->setFrameDelay(PLAYER_ANIMATION_DELAY);
-	this->setFrames(PLAYER_WALK_START_FRAME, PLAYER_WALK_END_FRAME);
-	this->setCurrentFrame(PLAYER_WALK_START_FRAME);
+	this->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
+	this->setFrames(playerNS::PLAYER_WALK_START_FRAME, playerNS::PLAYER_WALK_END_FRAME);
+	this->setCurrentFrame(playerNS::PLAYER_WALK_START_FRAME);
 }
 
 void Player::startAttackAnimation() {
 	this->setFrameDelay(1.0);
-	this->setFrames(PLAYER_ATK_START_FRAME, PLAYER_ATK_END_FRAME);
-	this->setCurrentFrame(PLAYER_ATK_START_FRAME);
+	this->setFrames(playerNS::PLAYER_ATK_START_FRAME, playerNS::PLAYER_ATK_END_FRAME);
+	this->setCurrentFrame(playerNS::PLAYER_ATK_START_FRAME);
 }
 
 bool Player::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
@@ -63,7 +63,7 @@ void Player::moveInDirection(LevelGrid *levelGrid, EntityGrid *entityGrid,
 	int nextTileValue = entityGrid->getTileValueAtCoordinates(nextCoord);
 
 	// Check if there is a monster on the next tile
-	if (nextTileValue > PLAYER_ID) {
+	if (nextTileValue > playerNS::PLAYER_ID) {
 		this->setAction(ATTACK);
 		this->startAttackAnimation();
 		this->setAnimating(true);
