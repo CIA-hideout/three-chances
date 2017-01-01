@@ -22,7 +22,7 @@ struct Position {
 // 1 - 1st floor path
 // 2 - 2nd floor path
 // 3 - stairs
-// 4 - water
+// 4 - water / lava
 // 5 - obstacle
 // 6 - blockage
 
