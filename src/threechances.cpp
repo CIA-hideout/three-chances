@@ -32,8 +32,6 @@ int findKeyDown(std::map<int, bool> *keysPressed) {
 	return -1;
 }
 
-
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -49,7 +47,12 @@ ThreeChances::ThreeChances() {
 
 	startBtnPressed = false;
 	muted = false;
+
 	gameMode = GAME_MODE::demo;
+	stageNo = 1;
+	finalStageNo = gameMode == GAME_MODE::demo ? DEMO_LEVEL::NO_OF_STAGE : NORMAL_LEVEL::NO_OF_STAGE;
+	levelSize = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_SIZE : NORMAL_LEVEL::LEVEL_SIZE;
+	levelCols = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_COLS : NORMAL_LEVEL::LEVEL_COLS;
 }
 
 //=============================================================================
@@ -73,7 +76,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
-	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
+	levelGrid->initialize(gameMode);
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
@@ -92,7 +95,7 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
 	// map texture
-	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_IMAGE : LEVEL_1_IMAGE))
+	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
@@ -115,9 +118,6 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
-
-	int levelSize = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_SIZE : NORMAL_LEVEL::LEVEL_SIZE;
-	int levelCols = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_COLS : NORMAL_LEVEL::LEVEL_COLS;
 
 	if (!level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile()))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
@@ -151,7 +151,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	return;
 }
 
-void ThreeChances::restartGame() {
+void ThreeChances::clearEntities() {
 	// Clear mv
 	std::vector<Entity*> mv;
 	std::queue<Entity*> aq;
@@ -159,12 +159,19 @@ void ThreeChances::restartGame() {
 	gameControl->setMonsterVec(mv);
 	gameControl->setAnimationQueue(aq);
 
-	// initialize level grid
-	levelGrid = new LevelGrid;
-	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
-
 	// initialize entity grid
 	entityGrid = new EntityGrid;
+}
+
+void ThreeChances::restartGame() {
+	clearEntities();
+
+	// initialize level grid
+	levelGrid = new LevelGrid;
+	levelGrid->initialize(gameMode);
+
+	levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE);
+	level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
 
 	player.setHealth(PLAYER_DATA.health);
 	player.setMovesLeft(PLAYER_DATA.moves);
@@ -178,6 +185,30 @@ void ThreeChances::restartGame() {
 	hud->resetHealthHud();
 	this->initializeEntities();
 
+	gameControl->setEnemyAiInitialized(false);
+}
+
+void ThreeChances::incrementStage() {
+	stageNo++;
+	clearEntities();
+
+	// switch layout
+	levelGrid->switchLayout(gameMode, stageNo);
+	if (gameMode == GAME_MODE::demo) {
+		switch (stageNo) {
+			case 2: {
+				levelTexture.initialize(graphics, DEMO_LVL_2_IMAGE);
+				level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
+			} break;
+		}
+	}
+
+	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setAnimating(false);
+	player.rotateEntity(DOWN);
+
+	hud->resetMovesHud();
+	this->initializeEntities();
 	gameControl->setEnemyAiInitialized(false);
 }
 
@@ -196,7 +227,7 @@ void ThreeChances::initializeEntities() {
 	// reset random seed
 	srand(time(NULL));
 
-	// Add to entity grid
+	// Add player to entity grid
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
@@ -207,79 +238,78 @@ void ThreeChances::initializeEntities() {
 	TextureManager *monsterTexture;
 	EntityData monsterData;
 
-
 	if (gameMode == GAME_MODE::demo) {
-		int gridSize = gameGrid.size();
+		//int gridSize = gameGrid.size();
 
-		// initialize the 4 boxes
-		std::vector<std::vector<Coordinates>> coordSet;
-		for (int i = 0; i < 4; i++) {
-			std::vector<Coordinates> tempVec;
-			coordSet.push_back(tempVec);
-		}
+		//// initialize the 4 boxes
+		//std::vector<std::vector<Coordinates>> coordSet;
+		//for (int i = 0; i < 4; i++) {
+		//	std::vector<Coordinates> tempVec;
+		//	coordSet.push_back(tempVec);
+		//}
 
-		// Add coordinates to that 4 boxes
-		for (int i = 0; i < gridSize; i++) {
-			for (int j = 0; j < gridSize; j++) {
-				
-				if (i < gridSize / 2 && j < gridSize / 2)
-					coordSet[0].push_back(Coordinates(j, i));
-				else if (i < gridSize / 2 && j >= gridSize / 2)
-					coordSet[1].push_back(Coordinates(j, i));
-				else if (i >= gridSize / 2 && j < gridSize / 2)
-					coordSet[2].push_back(Coordinates(j, i));
-				else 
-					coordSet[3].push_back(Coordinates(j, i));
-			}
-		}
+		//// Add coordinates to that 4 boxes
+		//for (int i = 0; i < gridSize; i++) {
+		//	for (int j = 0; j < gridSize; j++) {
+		//		
+		//		if (i < gridSize / 2 && j < gridSize / 2)
+		//			coordSet[0].push_back(Coordinates(j, i));
+		//		else if (i < gridSize / 2 && j >= gridSize / 2)
+		//			coordSet[1].push_back(Coordinates(j, i));
+		//		else if (i >= gridSize / 2 && j < gridSize / 2)
+		//			coordSet[2].push_back(Coordinates(j, i));
+		//		else 
+		//			coordSet[3].push_back(Coordinates(j, i));
+		//	}
+		//}
 
-		// Spawn 5 monsters in each box
-		for (size_t i = 0; i < coordSet.size(); i++) {
-			int monsterCounter = 0;
+		//// Spawn 5 monsters in each box
+		//for (size_t i = 0; i < coordSet.size(); i++) {
+		//	int monsterCounter = 0;
 
-			do {
-				// try spawn random monster at random index
-				int randIndex = rand() % coordSet[i].size();
-				double randNo = ((double)rand()) / RAND_MAX;
-				Coordinates startCoord = coordSet[i][randIndex];
+		//	do {
+		//		// try spawn random monster at random index
+		//		int randIndex = rand() % coordSet[i].size();
+		//		double randNo = ((double)rand()) / RAND_MAX;
+		//		Coordinates startCoord = coordSet[i][randIndex];
 
-				if (randNo < 0.5) {
-					// ghost 50%
-					tempMonster = new Ghost;
-					monsterCols = GHOST_COLS;
-					monsterTexture = &ghostTexture;
-					monsterData = GHOST_DATA;
-				}
-				else if (randNo > 0.5 && randNo < 0.8) {
-					// duck 30%
-					tempMonster = new Duck;
-					monsterCols = DUCK_COLS;
-					monsterTexture = &duckTexture;
-					monsterData = DUCK_DATA;
+		//		if (randNo < 0.5) {
+		//			// ghost 50%
+		//			tempMonster = new Ghost;
+		//			monsterCols = GHOST_COLS;
+		//			monsterTexture = &ghostTexture;
+		//			monsterData = GHOST_DATA;
+		//		}
+		//		else if (randNo > 0.5 && randNo < 0.8) {
+		//			// duck 30%
+		//			tempMonster = new Duck;
+		//			monsterCols = DUCK_COLS;
+		//			monsterTexture = &duckTexture;
+		//			monsterData = DUCK_DATA;
 
-					// TODO: Check if water or lava
-					// tempMonster = new Slug;
-					// monsterCols = SLUG_COLS;
-					// monsterTexture = &slugTexture;
-					// monsterData = SLUG_Data;
-				}
-				else {
-					// moon 20%
-					tempMonster = new Moon;
-					monsterCols = MOON_COLS;
-					monsterTexture = &moonTexture;
-					monsterData = MOON_DATA;
-				}
+		//			// TODO: Check if water or lava
+		//			// tempMonster = new Slug;
+		//			// monsterCols = SLUG_COLS;
+		//			// monsterTexture = &slugTexture;
+		//			// monsterData = SLUG_Data;
+		//		}
+		//		else {
+		//			// moon 20%
+		//			tempMonster = new Moon;
+		//			monsterCols = MOON_COLS;
+		//			monsterTexture = &moonTexture;
+		//			monsterData = MOON_DATA;
+		//		}
 
-				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
-					tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, monsterCols, monsterTexture, monsterData);
-					mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
-					monsterCounter++;
-				}
-			
+		//		if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+		//			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, monsterCols, monsterTexture, monsterData);
+		//			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+		//			monsterCounter++;
+		//		}
+		//	
 
-			} while (monsterCounter != 4);
-		}
+		//	} while (monsterCounter != 4);
+		//}
 		
 	}
 	else {
@@ -435,8 +465,13 @@ void ThreeChances::update() {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
 
-						if (entityGrid->getPlayerCoordinates() == levelGrid->getEndTile())
-							gameControl->setGeneralState(GENERAL_STATE::gameClear);
+						// Victory
+						if (entityGrid->getPlayerCoordinates() == levelGrid->getEndTile()) {
+							if (stageNo == finalStageNo)
+								gameControl->setGeneralState(GENERAL_STATE::gameClear);
+							else
+								incrementStage();
+						}
 					}
 				}
 				// If action is ATTACK

@@ -17,6 +17,11 @@ struct Position {
 	Position(float x, float y) : x(x), y(y) {}
 };
 
+enum class GAME_MODE : int {
+	demo = 0,
+	normal = 1,
+};
+
 // Legend
 // 0 - border
 // 1 - 1st floor path
@@ -96,7 +101,7 @@ const std::vector<std::vector<int>> STAGE_1_LAYOUT_CLEAR = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const std::vector<std::vector<int>> DEMO_LAYOUT = {
+const std::vector<std::vector<int>> DEMO_STAGE_1_LAYOUT = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -117,9 +122,34 @@ const std::vector<std::vector<int>> DEMO_LAYOUT = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 };
 
+const std::vector<std::vector<int>> DEMO_STAGE_2_LAYOUT = {
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 5, 2, 2, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 2, 2, 2, 2, 3, 1, 1, 5, 4, 4, 4, 0, 0, 0, 0 },
+	{ 0, 0, 0, 5, 2, 2, 2, 3, 1, 1, 1, 1, 4, 4, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 5, 5, 5, 5, 1, 1, 1, 1, 4, 5, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 5, 4, 4, 4, 1, 1, 1, 1, 4, 4, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 4, 1, 1, 1, 5, 4, 4, 4, 4, 4, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 4, 1, 1, 5, 1, 4, 4, 5, 4, 4, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 4, 1, 1, 1, 1, 1, 5, 2, 2, 2, 5, 0, 0, 0 },
+	{ 0, 0, 0, 0, 4, 4, 4, 1, 1, 1, 3, 2, 2, 2, 2, 0, 0, 0 },
+	{ 0, 0, 0, 0, 4, 5, 4, 4, 1, 1, 3, 2, 2, 2, 2, 0, 0, 0 },
+	{ 0, 0, 0, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+};
+
 const Coordinates STAGE_1_START_TILE(5, 28);
 const Coordinates STAGE_1_END_TILE(16, 4);
 
-const Coordinates DEMO_START_TILE(5, 14);
-const Coordinates DEMO_END_TILE(8, 10);
+//const Coordinates DEMO_STAGE_1_START_TILE(5, 14);
+const Coordinates DEMO_STAGE_1_START_TILE(8, 9);
+const Coordinates DEMO_STAGE_1_END_TILE(8, 10);
+
+const Coordinates DEMO_STAGE_2_START_TILE(3, 4);
+const Coordinates DEMO_STAGE_2_END_TILE(13, 15);
 #endif

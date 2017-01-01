@@ -31,19 +31,19 @@
 
 bool operator==(const Coordinates& lhs, const Coordinates& rhs);
 
-enum class GAME_MODE : int {
-	demo = 0,
-	normal = 1,
-};
-
 class ThreeChances : public Game {
 private:
 	// Consts
-	GAME_MODE		gameMode;
 	GameControl*	gameControl;
 	EntityGrid*		entityGrid;
 	LevelGrid*		levelGrid;
 	Hud*			hud;
+
+	GAME_MODE		gameMode;
+	int				finalStageNo;
+	int				stageNo;
+	int				levelSize;
+	int				levelCols;
 
 	// Game items
 	TextureManager	levelTexture;
@@ -90,15 +90,18 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
-	void restartGame();
-	void initializeEntities();
 	void update();      // must override pure virtual from Game
-	void enemyAi();
 	void ai();          // "
 	void collisions();  // "
 	void render();      // "
 	void releaseAll();
 	void resetAll();
+
+	void clearEntities();
+	void enemyAi();
+	void restartGame();
+	void initializeEntities();
+	void incrementStage();
 };
 
 #endif

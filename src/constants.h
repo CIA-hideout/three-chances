@@ -36,11 +36,13 @@ const int VIEW_RANGE = 7;
 namespace DEMO_LEVEL {
 	const int LEVEL_SIZE = TILE_SIZE * 18;
 	const int LEVEL_COLS = 1;
+	const int NO_OF_STAGE = 2;
 };
 
 namespace NORMAL_LEVEL {
 	const int LEVEL_SIZE = TILE_SIZE * 32;
 	const int LEVEL_COLS = 2;
+	const int NO_OF_STAGE = 1;
 }
 
 // Window
@@ -84,7 +86,8 @@ const int ESC = 100;
 const int SPACE = 101;
 
 // Sprites
-const char DEMO_IMAGE[] = "sprites\\Demo_Map.png";
+const char DEMO_LVL_1_IMAGE[] = "sprites\\Demo_Level1.png";
+const char DEMO_LVL_2_IMAGE[] = "sprites\\Demo_Level2.png";
 const char LEVEL_1_IMAGE[] = "sprites\\LEVEL1_Final.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
 
