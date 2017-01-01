@@ -9,7 +9,7 @@ void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[UP] = false;
 	if (!input->isKeyDown(DOWN_KEY))
 		(*keysPressed)[DOWN] = false;
-	if (!input->isKeyDown(Q_KEY))
+	if (!input->isKeyDown(X_KEY))
 		(*keysPressed)[END] = false;
 }
 
@@ -203,6 +203,10 @@ void ThreeChances::initializeEntities() {
 	std::vector<std::vector<int>> gameGrid = levelGrid->getGrid();
 	
 	Entity *tempMonster;
+	int monsterCols;
+	TextureManager *monsterTexture;
+	EntityData monsterData;
+
 
 	if (gameMode == GAME_MODE::demo) {
 		int gridSize = gameGrid.size();
@@ -242,33 +246,39 @@ void ThreeChances::initializeEntities() {
 				if (randNo < 0.5) {
 					// ghost 50%
 					tempMonster = new Ghost;
-					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
-						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
-						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
-						monsterCounter++;
-					}
+					monsterCols = GHOST_COLS;
+					monsterTexture = &ghostTexture;
+					monsterData = GHOST_DATA;
 				}
 				else if (randNo > 0.5 && randNo < 0.8) {
 					// duck 30%
 					tempMonster = new Duck;
-					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
-						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
-						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
-						monsterCounter++;
-					}
+					monsterCols = DUCK_COLS;
+					monsterTexture = &duckTexture;
+					monsterData = DUCK_DATA;
+
+					// TODO: Check if water or lava
+					// tempMonster = new Slug;
+					// monsterCols = SLUG_COLS;
+					// monsterTexture = &slugTexture;
+					// monsterData = SLUG_Data;
 				}
 				else {
 					// moon 20%
 					tempMonster = new Moon;
-					if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
-						tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
-						mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
-						monsterCounter++;
-					}
+					monsterCols = MOON_COLS;
+					monsterTexture = &moonTexture;
+					monsterData = MOON_DATA;
+				}
+
+				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+					tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, monsterCols, monsterTexture, monsterData);
+					mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
+					monsterCounter++;
 				}
 			
 
-			} while (monsterCounter != 5);
+			} while (monsterCounter != 4);
 		}
 		
 	}
@@ -396,7 +406,7 @@ void ThreeChances::update() {
 						sword.setDirection(DOWN, player.getX(), player.getY());
 					}
 
-					if (input->isKeyDown(Q_KEY) && !keysPressed[END]) {
+					if (input->isKeyDown(X_KEY) && !keysPressed[END]) {
 						keysPressed[END] = true;
 						player.setMovesLeft(0);
 					}

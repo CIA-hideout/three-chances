@@ -15,6 +15,7 @@ public:
 	void startDeathAnimation();
 
 	bool isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction);
+	bool isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord);
 };
 
 #endif

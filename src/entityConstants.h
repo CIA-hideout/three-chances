@@ -34,7 +34,7 @@ const EntityData SLUG_DATA = {
 	2.0f,	// health
 	1.0f,	// dmg
 	1,		// atkRange
-	2,		// moves
+	3,		// moves
 	std::vector < int > { 1 },
 	std::vector < entityNS::ABILITY_TYPE > { entityNS::TRAVEL_LAVA, entityNS::BURNS_PLAYER },
 };

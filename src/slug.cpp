@@ -49,18 +49,26 @@ void Slug::startDeathAnimation() {
 }
 
 bool Slug::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
-	int currTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
 	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
 
 	bool valid = false;
 
-	if (currTileValue == 1)									// 1st floor
-		valid = nextTileValue == 1 || nextTileValue == 3;	// 1st floor or stairs
-	else if (currTileValue == 2)							// 2nd floor
-		valid = nextTileValue == 2 || nextTileValue == 3;	// 2nd floor or stairs
-	else if (currTileValue == 3)							// Stairs
-		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;	// 1st floor or 2nd floor or stairs
+	// Slug can move over lava and land
+	if (currentTileValue == 1)
+		valid = nextTileValue == 1 || nextTileValue == 3 || nextTileValue == 4;
+	else if (currentTileValue == 2)
+		valid = nextTileValue == 2 || nextTileValue == 3;
+	else if (currentTileValue == 3)
+		valid = nextTileValue == 1 || nextTileValue == 2 || nextTileValue == 3;
+	else if (currentTileValue == 4)
+		valid = nextTileValue == 1 || nextTileValue == 4;
 
 	return valid;
+}
+
+bool Slug::isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord) {
+	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
+	return currentTileValue != 0 && currentTileValue != 5;
 }
 

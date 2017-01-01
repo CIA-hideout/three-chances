@@ -68,7 +68,7 @@ const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR DOWN_KEY = VK_DOWN;
 const UCHAR SPACE_KEY = VK_SPACE;
-const UCHAR Q_KEY = 0x51;
+const UCHAR X_KEY = 0x58;
 
 // Action integers
 const int LEFT = 0;

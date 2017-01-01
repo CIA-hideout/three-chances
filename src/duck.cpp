@@ -48,7 +48,6 @@ void Duck::startDeathAnimation() {
 	this->setVisible(false);
 }
 
-// Duck can move on water
 bool Duck::isValidMove(LevelGrid *levelGrid, Coordinates currCoord, int direction) {
 	int currentTileValue = levelGrid->getTileValueAtCoordinates(currCoord);
 	int nextTileValue = levelGrid->getNextTileValue(currCoord, direction);
