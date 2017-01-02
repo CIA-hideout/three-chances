@@ -14,6 +14,13 @@ namespace playerNS
 	// Place player in middle of screen
 	const int X = TILE_SIZE * SCALE * 3;
 	const int Y = TILE_SIZE * SCALE * 3;
+	const int PLAYER_STANDING_FRAME = 0;
+	const int PLAYER_WALK_START_FRAME = 0;
+	const int PLAYER_WALK_END_FRAME = 4;
+	const float PLAYER_ANIMATION_DELAY = 0.1f;
+	const int PLAYER_ATK_START_FRAME = 5;
+	const int PLAYER_ATK_END_FRAME = 6;
+	const int PLAYER_COLS = 7;
 }
 
 class Player : public Entity {

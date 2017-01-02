@@ -1,7 +1,7 @@
 #include "slug.h"
 
 Slug::Slug() : Entity() {
-	this->setFrameDelay(SLUG_ANIMATION_DELAY);
+	this->setFrameDelay(slugNS::SLUG_ANIMATION_DELAY);
 	this->setLoop(false);
 }
 
@@ -10,7 +10,7 @@ Slug::~Slug() {}
 void Slug::update(float frameTime) {
 	if (this->getAnimationComplete()) {
 		this->setFrames(0, 0);
-		this->setCurrentFrame(SLUG_STANDING_FRAME);
+		this->setCurrentFrame(slugNS::SLUG_STANDING_FRAME);
 		this->setAnimationComplete(false);
 
 		if (this->getHealth() <= 0.0) {
@@ -18,7 +18,7 @@ void Slug::update(float frameTime) {
 		}
 	}
 
-	if (this->getCurrentFrame() == SLUG_HURT_FRAME) {
+	if (this->getCurrentFrame() == slugNS::SLUG_HURT_FRAME) {
 		this->setTimer(this->getTimer() + frameTime);
 
 		if (this->getTimer() > 0.2) {
@@ -31,17 +31,17 @@ void Slug::update(float frameTime) {
 }
 
 void Slug::startAttackAnimation() {
-	this->setFrames(SLUG_ATK_START_FRAME, SLUG_ATK_END_FRAME);
-	this->setCurrentFrame(SLUG_ATK_START_FRAME);
+	this->setFrames(slugNS::SLUG_ATK_START_FRAME, slugNS::SLUG_ATK_END_FRAME);
+	this->setCurrentFrame(slugNS::SLUG_ATK_START_FRAME);
 }
 
 void Slug::startWalkAnimation() {
-	this->setFrames(SLUG_WALK_START_FRAME, SLUG_WALK_END_FRAME);
-	this->setCurrentFrame(SLUG_WALK_START_FRAME);
+	this->setFrames(slugNS::SLUG_WALK_START_FRAME, slugNS::SLUG_WALK_END_FRAME);
+	this->setCurrentFrame(slugNS::SLUG_WALK_START_FRAME);
 }
 
 void Slug::startHurtAnimation() {
-	this->setCurrentFrame(SLUG_HURT_FRAME);
+	this->setCurrentFrame(slugNS::SLUG_HURT_FRAME);
 }
 
 void Slug::startDeathAnimation() {

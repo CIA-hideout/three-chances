@@ -32,8 +32,6 @@ int findKeyDown(std::map<int, bool> *keysPressed) {
 	return -1;
 }
 
-
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -49,7 +47,12 @@ ThreeChances::ThreeChances() {
 
 	startBtnPressed = false;
 	muted = false;
+
 	gameMode = GAME_MODE::demo;
+	stageNo = 1;
+	finalStageNo = gameMode == GAME_MODE::demo ? DEMO_LEVEL::NO_OF_STAGE : NORMAL_LEVEL::NO_OF_STAGE;
+	levelSize = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_SIZE : NORMAL_LEVEL::LEVEL_SIZE;
+	levelCols = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_COLS : NORMAL_LEVEL::LEVEL_COLS;
 }
 
 //=============================================================================
@@ -73,7 +76,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
-	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
+	levelGrid->initialize(gameMode);
 
 	// initialize entity grid
 	entityGrid = new EntityGrid;
@@ -92,7 +95,7 @@ void ThreeChances::initialize(HWND hwnd) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
 	// map texture
-	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_IMAGE : LEVEL_1_IMAGE))
+	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
 
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
@@ -116,16 +119,13 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
-	int levelSize = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_SIZE : NORMAL_LEVEL::LEVEL_SIZE;
-	int levelCols = gameMode == GAME_MODE::demo ? DEMO_LEVEL::LEVEL_COLS : NORMAL_LEVEL::LEVEL_COLS;
-
 	if (!level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile()))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
-	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
+	if (!player.initialize(this, TILE_SIZE, TILE_SIZE, playerNS::PLAYER_COLS, &playerMaleTexture, PLAYER_DATA))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male player"));
 
-	if (!sword.initialize(this, SWORD_WIDTH, SWORD_HEIGHT, SWORD_COLS, &swordTexture))
+	if (!sword.initialize(this, swordNS::SWORD_WIDTH, swordNS::SWORD_HEIGHT, swordNS::SWORD_COLS, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
 	// Initialize screens
@@ -151,7 +151,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	return;
 }
 
-void ThreeChances::restartGame() {
+void ThreeChances::clearEntities() {
 	// Clear mv
 	std::vector<Entity*> mv;
 	std::queue<Entity*> aq;
@@ -159,12 +159,19 @@ void ThreeChances::restartGame() {
 	gameControl->setMonsterVec(mv);
 	gameControl->setAnimationQueue(aq);
 
-	// initialize level grid
-	levelGrid = new LevelGrid;
-	levelGrid->initialize(gameMode == GAME_MODE::demo ? 0 : 1);
-
 	// initialize entity grid
 	entityGrid = new EntityGrid;
+}
+
+void ThreeChances::restartGame() {
+	clearEntities();
+
+	// initialize level grid
+	levelGrid = new LevelGrid;
+	levelGrid->initialize(gameMode);
+
+	levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE);
+	level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
 
 	player.setHealth(PLAYER_DATA.health);
 	player.setMovesLeft(PLAYER_DATA.moves);
@@ -176,6 +183,31 @@ void ThreeChances::restartGame() {
 
 	hud->resetMovesHud();
 	hud->resetHealthHud();
+	this->initializeEntities();
+
+	gameControl->setEnemyAiInitialized(false);
+}
+
+void ThreeChances::incrementStage() {
+	stageNo++;
+	clearEntities();
+
+	// switch layout
+	levelGrid->switchLayout(gameMode, stageNo);
+	if (gameMode == GAME_MODE::demo) {
+		switch (stageNo) {
+			case 2: {
+				levelTexture.initialize(graphics, DEMO_LVL_2_IMAGE);
+				level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
+			} break;
+		}
+	}
+
+	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setAnimating(false);
+	player.rotateEntity(DOWN);
+
+	hud->resetMovesHud();
 	this->initializeEntities();
 
 	gameControl->setEnemyAiInitialized(false);
@@ -196,7 +228,7 @@ void ThreeChances::initializeEntities() {
 	// reset random seed
 	srand(time(NULL));
 
-	// Add to entity grid
+	// Add player to entity grid
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
@@ -206,7 +238,6 @@ void ThreeChances::initializeEntities() {
 	int monsterCols;
 	TextureManager *monsterTexture;
 	EntityData monsterData;
-
 
 	if (gameMode == GAME_MODE::demo) {
 		int gridSize = gameGrid.size();
@@ -246,27 +277,29 @@ void ThreeChances::initializeEntities() {
 				if (randNo < 0.5) {
 					// ghost 50%
 					tempMonster = new Ghost;
-					monsterCols = GHOST_COLS;
+					monsterCols = ghostNS::GHOST_COLS;
 					monsterTexture = &ghostTexture;
 					monsterData = GHOST_DATA;
 				}
 				else if (randNo > 0.5 && randNo < 0.8) {
-					// duck 30%
-					tempMonster = new Duck;
-					monsterCols = DUCK_COLS;
-					monsterTexture = &duckTexture;
-					monsterData = DUCK_DATA;
-
-					// TODO: Check if water or lava
-					// tempMonster = new Slug;
-					// monsterCols = SLUG_COLS;
-					// monsterTexture = &slugTexture;
-					// monsterData = SLUG_Data;
+					// water monsters 30%
+					if (levelGrid->getMapType() == MAP_TYPE::water) {
+						tempMonster = new Duck;
+						monsterCols = duckNS::DUCK_COLS;
+						monsterTexture = &duckTexture;
+						monsterData = DUCK_DATA;
+					}
+					else if (levelGrid->getMapType() == MAP_TYPE::lava) {
+						 tempMonster = new Slug;
+						 monsterCols = slugNS::SLUG_COLS;
+						 monsterTexture = &slugTexture;
+						 monsterData = SLUG_DATA;
+					}
 				}
 				else {
 					// moon 20%
 					tempMonster = new Moon;
-					monsterCols = MOON_COLS;
+					monsterCols = moonNS::MOON_COLS;
 					monsterTexture = &moonTexture;
 					monsterData = MOON_DATA;
 				}
@@ -278,26 +311,26 @@ void ThreeChances::initializeEntities() {
 				}
 			
 
-			} while (monsterCounter != 4);
+			} while (monsterCounter != MAX_NO_OF_MONSTERS_PER_SQUARE);
 		}
 		
 	}
 	else {
 		for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
 			tempMonster = new Duck;
-			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, DUCK_COLS, &duckTexture, DUCK_DATA);
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, duckNS::DUCK_COLS, &duckTexture, DUCK_DATA);
 			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
 		}
 
 		for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
 			tempMonster = new Ghost;
-			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, GHOST_COLS, &ghostTexture, GHOST_DATA);
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, ghostNS::GHOST_COLS, &ghostTexture, GHOST_DATA);
 			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
 		}
 
 		for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
 			tempMonster = new Moon;
-			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, MOON_COLS, &moonTexture, MOON_DATA);
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, moonNS::MOON_COLS, &moonTexture, MOON_DATA);
 			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
 		}
 	}
@@ -435,8 +468,13 @@ void ThreeChances::update() {
 						level.finishAnimating(levelGrid, &player);
 						levelGrid->logTile(entityGrid->getPlayerCoordinates(), level.getX(), level.getY());
 
-						if (entityGrid->getPlayerCoordinates() == levelGrid->getEndTile())
-							gameControl->setGeneralState(GENERAL_STATE::gameClear);
+						// Victory
+						if (entityGrid->getPlayerCoordinates() == levelGrid->getEndTile()) {
+							if (stageNo == finalStageNo)
+								gameControl->setGeneralState(GENERAL_STATE::gameClear);
+							else
+								incrementStage();
+						}
 					}
 				}
 				// If action is ATTACK

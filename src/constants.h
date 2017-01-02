@@ -36,12 +36,17 @@ const int VIEW_RANGE = 7;
 namespace DEMO_LEVEL {
 	const int LEVEL_SIZE = TILE_SIZE * 18;
 	const int LEVEL_COLS = 1;
+	const int NO_OF_STAGE = 2;
 };
 
 namespace NORMAL_LEVEL {
 	const int LEVEL_SIZE = TILE_SIZE * 32;
 	const int LEVEL_COLS = 2;
+	const int NO_OF_STAGE = 1;
 }
+
+const int MAX_NO_OF_MONSTERS_PER_SQUARE = 4;
+const int PLAYER_ID = 1;
 
 // Window
 const char CLASS_NAME[] = "ThreeChances";
@@ -84,7 +89,8 @@ const int ESC = 100;
 const int SPACE = 101;
 
 // Sprites
-const char DEMO_IMAGE[] = "sprites\\Demo_Map.png";
+const char DEMO_LVL_1_IMAGE[] = "sprites\\Demo_Level1.png";
+const char DEMO_LVL_2_IMAGE[] = "sprites\\Demo_Level2.png";
 const char LEVEL_1_IMAGE[] = "sprites\\LEVEL1_Final.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
 
@@ -135,54 +141,5 @@ const char CLICK_CUE[] = "click";
 const char DIE_CUE[] = "die";
 const char GAME_OVER_CUE[] = "game_over";
 const char START_GAME_CUE[] = "start_game";
-
-const int PLAYER_STANDING_FRAME = 0;
-const int PLAYER_WALK_START_FRAME = 0;
-const int PLAYER_WALK_END_FRAME = 4;
-const float PLAYER_ANIMATION_DELAY = 0.1f;
-const int PLAYER_ATK_START_FRAME = 5;
-const int PLAYER_ATK_END_FRAME = 6;
-const int PLAYER_COLS = 7;
-const int PLAYER_ID = 1;
-
-const int SWORD_WIDTH = 128;
-const int SWORD_HEIGHT = 128;
-const int SWORD_COLS = 4;
-
-const int DUCK_STANDING_FRAME = 0;
-const int DUCK_WALK_START_FRAME = 0;
-const int DUCK_WALK_END_FRAME = 3;
-const int DUCK_ATK_START_FRAME = 4;
-const int DUCK_ATK_END_FRAME = 5;
-const float DUCK_ANIMATION_DELAY = 0.2f;
-const int DUCK_HURT_FRAME = 6;
-const int DUCK_COLS = 7;
-
-const int GHOST_STANDING_FRAME = 0;
-const int GHOST_WALK_START_FRAME = 0;
-const int GHOST_WALK_END_FRAME = 3;
-const int GHOST_ATK_START_FRAME = 4;
-const int GHOST_ATK_END_FRAME = 5;
-const float GHOST_ANIMATION_DELAY = 0.2f;
-const int GHOST_HURT_FRAME = 6;
-const int GHOST_COLS = 7;
-
-const int SLUG_STANDING_FRAME = 0;
-const int SLUG_WALK_START_FRAME = 0;
-const int SLUG_WALK_END_FRAME = 2;
-const int SLUG_ATK_START_FRAME = 3;
-const int SLUG_ATK_END_FRAME = 4;
-const float SLUG_ANIMATION_DELAY = 0.2f;
-const int SLUG_HURT_FRAME = 5;
-const int SLUG_COLS = 6;
-
-const int MOON_STANDING_FRAME = 0;
-const int MOON_WALK_START_FRAME = 0;
-const int MOON_WALK_END_FRAME = 2;
-const int MOON_ATK_START_FRAME = 3;
-const int MOON_ATK_END_FRAME = 4;
-const float MOON_ANIMATION_DELAY = 0.25f;
-const int MOON_HURT_FRAME = 5;
-const int MOON_COLS = 6;
 
 #endif

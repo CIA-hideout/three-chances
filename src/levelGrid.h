@@ -12,25 +12,26 @@ private:
 	std::vector<std::vector<int>> grid;		// 2D array representing stage layout
 	Coordinates startTile;					// Coordinates of start tile
 	Coordinates endTile;					// Coordinates of end tile
-	int stageNo;							// Stage number
+	MAP_TYPE mapType;
 
 public:
 	LevelGrid();
 	~LevelGrid();
 
-	bool initialize(int stageNo);
+	void initialize(GAME_MODE gameMode);
+	void switchLayout(GAME_MODE gameMode, int stageNo);
 
 	// Getters
 	std::vector<std::vector<int>> getGrid() { return grid; }
 	Coordinates getStartTile() { return startTile; }
 	Coordinates getEndTile() { return endTile; }
-	int getStageNo() { return stageNo; }
+	MAP_TYPE getMapType() { return mapType; }
 
 	// Setters
 	void setGrid(std::vector<std::vector<int>> g) { grid = g; }
 	void setStartTile(Coordinates st) { startTile = st; }
 	void setEndTile(Coordinates et) { endTile = et; }
-	void setStageNo(int sn) { stageNo = sn; }
+	void setMapType(MAP_TYPE mt) { mapType = mt; }
 
 	// Logging
 	void logGrid();

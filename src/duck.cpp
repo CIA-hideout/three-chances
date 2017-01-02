@@ -1,7 +1,7 @@
 #include "duck.h"
 
 Duck::Duck() : Entity() {
-	this->setFrameDelay(DUCK_ANIMATION_DELAY);
+	this->setFrameDelay(duckNS::DUCK_ANIMATION_DELAY);
 	this->setLoop(false);
 }
 
@@ -10,7 +10,7 @@ Duck::~Duck() {}
 void Duck::update(float frameTime) {
 	if (this->getAnimationComplete()) {
 		this->setFrames(0, 0);
-		this->setCurrentFrame(DUCK_STANDING_FRAME);
+		this->setCurrentFrame(duckNS::DUCK_STANDING_FRAME);
 		this->setAnimationComplete(false);
 
 		if (this->getHealth() <= 0.0) {
@@ -18,7 +18,7 @@ void Duck::update(float frameTime) {
 		}
 	}
 
-	if (this->getCurrentFrame() == DUCK_HURT_FRAME) {
+	if (this->getCurrentFrame() == duckNS::DUCK_HURT_FRAME) {
 		this->setTimer(this->getTimer() + frameTime);
 
 		if (this->getTimer() > 0.2) {
@@ -31,17 +31,17 @@ void Duck::update(float frameTime) {
 }
 
 void Duck::startAttackAnimation() {
-	this->setFrames(DUCK_ATK_START_FRAME, DUCK_ATK_END_FRAME);
-	this->setCurrentFrame(DUCK_ATK_START_FRAME);
+	this->setFrames(duckNS::DUCK_ATK_START_FRAME, duckNS::DUCK_ATK_END_FRAME);
+	this->setCurrentFrame(duckNS::DUCK_ATK_START_FRAME);
 }
 
 void Duck::startWalkAnimation() {
-	this->setFrames(DUCK_WALK_START_FRAME, DUCK_WALK_END_FRAME);
-	this->setCurrentFrame(DUCK_WALK_START_FRAME);
+	this->setFrames(duckNS::DUCK_WALK_START_FRAME, duckNS::DUCK_WALK_END_FRAME);
+	this->setCurrentFrame(duckNS::DUCK_WALK_START_FRAME);
 }
 
 void Duck::startHurtAnimation() {
-	this->setCurrentFrame(DUCK_HURT_FRAME);
+	this->setCurrentFrame(duckNS::DUCK_HURT_FRAME);
 }
 
 void Duck::startDeathAnimation() {

@@ -3,7 +3,8 @@
 //=============================================================================
 // Constructor
 //=============================================================================
-LevelGrid::LevelGrid() {}
+LevelGrid::LevelGrid() {
+}
 
 //=============================================================================
 // Destructor
@@ -13,21 +14,32 @@ LevelGrid::~LevelGrid() {}
 //=============================================================================
 // Initializes the map
 //=============================================================================
-bool LevelGrid::initialize(int stageNo) {
-	switch (stageNo) {
-	case 0:
-		grid = DEMO_LAYOUT;
-		startTile = DEMO_START_TILE;
-		endTile = DEMO_END_TILE;
-		break;
-	case 1:
+void LevelGrid::initialize(GAME_MODE gameMode) {
+	if (gameMode == GAME_MODE::demo) {
+		grid = DEMO_STAGE_1_LAYOUT;
+		startTile = DEMO_STAGE_1_START_TILE;
+		endTile = DEMO_STAGE_1_END_TILE;
+		mapType = DEMO_STAGE_1_MAP_TYPE;
+	}
+	else {
 		grid = STAGE_1_LAYOUT;
 		startTile = STAGE_1_START_TILE;
 		endTile = STAGE_1_END_TILE;
-		break;
+		mapType = STAGE_1_MAP_TYPE;
 	}
+}
 
-	return true;
+void LevelGrid::switchLayout(GAME_MODE gameMode, int stageNo) {
+	if (gameMode == GAME_MODE::demo) {
+		switch (stageNo) {
+			case 2: {
+				grid = DEMO_STAGE_2_LAYOUT;
+				startTile = DEMO_STAGE_2_START_TILE;
+				endTile = DEMO_STAGE_2_END_TILE;
+				mapType = DEMO_STAGE_2_MAP_TYPE;
+			}	break;
+		}
+	}
 }
 
 //=============================================================================
