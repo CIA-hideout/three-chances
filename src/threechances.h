@@ -65,11 +65,17 @@ private:
 	TextureManager  pauseScreenTexture;
 	TextureManager	gameOverScreenTexture;
 	TextureManager	gameClearScreenTexture;
+	TextureManager	instructionsScreenTexture;
+	TextureManager	creditsScreenTexture;
+	TextureManager	homeScreenTexture;
 
 	Image startScreen;
 	Image pausedScreen;
 	Image gameOverScreen;
 	Image gameClearScreen;
+	Image instructionsScreen;
+	Image creditsScreen;
+	Image homeScreen;
 
 	// Sprites
 	Level	level;

@@ -20,6 +20,12 @@ void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[ESC] = false;
 	if (!input->isKeyDown(M_KEY))
 		(*keysPressed)[MUTE] = false;
+	if (!input->isKeyDown(DOWN_KEY))
+		(*keysPressed)[DOWN] = false;
+	if (!input->isKeyDown(UP_KEY))
+		(*keysPressed)[UP] = false;
+	if (!input->isKeyDown(ENTER_KEY))
+		(*keysPressed)[ENTER] = false;
 }
 
 //=============================================================================
@@ -35,9 +41,11 @@ ThreeChances::ThreeChances() {
 	screenKeysPressed[ESC] = false;
 	screenKeysPressed[SPACE] = false;
 	screenKeysPressed[MUTE] = false;
+	screenKeysPressed[DOWN] = false;
+	screenKeysPressed[UP] = false;
 
 	startBtnPressed = false;
-	muted = true;
+	muted = false;
 
 	gameMode = GAME_MODE::demo;
 	stageNo = 1;
@@ -85,6 +93,15 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!gameClearScreenTexture.initialize(graphics, GAME_CLEAR_SCREEN_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
+	if (!instructionsScreenTexture.initialize(graphics, INSTRUCTIONS_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instructionsScreen texture"));
+
+	if (!creditsScreenTexture.initialize(graphics, CREDITS_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing creditScreen texture"));
+
+	if (!homeScreenTexture.initialize(graphics, HOME_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing homeScreen texture"));
+
 	// map texture
 	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
@@ -131,11 +148,17 @@ void ThreeChances::initialize(HWND hwnd) {
 	pausedScreen.initialize(graphics, 0, 0, 0, &pauseScreenTexture);
 	gameOverScreen.initialize(graphics, 0, 0, 0, &gameOverScreenTexture);
 	gameClearScreen.initialize(graphics, 0, 0, 0, &gameClearScreenTexture);
+	instructionsScreen.initialize(graphics, 0, 0, 0, &instructionsScreenTexture);
+	creditsScreen.initialize(graphics, 0, 0, 0, &creditsScreenTexture);
+	homeScreen.initialize(graphics, 448, 448, 3, &homeScreenTexture);
 
 	startScreen.setScale(SCALE_2X);
 	pausedScreen.setScale(SCALE_2X);
 	gameOverScreen.setScale(SCALE_2X);
 	gameClearScreen.setScale(SCALE_2X);
+	instructionsScreen.setScale(SCALE_2X);
+	creditsScreen.setScale(SCALE_2X);
+	homeScreen.setScale(SCALE_2X);
 
 	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
 	pausedScreen.setY(GAME_HEIGHT / 2 - PAUSE_SCREEN_HEIGHT / 2);
@@ -365,10 +388,15 @@ void ThreeChances::update() {
 	switch (gs) {
 		case GENERAL_STATE::menu: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
-				screenKeysPressed[SPACE] = true;			
-				startBtnPressed = true;
-				startCue = audio->playCue(START_GAME_CUE);
+				audio->playCue(CLICK_CUE);
+				screenKeysPressed[SPACE] = true;
+				gameControl->setGeneralState(GENERAL_STATE::home);
 			}
+		} break;
+		case GENERAL_STATE::home: {
+			int homeCurrentFrame = homeScreen.getCurrentFrame();
+			int homeNextFrame = homeScreen.getCurrentFrame() + 1;
+			int homePreviousFrame = homeScreen.getCurrentFrame() - 1;
 
 			if (startBtnPressed) {
 				DWORD* tempCueState = new DWORD;
@@ -377,6 +405,51 @@ void ThreeChances::update() {
 				if (*tempCueState == XACT_CUESTATE_STOPPED || muted) {
 					gameControl->setGeneralState(GENERAL_STATE::game);
 				}
+			}
+
+			if (input->isKeyDown(DOWN_KEY) && !screenKeysPressed[DOWN]) {
+				screenKeysPressed[DOWN] = true;
+				if (homeNextFrame == 3)
+					homeNextFrame = 0;
+			
+				audio->playCue(CLICK_CUE);
+				homeScreen.setCurrentFrame(homeNextFrame);
+			}
+
+			if (input->isKeyDown(UP_KEY) && !screenKeysPressed[UP]) {
+				screenKeysPressed[UP] = true;
+				if (homePreviousFrame == -1)
+					homePreviousFrame = 2;
+
+				audio->playCue(CLICK_CUE);
+				homeScreen.setCurrentFrame(homePreviousFrame);
+			}
+
+			if (input->isKeyDown(ENTER_KEY) && !screenKeysPressed[ENTER]) {
+				screenKeysPressed[ENTER] = true;
+				
+				switch (homeCurrentFrame) {
+					case 0: {
+						screenKeysPressed[SPACE] = true;
+						startBtnPressed = true;
+						startCue = audio->playCue(START_GAME_CUE);
+					} break;
+					case 1: {
+						audio->playCue(CLICK_CUE);
+						gameControl->setGeneralState(GENERAL_STATE::instructions);
+					} break;
+					case 2: {
+						audio->playCue(CLICK_CUE);
+						gameControl->setGeneralState(GENERAL_STATE::credits);
+					} break;
+				}	
+			}
+		} break;
+		case GENERAL_STATE::instructions: 
+		case GENERAL_STATE::credits: {
+			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
+				audio->playCue(CLICK_CUE);
+				gameControl->setGeneralState(GENERAL_STATE::home);
 			}
 		} break;
 		case GENERAL_STATE::paused: {
@@ -599,6 +672,15 @@ void ThreeChances::render() {
 	switch (gameControl->getGeneralState()) {
 		case GENERAL_STATE::menu: {
 			startScreen.draw();
+		} break;
+		case GENERAL_STATE::home: {
+			homeScreen.draw();
+		} break;
+		case GENERAL_STATE::instructions: {
+			instructionsScreen.draw();
+		} break;
+		case GENERAL_STATE::credits: {
+			creditsScreen.draw();
 		} break;
 		case GENERAL_STATE::paused: {
 			pausedScreen.draw();
