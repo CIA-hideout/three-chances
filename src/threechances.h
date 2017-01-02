@@ -100,18 +100,19 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+
+	void initializeEntities();
+	void clearEntities();
+	void incrementStage();
+	void restartGame();
+	void enemyAi();
+
 	void update();      // must override pure virtual from Game
 	void ai();          // "
 	void collisions();  // "
 	void render();      // "
 	void releaseAll();
 	void resetAll();
-
-	void clearEntities();
-	void enemyAi();
-	void restartGame();
-	void initializeEntities();
-	void incrementStage();
 };
 
 #endif

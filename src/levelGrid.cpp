@@ -75,7 +75,8 @@ void LevelGrid::logGrid() {
 // Log tile information with x and y coordinates
 //=============================================================================
 void LevelGrid::logTile(Coordinates coordinates, float x, float y) {
-	printf("X: %.2f Y: %.2f Tile: %s\n", x, y, this->getTileType(coordinates).c_str());
+	printf("Coord X: %d Y:%d\n", coordinates.x, coordinates.y);
+	printf("Position X: %.2f Y: %.2f Tile: %s\n", x, y, this->getTileType(coordinates).c_str());
 }
 
 //=============================================================================

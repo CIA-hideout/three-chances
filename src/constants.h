@@ -45,6 +45,7 @@ namespace NORMAL_LEVEL {
 	const int NO_OF_STAGE = 1;
 }
 
+const int NO_OF_PROTECTION_TILES = 2;
 const int MAX_NO_OF_MONSTERS_PER_SQUARE = 4;
 const int PLAYER_ID = 1;
 
