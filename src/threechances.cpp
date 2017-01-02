@@ -18,18 +18,8 @@ void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[SPACE] = false;
 	if (!input->isKeyDown(ESC_KEY))
 		(*keysPressed)[ESC] = false;
-}
-
-int findKeyDown(std::map<int, bool> *keysPressed) {
-	if ((*keysPressed)[LEFT])
-		return LEFT;
-	if ((*keysPressed)[RIGHT])
-		return RIGHT;
-	if ((*keysPressed)[UP])
-		return UP;
-	if ((*keysPressed)[DOWN])
-		return DOWN;
-	return -1;
+	if (!input->isKeyDown(M_KEY))
+		(*keysPressed)[MUTE] = false;
 }
 
 //=============================================================================
@@ -44,9 +34,10 @@ ThreeChances::ThreeChances() {
 
 	screenKeysPressed[ESC] = false;
 	screenKeysPressed[SPACE] = false;
+	screenKeysPressed[MUTE] = false;
 
 	startBtnPressed = false;
-	muted = false;
+	muted = true;
 
 	gameMode = GAME_MODE::demo;
 	stageNo = 1;
@@ -119,6 +110,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
+	// initialize images
 	if (!level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile()))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
@@ -142,10 +134,14 @@ void ThreeChances::initialize(HWND hwnd) {
 	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
 	pausedScreen.setY(GAME_HEIGHT / 2 - PAUSE_SCREEN_HEIGHT / 2);
 
+	settings = new Settings;
+	settings->initializeTexture(graphics);
+
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
 
 	this->initializeEntities();
+	settings->setInitialPosition(muted);
 	hud->setInitialPosition();
 
 	return;
@@ -344,9 +340,9 @@ void ThreeChances::initializeEntities() {
 //=============================================================================
 void ThreeChances::update() {
 	if (muted)
-		audio->pauseCategory("Music");
+		audio->pauseCategory("Default");
 	else
-		audio->resumeCategory("Music");
+		audio->resumeCategory("Default");
 
 	GENERAL_STATE gs = gameControl->getGeneralState();
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
@@ -363,7 +359,7 @@ void ThreeChances::update() {
 				DWORD* tempCueState = new DWORD;
 				startCue->GetState(tempCueState);
 
-				if (*tempCueState == XACT_CUESTATE_STOPPED) {
+				if (*tempCueState == XACT_CUESTATE_STOPPED || muted) {
 					gameControl->setGeneralState(GENERAL_STATE::game);
 				}
 			}
@@ -374,6 +370,13 @@ void ThreeChances::update() {
 				screenKeysPressed[SPACE] = true;
 				audio->playCue(UNPAUSE_CUE);
 			}
+
+			if (input->isKeyDown(M_KEY) && !screenKeysPressed[MUTE]) {
+				screenKeysPressed[MUTE] = true;
+				muted = !muted;
+			}
+
+			settings->update(muted);
 		} break;
 		case GENERAL_STATE::gameOver: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
@@ -575,6 +578,7 @@ void ThreeChances::render() {
 		} break;
 		case GENERAL_STATE::paused: {
 			pausedScreen.draw();
+			settings->draw();
 		} break;
 		case GENERAL_STATE::gameOver: {
 			gameOverScreen.draw();
@@ -612,6 +616,7 @@ void ThreeChances::releaseAll() {
 	swordTexture.onLostDevice();
 	fontTexture.onLostDevice();
 
+	settings->releaseAll();
 	hud->releaseAll();
 	Game::releaseAll();
 	return;
@@ -631,6 +636,7 @@ void ThreeChances::resetAll() {
 	swordTexture.onResetDevice();
 	fontTexture.onResetDevice();
 
+	settings->resetAll();
 	hud->resetAll();
 	Game::resetAll();
 	return;

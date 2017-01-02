@@ -74,6 +74,7 @@ const UCHAR UP_KEY = VK_UP;
 const UCHAR DOWN_KEY = VK_DOWN;
 const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR X_KEY = 0x58;
+const UCHAR M_KEY = 0x4D;
 
 // Action integers
 const int LEFT = 0;
@@ -87,6 +88,7 @@ const int END = 6;
 // Screen key pressed
 const int ESC = 100;
 const int SPACE = 101;
+const int MUTE = 102;
 
 // Sprites
 const char DEMO_LVL_1_IMAGE[] = "sprites\\Demo_Level1.png";
@@ -115,6 +117,9 @@ const char FONT_TEXTURE_INFO[] = "resources\\silkscreen.dat";
 const char HUD_BG_IMAGE[] = "sprites\\hud-bg.png";
 const char MOVE_ICON[] = "sprites\\white-circle.png";
 const char MOVE_OVER_ICON[] = "sprites\\black-circle.png";
+
+const char MUTED_AUDIO_IMAGE[] = "resources\\muted.png";
+const char UNMUTED_AUDIO_IMAGE[] = "resources\\unmuted.png";
 
 const UINT PAUSE_SCREEN_WIDTH = 96 * SCALE;
 const UINT PAUSE_SCREEN_HEIGHT = 128 * SCALE;

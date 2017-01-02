@@ -16,8 +16,8 @@ Global Settings
     Header File = threechances.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 897028063;
-    Last Modified High = 30564825;
+    Last Modified Low = 30564825;
+    Last Modified High = 897028063;
 
     Category
     {
@@ -229,6 +229,8 @@ Wave Bank
     Xbox Bank Last Modified High = 0;
     PC Bank Last Modified Low = 1768839505;
     PC Bank Last Modified High = 30564823;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
     Bank Last Revised Low = 1645100678;
     Bank Last Revised High = 30564823;
 
@@ -447,10 +449,6 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 897248622;
-    Bank Last Modified High = 30564825;
-    Header Last Modified High = 0;
-    Header Last Modified Low = 0;
 
     Sound
     {
@@ -461,7 +459,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -508,7 +506,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -555,7 +553,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -602,7 +600,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -649,7 +647,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -696,7 +694,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -743,7 +741,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -790,7 +788,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track
@@ -837,7 +835,7 @@ Sound Bank
 
         Category Entry
         {
-            Name = Music;
+            Name = Default;
         }
 
         Track

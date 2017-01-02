@@ -97,6 +97,7 @@
     <ClInclude Include="src\entityConstants.h" />
     <ClInclude Include="src\moon.h" />
     <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\slug.h" />
     <ClInclude Include="src\sword.h" />
     <ClInclude Include="src\threechances.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="src\levelGrid.cpp" />
     <ClCompile Include="src\moon.cpp" />
     <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\slug.cpp" />
     <ClCompile Include="src\sword.cpp" />
     <ClCompile Include="src\threechances.cpp" />
