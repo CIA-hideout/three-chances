@@ -55,7 +55,6 @@ std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
 	return mv;
 }
 
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -755,6 +754,14 @@ void ThreeChances::releaseAll() {
 	swordTexture.onLostDevice();
 	fontTexture.onLostDevice();
 
+	startScreenTexture.onLostDevice();
+	pauseScreenTexture.onLostDevice();
+	gameOverScreenTexture.onLostDevice();
+	gameClearScreenTexture.onLostDevice();
+	instructionsScreenTexture.onLostDevice();
+	creditsScreenTexture.onLostDevice();
+	homeScreenTexture.onLostDevice();
+
 	settings->releaseAll();
 	hud->releaseAll();
 	Game::releaseAll();
@@ -775,6 +782,14 @@ void ThreeChances::resetAll() {
 	sunTexture.onResetDevice();
 	swordTexture.onResetDevice();
 	fontTexture.onResetDevice();
+
+	startScreenTexture.onResetDevice();
+	pauseScreenTexture.onResetDevice();
+	gameOverScreenTexture.onResetDevice();
+	gameClearScreenTexture.onResetDevice();
+	instructionsScreenTexture.onResetDevice();
+	creditsScreenTexture.onResetDevice();
+	homeScreenTexture.onResetDevice();
 
 	settings->resetAll();
 	hud->resetAll();
