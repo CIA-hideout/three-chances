@@ -120,6 +120,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!sword.initialize(this, swordNS::SWORD_WIDTH, swordNS::SWORD_HEIGHT, swordNS::SWORD_COLS, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
+	if (gameMode == GAME_MODE::normal)
+		level.setPathBlocked(true);
+	
 	// Initialize screens
 	startScreen.initialize(graphics, 0, 0, 0, &startScreenTexture);
 	pausedScreen.initialize(graphics, 0, 0, 0, &pauseScreenTexture);
@@ -161,6 +164,7 @@ void ThreeChances::clearEntities() {
 
 void ThreeChances::restartGame() {
 	clearEntities();
+	stageNo = 1;
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -180,7 +184,7 @@ void ThreeChances::restartGame() {
 	hud->resetMovesHud();
 	hud->resetHealthHud();
 	this->initializeEntities();
-
+	
 	gameControl->setEnemyAiInitialized(false);
 }
 
@@ -494,10 +498,19 @@ void ThreeChances::update() {
 			} 
 
 			// Remove blockage on level if monsters left == 0
-			if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
+			if (gameControl->getMonstersLeft() == 0) {
+				levelGrid->allowExit();
+
+				if (level.getPathBlocked()) {
+					level.removeBlockage();
+					levelGrid->removeBlockage();
+				}
+			}
+
+			/*if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
 				level.removeBlockage();
 				levelGrid->removeBlockage();
-			}
+			}*/
 
 			// Update and reset
 			for (size_t i = 0; i < mv.size(); i++) {

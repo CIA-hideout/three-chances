@@ -33,23 +33,7 @@ void Settings::setInitialPosition(bool muted) {
 		unmutedAudioImage.setVisible(false);
 }
 
-void Settings::update(bool muted) {
-	// To prevent extra rendering
-	//if (muted) {
-	//	if (!mutedAudioImage.getVisible())
-	//		mutedAudioImage.setVisible(true);
-
-	//	if (unmutedAudioImage.getVisible())
-	//		unmutedAudioImage.setVisible(false);
-	//}
-	//else {
-	//	if (mutedAudioImage.getVisible())
-	//		mutedAudioImage.setVisible(false);
-
-	//	if (!unmutedAudioImage.getVisible())
-	//		unmutedAudioImage.setVisible(true);
-	//}
-	
+void Settings::update(bool muted) {	
 	mutedAudioImage.setVisible(muted ? true : false);
 	unmutedAudioImage.setVisible(muted ? false : true);
 }

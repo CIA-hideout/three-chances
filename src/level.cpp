@@ -4,7 +4,9 @@ bool operator==(const Coordinates& lhs, const Coordinates& rhs) {
 	return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-Level::Level() : Image() {}
+Level::Level() : Image() {
+	pathBlocked = false;
+}
 
 Level::~Level() {}
 
@@ -20,7 +22,6 @@ bool Level::initialize(Game *gamePtr, int width, int height, int ncols,
 	startX = x;
 	startY = y;
 
-	pathBlocked = true;
 	this->setScale((float)SCALE);
 	return(Image::initialize(gamePtr->getGraphics(), width, height, ncols, textureM));
 }

@@ -11,32 +11,48 @@ LevelGrid::LevelGrid() {
 //=============================================================================
 LevelGrid::~LevelGrid() {}
 
+void LevelGrid::saveLayoutInfo(std::vector<std::vector<int>> g, Coordinates st, Coordinates et, MAP_TYPE mt) {
+	grid = g;
+	startTile = st;
+	endTile = et;
+	mapType = mt;
+
+	// change exit to obstacle tile type
+	finalTileValueType = grid[et.y][et.x];
+	grid[et.y][et.x] = 5;
+}
+
 //=============================================================================
 // Initializes the map
 //=============================================================================
 void LevelGrid::initialize(GAME_MODE gameMode) {
-	if (gameMode == GAME_MODE::demo) {
-		grid = DEMO_STAGE_1_LAYOUT;
-		startTile = DEMO_STAGE_1_START_TILE;
-		endTile = DEMO_STAGE_1_END_TILE;
-		mapType = DEMO_STAGE_1_MAP_TYPE;
-	}
-	else {
-		grid = STAGE_1_LAYOUT;
-		startTile = STAGE_1_START_TILE;
-		endTile = STAGE_1_END_TILE;
-		mapType = STAGE_1_MAP_TYPE;
-	}
+	if (gameMode == GAME_MODE::demo)
+		saveLayoutInfo(
+			DEMO_STAGE_1_LAYOUT, 
+			DEMO_STAGE_1_START_TILE, 
+			DEMO_STAGE_1_END_TILE, 
+			DEMO_STAGE_1_MAP_TYPE
+		);
+	else
+		saveLayoutInfo(
+			STAGE_1_LAYOUT, 
+			STAGE_1_START_TILE, 
+			STAGE_1_END_TILE,
+			STAGE_1_MAP_TYPE
+		);
 }
+
 
 void LevelGrid::switchLayout(GAME_MODE gameMode, int stageNo) {
 	if (gameMode == GAME_MODE::demo) {
 		switch (stageNo) {
 			case 2: {
-				grid = DEMO_STAGE_2_LAYOUT;
-				startTile = DEMO_STAGE_2_START_TILE;
-				endTile = DEMO_STAGE_2_END_TILE;
-				mapType = DEMO_STAGE_2_MAP_TYPE;
+				saveLayoutInfo(
+					DEMO_STAGE_2_LAYOUT,
+					DEMO_STAGE_2_START_TILE,
+					DEMO_STAGE_2_END_TILE,
+					DEMO_STAGE_2_MAP_TYPE
+				);
 			}	break;
 		}
 	}
