@@ -49,8 +49,6 @@ void Settings::update(bool muted) {
 	//	if (!unmutedAudioImage.getVisible())
 	//		unmutedAudioImage.setVisible(true);
 	//}
-
-
 	
 	mutedAudioImage.setVisible(muted ? true : false);
 	unmutedAudioImage.setVisible(muted ? false : true);

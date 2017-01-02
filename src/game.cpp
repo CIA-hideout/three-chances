@@ -204,6 +204,7 @@ void Game::run(HWND hwnd) {
 
 	renderGame();                   // draw all game items
 	input->readControllers();       // read state of controllers
+
 	audio->run();                   // perform periodic sound engine tasks
 
 	// Clear input

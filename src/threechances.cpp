@@ -340,9 +340,9 @@ void ThreeChances::initializeEntities() {
 //=============================================================================
 void ThreeChances::update() {
 	if (muted)
-		audio->pauseCategory("Default");
+		audio->muteCategory("Default");
 	else
-		audio->resumeCategory("Default");
+		audio->unmuteCategory("Default");
 
 	GENERAL_STATE gs = gameControl->getGeneralState();
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
