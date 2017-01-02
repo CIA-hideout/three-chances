@@ -12,15 +12,6 @@ const EntityData PLAYER_DATA = {
 	std::vector < entityNS::ABILITY_TYPE > {},
 };
 
-const EntityData DUCK_DATA = {
-	2.0f,	// health
-	0.5f,	// dmg
-	1,		// atkRange
-	3,		// moves
-	std::vector < int > { 1, 2 },
-	std::vector < entityNS::ABILITY_TYPE > {},
-};
-
 const EntityData GHOST_DATA = {
 	2.0f,	// health
 	0.5f,	// dmg
@@ -30,12 +21,21 @@ const EntityData GHOST_DATA = {
 	std::vector < entityNS::ABILITY_TYPE > {  entityNS::TRAVEL_WALL },
 };
 
+const EntityData DUCK_DATA = {
+	2.0f,	// health
+	0.5f,	// dmg
+	1,		// atkRange
+	3,		// moves
+	std::vector < int > { 1 },
+	std::vector < entityNS::ABILITY_TYPE > {},
+};
+
 const EntityData SLUG_DATA = {
 	2.0f,	// health
 	1.0f,	// dmg
 	1,		// atkRange
 	3,		// moves
-	std::vector < int > { 1 },
+	std::vector < int > { 2 },
 	std::vector < entityNS::ABILITY_TYPE > { entityNS::TRAVEL_LAVA, entityNS::BURNS_PLAYER },
 };
 
@@ -45,6 +45,15 @@ const EntityData MOON_DATA = {
 	1,		// atkRange
 	4,		// moves
 	std::vector < int > { 1 },
+	std::vector < entityNS::ABILITY_TYPE > {},
+};
+
+const EntityData SUN_DATA = {
+	4.0f,	// health
+	0.5f,	// dmg
+	1,		// atkRange
+	4,		// moves
+	std::vector < int > { 2 },
 	std::vector < entityNS::ABILITY_TYPE > {},
 };
 

@@ -24,10 +24,11 @@
 #include "level.h"
 #include "entity.h"
 #include "player.h"
-#include "duck.h"
 #include "ghost.h"
+#include "duck.h"
 #include "slug.h"
 #include "moon.h"
+#include "sun.h"
 #include "sword.h"
 
 bool operator==(const Coordinates& lhs, const Coordinates& rhs);
@@ -50,10 +51,11 @@ private:
 	// Game items
 	TextureManager	levelTexture;
 	TextureManager	playerMaleTexture;
-	TextureManager	duckTexture;
 	TextureManager	ghostTexture;
+	TextureManager	duckTexture;
 	TextureManager	slugTexture;
 	TextureManager	moonTexture;
+	TextureManager	sunTexture;
 	TextureManager	hudBgTexture;
 	TextureManager	swordTexture;
 	TextureManager	fontTexture;

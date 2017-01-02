@@ -4,14 +4,14 @@
 #include "entity.h"
 
 namespace duckNS {
-	const int DUCK_STANDING_FRAME = 0;
-	const int DUCK_WALK_START_FRAME = 0;
-	const int DUCK_WALK_END_FRAME = 3;
-	const int DUCK_ATK_START_FRAME = 4;
-	const int DUCK_ATK_END_FRAME = 5;
-	const float DUCK_ANIMATION_DELAY = 0.2f;
-	const int DUCK_HURT_FRAME = 6;
-	const int DUCK_COLS = 7;
+	const int STANDING_FRAME = 0;
+	const int WALK_START_FRAME = 0;
+	const int WALK_END_FRAME = 3;
+	const int ATK_START_FRAME = 4;
+	const int ATK_END_FRAME = 5;
+	const int HURT_FRAME = 6;
+	const int COLS = 7;
+	const float ANIMATION_DELAY = 0.2f;
 }
 
 class Duck : public Entity {
