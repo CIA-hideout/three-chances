@@ -124,8 +124,6 @@ const char MOVE_OVER_ICON[] = "sprites\\black-circle.png";
 const char MUTED_AUDIO_IMAGE[] = "resources\\muted.png";
 const char UNMUTED_AUDIO_IMAGE[] = "resources\\unmuted.png";
 
-const UINT PAUSE_SCREEN_WIDTH = 96 * SCALE;
-const UINT PAUSE_SCREEN_HEIGHT = 128 * SCALE;
 const char PAUSE_SCREEN_IMAGE[] = "resources\\Pause_Menu.png";
 const char START_SCREEN_IMAGE[] = "resources\\Start_Menu.png";
 const char HOME_SCREEN_IMAGE[] = "resources\\Home_Menu.png";
