@@ -19,6 +19,7 @@
 #include "entityGrid.h"
 #include "gameControl.h"
 
+#include "settings.h"
 #include "hud.h"
 #include "level.h"
 #include "entity.h"
@@ -38,6 +39,7 @@ private:
 	EntityGrid*		entityGrid;
 	LevelGrid*		levelGrid;
 	Hud*			hud;
+	Settings*		settings;
 
 	GAME_MODE		gameMode;
 	int				finalStageNo;

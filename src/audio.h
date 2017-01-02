@@ -57,6 +57,9 @@ public:
 	// Resume playback of paused sound specified by category from sound bank.
 	// If category does not exist no error occurs.
 	void resumeCategory(const char category[]);
+
+	void muteCategory(const char category[]);
+	void unmuteCategory(const char category[]);
 };
 
 #endif

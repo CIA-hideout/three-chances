@@ -226,3 +226,19 @@ void Audio::resumeCategory(const char category[])
 	xactEngine->Pause(iCategory, false);
 }
 
+void Audio::muteCategory(const char category[])
+{
+	if (soundBank == NULL)
+		return;
+	XACTCATEGORY iCategory = xactEngine->GetCategory(category);
+	xactEngine->SetVolume(iCategory, 0.0f);
+}
+
+void Audio::unmuteCategory(const char category[])
+{
+	if (soundBank == NULL)
+		return;
+	XACTCATEGORY iCategory = xactEngine->GetCategory(category);
+	// Set back to as authored volume
+	xactEngine->SetVolume(iCategory, 1.0f);
+}

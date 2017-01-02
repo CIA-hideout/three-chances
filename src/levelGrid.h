@@ -13,11 +13,13 @@ private:
 	Coordinates startTile;					// Coordinates of start tile
 	Coordinates endTile;					// Coordinates of end tile
 	MAP_TYPE mapType;
+	int finalTileValueType;
 
 public:
 	LevelGrid();
 	~LevelGrid();
 
+	void saveLayoutInfo(std::vector<std::vector<int>> g, Coordinates st, Coordinates et, MAP_TYPE mt);
 	void initialize(GAME_MODE gameMode);
 	void switchLayout(GAME_MODE gameMode, int stageNo);
 
@@ -44,6 +46,7 @@ public:
 	int getNextTileValue(Coordinates coordinates, int direction);
 
 	void removeBlockage() { grid = STAGE_1_LAYOUT_CLEAR; };
+	void allowExit() { grid[endTile.y][endTile.x] = finalTileValueType; };
 };
 
 #endif

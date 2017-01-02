@@ -121,7 +121,7 @@ const std::vector<std::vector<int>> DEMO_STAGE_1_LAYOUT = {
 	{ 0, 0, 0, 2, 2, 2, 2, 5, 1, 1, 4, 4, 4, 4, 0, 0, 0, 0 },
 	{ 0, 0, 0, 2, 2, 2, 2, 2, 2, 5, 4, 4, 4, 4, 0, 0, 0, 0 },
 	{ 0, 0, 0, 5, 2, 2, 2, 2, 2, 5, 4, 4, 4, 4, 0, 0, 0, 0 },
-	{ 0, 0, 0, 5, 2, 2, 2, 2, 2, 5, 2, 5, 5, 5, 0, 0, 0, 0 },
+	{ 0, 0, 0, 5, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -152,6 +152,7 @@ const Coordinates STAGE_1_START_TILE(5, 28);
 const Coordinates STAGE_1_END_TILE(16, 4);
 const MAP_TYPE STAGE_1_MAP_TYPE = MAP_TYPE::water;
 
+//const Coordinates DEMO_STAGE_1_START_TILE(9, 10);
 const Coordinates DEMO_STAGE_1_START_TILE(5, 14);
 const Coordinates DEMO_STAGE_1_END_TILE(8, 10);
 const MAP_TYPE DEMO_STAGE_1_MAP_TYPE = MAP_TYPE::water;

@@ -18,18 +18,8 @@ void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[SPACE] = false;
 	if (!input->isKeyDown(ESC_KEY))
 		(*keysPressed)[ESC] = false;
-}
-
-int findKeyDown(std::map<int, bool> *keysPressed) {
-	if ((*keysPressed)[LEFT])
-		return LEFT;
-	if ((*keysPressed)[RIGHT])
-		return RIGHT;
-	if ((*keysPressed)[UP])
-		return UP;
-	if ((*keysPressed)[DOWN])
-		return DOWN;
-	return -1;
+	if (!input->isKeyDown(M_KEY))
+		(*keysPressed)[MUTE] = false;
 }
 
 //=============================================================================
@@ -44,9 +34,10 @@ ThreeChances::ThreeChances() {
 
 	screenKeysPressed[ESC] = false;
 	screenKeysPressed[SPACE] = false;
+	screenKeysPressed[MUTE] = false;
 
 	startBtnPressed = false;
-	muted = false;
+	muted = true;
 
 	gameMode = GAME_MODE::demo;
 	stageNo = 1;
@@ -119,6 +110,7 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!fontTexture.initialize(graphics, FONT_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing font texture"));
 
+	// initialize images
 	if (!level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile()))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map"));
 
@@ -128,6 +120,9 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!sword.initialize(this, swordNS::SWORD_WIDTH, swordNS::SWORD_HEIGHT, swordNS::SWORD_COLS, &swordTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword"));
 
+	if (gameMode == GAME_MODE::normal)
+		level.setPathBlocked(true);
+	
 	// Initialize screens
 	startScreen.initialize(graphics, 0, 0, 0, &startScreenTexture);
 	pausedScreen.initialize(graphics, 0, 0, 0, &pauseScreenTexture);
@@ -142,10 +137,14 @@ void ThreeChances::initialize(HWND hwnd) {
 	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
 	pausedScreen.setY(GAME_HEIGHT / 2 - PAUSE_SCREEN_HEIGHT / 2);
 
+	settings = new Settings;
+	settings->initializeTexture(graphics);
+
 	hud = new Hud;
 	hud->initializeTexture(graphics, &fontTexture);
 
 	this->initializeEntities();
+	settings->setInitialPosition(muted);
 	hud->setInitialPosition();
 
 	return;
@@ -165,6 +164,7 @@ void ThreeChances::clearEntities() {
 
 void ThreeChances::restartGame() {
 	clearEntities();
+	stageNo = 1;
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -184,7 +184,7 @@ void ThreeChances::restartGame() {
 	hud->resetMovesHud();
 	hud->resetHealthHud();
 	this->initializeEntities();
-
+	
 	gameControl->setEnemyAiInitialized(false);
 }
 
@@ -344,9 +344,9 @@ void ThreeChances::initializeEntities() {
 //=============================================================================
 void ThreeChances::update() {
 	if (muted)
-		audio->pauseCategory("Music");
+		audio->muteCategory("Default");
 	else
-		audio->resumeCategory("Music");
+		audio->unmuteCategory("Default");
 
 	GENERAL_STATE gs = gameControl->getGeneralState();
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
@@ -363,7 +363,7 @@ void ThreeChances::update() {
 				DWORD* tempCueState = new DWORD;
 				startCue->GetState(tempCueState);
 
-				if (*tempCueState == XACT_CUESTATE_STOPPED) {
+				if (*tempCueState == XACT_CUESTATE_STOPPED || muted) {
 					gameControl->setGeneralState(GENERAL_STATE::game);
 				}
 			}
@@ -374,6 +374,13 @@ void ThreeChances::update() {
 				screenKeysPressed[SPACE] = true;
 				audio->playCue(UNPAUSE_CUE);
 			}
+
+			if (input->isKeyDown(M_KEY) && !screenKeysPressed[MUTE]) {
+				screenKeysPressed[MUTE] = true;
+				muted = !muted;
+			}
+
+			settings->update(muted);
 		} break;
 		case GENERAL_STATE::gameOver: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
@@ -491,10 +498,19 @@ void ThreeChances::update() {
 			} 
 
 			// Remove blockage on level if monsters left == 0
-			if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
+			if (gameControl->getMonstersLeft() == 0) {
+				levelGrid->allowExit();
+
+				if (level.getPathBlocked()) {
+					level.removeBlockage();
+					levelGrid->removeBlockage();
+				}
+			}
+
+			/*if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
 				level.removeBlockage();
 				levelGrid->removeBlockage();
-			}
+			}*/
 
 			// Update and reset
 			for (size_t i = 0; i < mv.size(); i++) {
@@ -575,6 +591,7 @@ void ThreeChances::render() {
 		} break;
 		case GENERAL_STATE::paused: {
 			pausedScreen.draw();
+			settings->draw();
 		} break;
 		case GENERAL_STATE::gameOver: {
 			gameOverScreen.draw();
@@ -612,6 +629,7 @@ void ThreeChances::releaseAll() {
 	swordTexture.onLostDevice();
 	fontTexture.onLostDevice();
 
+	settings->releaseAll();
 	hud->releaseAll();
 	Game::releaseAll();
 	return;
@@ -631,6 +649,7 @@ void ThreeChances::resetAll() {
 	swordTexture.onResetDevice();
 	fontTexture.onResetDevice();
 
+	settings->resetAll();
 	hud->resetAll();
 	Game::resetAll();
 	return;
