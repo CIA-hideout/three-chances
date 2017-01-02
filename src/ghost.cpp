@@ -1,7 +1,7 @@
 #include "ghost.h"
 
 Ghost::Ghost() : Entity() {
-	this->setFrameDelay(ghostNS::GHOST_ANIMATION_DELAY);
+	this->setFrameDelay(ghostNS::ANIMATION_DELAY);
 	this->setLoop(false);
 }
 
@@ -12,7 +12,7 @@ void Ghost::update(float frameTime) {
 	if (this->getAnimationComplete()) {
 		// Clean up
 		this->setFrames(0, 0);
-		this->setCurrentFrame(ghostNS::GHOST_STANDING_FRAME);
+		this->setCurrentFrame(ghostNS::STANDING_FRAME);
 		this->setAnimationComplete(false);
 
 		if (this->getHealth() <= 0.0) {
@@ -20,7 +20,7 @@ void Ghost::update(float frameTime) {
 		}
 	}
 
-	if (this->getCurrentFrame() == ghostNS::GHOST_HURT_FRAME) {
+	if (this->getCurrentFrame() == ghostNS::HURT_FRAME) {
 		this->setTimer(this->getTimer() + frameTime);
 
 		if (this->getTimer() > 0.2) {
@@ -33,17 +33,17 @@ void Ghost::update(float frameTime) {
 }
 
 void Ghost::startAttackAnimation() {
-	this->setFrames(ghostNS::GHOST_ATK_START_FRAME, ghostNS::GHOST_ATK_END_FRAME);
-	this->setCurrentFrame(ghostNS::GHOST_ATK_START_FRAME);
+	this->setFrames(ghostNS::ATK_START_FRAME, ghostNS::ATK_END_FRAME);
+	this->setCurrentFrame(ghostNS::ATK_START_FRAME);
 }
 
 void Ghost::startWalkAnimation() {
-	this->setFrames(ghostNS::GHOST_WALK_START_FRAME, ghostNS::GHOST_WALK_END_FRAME);
-	this->setCurrentFrame(ghostNS::GHOST_WALK_START_FRAME);
+	this->setFrames(ghostNS::WALK_START_FRAME, ghostNS::WALK_END_FRAME);
+	this->setCurrentFrame(ghostNS::WALK_START_FRAME);
 }
 
 void Ghost::startHurtAnimation() {
-	this->setCurrentFrame(ghostNS::GHOST_HURT_FRAME);
+	this->setCurrentFrame(ghostNS::HURT_FRAME);
 }
 
 void Ghost::startDeathAnimation() {

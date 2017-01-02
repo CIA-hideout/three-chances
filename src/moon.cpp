@@ -1,7 +1,7 @@
 #include "moon.h"
 
 Moon::Moon() : Entity() {
-	this->setFrameDelay(moonNS::MOON_ANIMATION_DELAY);
+	this->setFrameDelay(moonNS::ANIMATION_DELAY);
 	this->setLoop(false);
 }
 
@@ -10,7 +10,7 @@ Moon::~Moon() {}
 void Moon::update(float frameTime) {
 	if (this->getAnimationComplete()) {
 		this->setFrames(0, 0);
-		this->setCurrentFrame(moonNS::MOON_STANDING_FRAME);
+		this->setCurrentFrame(moonNS::STANDING_FRAME);
 		this->setAnimationComplete(false);
 
 		if (this->getHealth() <= 0.0) {
@@ -18,7 +18,7 @@ void Moon::update(float frameTime) {
 		}
 	}
 
-	if (this->getCurrentFrame() == moonNS::MOON_HURT_FRAME) {
+	if (this->getCurrentFrame() == moonNS::HURT_FRAME) {
 		this->setTimer(this->getTimer() + frameTime);
 
 		if (this->getTimer() > 0.2) {
@@ -31,17 +31,17 @@ void Moon::update(float frameTime) {
 }
 
 void Moon::startAttackAnimation() {
-	this->setFrames(moonNS::MOON_ATK_START_FRAME, moonNS::MOON_ATK_END_FRAME);
-	this->setCurrentFrame(moonNS::MOON_ATK_START_FRAME);
+	this->setFrames(moonNS::ATK_START_FRAME, moonNS::ATK_END_FRAME);
+	this->setCurrentFrame(moonNS::ATK_START_FRAME);
 }
 
 void Moon::startWalkAnimation() {
-	this->setFrames(moonNS::MOON_WALK_START_FRAME, moonNS::MOON_WALK_END_FRAME);
-	this->setCurrentFrame(moonNS::MOON_WALK_START_FRAME);
+	this->setFrames(moonNS::WALK_START_FRAME, moonNS::WALK_END_FRAME);
+	this->setCurrentFrame(moonNS::WALK_START_FRAME);
 }
 
 void Moon::startHurtAnimation() {
-	this->setCurrentFrame(moonNS::MOON_HURT_FRAME);
+	this->setCurrentFrame(moonNS::HURT_FRAME);
 }
 
 void Moon::startDeathAnimation() {

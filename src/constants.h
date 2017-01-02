@@ -97,10 +97,11 @@ const char LEVEL_1_IMAGE[] = "sprites\\LEVEL1_Final.png";
 const char LEVEL_2_IMAGE[] = "sprites\\level2.png";
 
 const char PLAYER_MALE_IMAGE[] = "sprites\\Male_Player.png";
-const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char GHOST_IMAGE[] = "sprites\\Duskull.png";
+const char DUCK_IMAGE[] = "sprites\\Psyduck.png";
 const char SLUG_IMAGE[] = "sprites\\Slugma.png";
 const char MOON_IMAGE[] = "sprites\\Lunatone.png";
+const char SUN_IMAGE[] = "sprites\\Solrock.png";
 const char SWORD_IMAGE[] = "sprites\\sword.png";
 
 const char MOVES_HEADER_IMAGE[] = "sprites\\Moves_Header.png";

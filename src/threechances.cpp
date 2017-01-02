@@ -92,17 +92,20 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!playerMaleTexture.initialize(graphics, PLAYER_MALE_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing male texture"));
 
-	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
-
 	if (!ghostTexture.initialize(graphics, GHOST_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ghost texture"));
+
+	if (!duckTexture.initialize(graphics, DUCK_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing duck texture"));
 
 	if (!slugTexture.initialize(graphics, SLUG_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing slug texture"));
 
 	if (!moonTexture.initialize(graphics, MOON_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing moon texture"));
+
+	if (!sunTexture.initialize(graphics, SUN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sun texture"));
 
 	if (!swordTexture.initialize(graphics, SWORD_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing sword texture"));
@@ -264,7 +267,7 @@ void ThreeChances::initializeEntities() {
 			}
 		}
 
-		// Spawn 5 monsters in each box
+		// Spawn 4 monsters in each box
 		for (size_t i = 0; i < coordSet.size(); i++) {
 			int monsterCounter = 0;
 
@@ -277,31 +280,39 @@ void ThreeChances::initializeEntities() {
 				if (randNo < 0.5) {
 					// ghost 50%
 					tempMonster = new Ghost;
-					monsterCols = ghostNS::GHOST_COLS;
+					monsterCols = ghostNS::COLS;
 					monsterTexture = &ghostTexture;
 					monsterData = GHOST_DATA;
 				}
 				else if (randNo > 0.5 && randNo < 0.8) {
-					// water monsters 30%
+					// duck / slug 30%
 					if (levelGrid->getMapType() == MAP_TYPE::water) {
 						tempMonster = new Duck;
-						monsterCols = duckNS::DUCK_COLS;
+						monsterCols = duckNS::COLS;
 						monsterTexture = &duckTexture;
 						monsterData = DUCK_DATA;
 					}
 					else if (levelGrid->getMapType() == MAP_TYPE::lava) {
 						 tempMonster = new Slug;
-						 monsterCols = slugNS::SLUG_COLS;
+						 monsterCols = slugNS::COLS;
 						 monsterTexture = &slugTexture;
 						 monsterData = SLUG_DATA;
 					}
 				}
 				else {
-					// moon 20%
-					tempMonster = new Moon;
-					monsterCols = moonNS::MOON_COLS;
-					monsterTexture = &moonTexture;
-					monsterData = MOON_DATA;
+					// moon / sun 20%
+					if (levelGrid->getMapType() == MAP_TYPE::water) {
+						tempMonster = new Moon;
+						monsterCols = moonNS::COLS;
+						monsterTexture = &moonTexture;
+						monsterData = MOON_DATA;
+					}
+					else if (levelGrid->getMapType() == MAP_TYPE::lava) {
+						tempMonster = new Sun;
+						monsterCols = sunNS::COLS;
+						monsterTexture = &sunTexture;
+						monsterData = SUN_DATA;
+					}
 				}
 
 				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
@@ -318,19 +329,19 @@ void ThreeChances::initializeEntities() {
 	else {
 		for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
 			tempMonster = new Duck;
-			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, duckNS::DUCK_COLS, &duckTexture, DUCK_DATA);
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, duckNS::COLS, &duckTexture, DUCK_DATA);
 			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), DUCK_START_COORDS[i]);
 		}
 
 		for (size_t i = 0; i < GHOST_START_COORDS.size(); i++) {
 			tempMonster = new Ghost;
-			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, ghostNS::GHOST_COLS, &ghostTexture, GHOST_DATA);
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, ghostNS::COLS, &ghostTexture, GHOST_DATA);
 			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), GHOST_START_COORDS[i]);
 		}
 
 		for (size_t i = 0; i < MOON_START_COORDS.size(); i++) {
 			tempMonster = new Moon;
-			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, moonNS::MOON_COLS, &moonTexture, MOON_DATA);
+			tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, moonNS::COLS, &moonTexture, MOON_DATA);
 			mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), MOON_START_COORDS[i]);
 		}
 	}
@@ -622,10 +633,11 @@ void ThreeChances::render() {
 void ThreeChances::releaseAll() {
 	levelTexture.onLostDevice();
 	playerMaleTexture.onLostDevice();
-	duckTexture.onLostDevice();
 	ghostTexture.onLostDevice();
+	duckTexture.onLostDevice();
 	slugTexture.onLostDevice();
 	moonTexture.onLostDevice();
+	sunTexture.onLostDevice();
 	swordTexture.onLostDevice();
 	fontTexture.onLostDevice();
 
@@ -642,10 +654,11 @@ void ThreeChances::releaseAll() {
 void ThreeChances::resetAll() {
 	levelTexture.onResetDevice();
 	playerMaleTexture.onResetDevice();
-	duckTexture.onResetDevice();
 	ghostTexture.onResetDevice();
+	duckTexture.onResetDevice();
 	slugTexture.onResetDevice();
 	moonTexture.onResetDevice();
+	sunTexture.onResetDevice();
 	swordTexture.onResetDevice();
 	fontTexture.onResetDevice();
 

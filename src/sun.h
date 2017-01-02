@@ -1,23 +1,23 @@
-#ifndef _GHOST_H
-#define _GHOST_H
+#ifndef _SUN_H
+#define _SUN_H
 
 #include "entity.h"
 
-namespace ghostNS {
+namespace sunNS {
 	const int STANDING_FRAME = 0;
 	const int WALK_START_FRAME = 0;
-	const int WALK_END_FRAME = 3;
-	const int ATK_START_FRAME = 4;
-	const int ATK_END_FRAME = 5;
-	const int HURT_FRAME = 6;
-	const int COLS = 7;
-	const float ANIMATION_DELAY = 0.2f;
+	const int WALK_END_FRAME = 2;
+	const int ATK_START_FRAME = 3;
+	const int ATK_END_FRAME = 4;
+	const int HURT_FRAME = 5;
+	const int COLS = 6;
+	const float ANIMATION_DELAY = 2.0f;
 }
 
-class Ghost : public Entity {
+class Sun : public Entity {
 public:
-	Ghost();
-	~Ghost();
+	Sun();
+	~Sun();
 
 	void update(float frameTime);
 	void startAttackAnimation();

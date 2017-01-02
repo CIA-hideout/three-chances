@@ -102,6 +102,9 @@
     <ClInclude Include="src\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sun.h">
+      <Filter>Header Files\monsters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game.cpp">
@@ -172,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="src\settings.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sun.cpp">
+      <Filter>Source Files\monsters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

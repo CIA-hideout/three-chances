@@ -4,14 +4,14 @@
 #include "entity.h"
 
 namespace slugNS {
-	const int SLUG_STANDING_FRAME = 0;
-	const int SLUG_WALK_START_FRAME = 0;
-	const int SLUG_WALK_END_FRAME = 2;
-	const int SLUG_ATK_START_FRAME = 3;
-	const int SLUG_ATK_END_FRAME = 4;
-	const float SLUG_ANIMATION_DELAY = 0.2f;
-	const int SLUG_HURT_FRAME = 5;
-	const int SLUG_COLS = 6;
+	const int STANDING_FRAME = 0;
+	const int WALK_START_FRAME = 0;
+	const int WALK_END_FRAME = 2;
+	const int ATK_START_FRAME = 3;
+	const int ATK_END_FRAME = 4;
+	const int HURT_FRAME = 5;
+	const int COLS = 6;
+	const float ANIMATION_DELAY = 0.2f;
 }
 
 class Slug : public Entity {

@@ -99,6 +99,7 @@
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\slug.h" />
+    <ClInclude Include="src\sun.h" />
     <ClInclude Include="src\sword.h" />
     <ClInclude Include="src\threechances.h" />
     <ClInclude Include="src\textureManager.h" />
@@ -122,6 +123,7 @@
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\slug.cpp" />
+    <ClCompile Include="src\sun.cpp" />
     <ClCompile Include="src\sword.cpp" />
     <ClCompile Include="src\threechances.cpp" />
     <ClCompile Include="src\textureManager.cpp" />
