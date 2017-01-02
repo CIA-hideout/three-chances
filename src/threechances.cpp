@@ -1,5 +1,13 @@
 #include "threechances.h"
 
+// Logging
+void logCoordVec(std::vector<Coordinates> coordVec) {
+	for (size_t i = 0; i < coordVec.size(); i++) {
+		printf("X:%d Y:%d\n", coordVec[i].x, coordVec[i].y);
+	}
+}
+
+// Reset keys
 void resetKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 	if (!input->isKeyDown(LEFT_KEY))
 		(*keysPressed)[LEFT] = false;
@@ -20,6 +28,31 @@ void resetScreenKeysPressedMap(Input *input, std::map<int, bool> *keysPressed) {
 		(*keysPressed)[ESC] = false;
 	if (!input->isKeyDown(M_KEY))
 		(*keysPressed)[MUTE] = false;
+	if (!input->isKeyDown(DOWN_KEY))
+		(*keysPressed)[DOWN] = false;
+	if (!input->isKeyDown(UP_KEY))
+		(*keysPressed)[UP] = false;
+}
+
+// Helpers
+bool isCoordInVec(std::vector<Coordinates> coordVec, Coordinates target) {
+	for (size_t i = 0; i < coordVec.size(); i++) {
+		if (target == coordVec[i])
+			return true;
+	}
+
+	return false;
+}
+
+std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
+	Entity* entity, Coordinates currentTile, Coordinates startCoord) {
+
+	entityGrid->addEntity(startCoord, entity->getId());
+	Position startPos = entityGrid->getEntityPosition(entity->getId());
+	entity->setX(startPos.x);
+	entity->setY(startPos.y);
+	mv.push_back(entity);
+	return mv;
 }
 
 //=============================================================================
@@ -35,9 +68,11 @@ ThreeChances::ThreeChances() {
 	screenKeysPressed[ESC] = false;
 	screenKeysPressed[SPACE] = false;
 	screenKeysPressed[MUTE] = false;
+	screenKeysPressed[DOWN] = false;
+	screenKeysPressed[UP] = false;
 
 	startBtnPressed = false;
-	muted = true;
+	muted = false;
 
 	gameMode = GAME_MODE::demo;
 	stageNo = 1;
@@ -85,6 +120,15 @@ void ThreeChances::initialize(HWND hwnd) {
 	if (!gameClearScreenTexture.initialize(graphics, GAME_CLEAR_SCREEN_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameClearScreen texture"));
 
+	if (!instructionsScreenTexture.initialize(graphics, INSTRUCTIONS_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instructionsScreen texture"));
+
+	if (!creditsScreenTexture.initialize(graphics, CREDITS_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing creditScreen texture"));
+
+	if (!homeScreenTexture.initialize(graphics, HOME_SCREEN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing homeScreen texture"));
+
 	// map texture
 	if (!levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing map texture"));
@@ -131,11 +175,17 @@ void ThreeChances::initialize(HWND hwnd) {
 	pausedScreen.initialize(graphics, 0, 0, 0, &pauseScreenTexture);
 	gameOverScreen.initialize(graphics, 0, 0, 0, &gameOverScreenTexture);
 	gameClearScreen.initialize(graphics, 0, 0, 0, &gameClearScreenTexture);
+	instructionsScreen.initialize(graphics, 0, 0, 0, &instructionsScreenTexture);
+	creditsScreen.initialize(graphics, 0, 0, 0, &creditsScreenTexture);
+	homeScreen.initialize(graphics, 448, 448, 3, &homeScreenTexture);
 
 	startScreen.setScale(SCALE_2X);
 	pausedScreen.setScale(SCALE_2X);
 	gameOverScreen.setScale(SCALE_2X);
 	gameClearScreen.setScale(SCALE_2X);
+	instructionsScreen.setScale(SCALE_2X);
+	creditsScreen.setScale(SCALE_2X);
+	homeScreen.setScale(SCALE_2X);
 
 	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
 	pausedScreen.setY(GAME_HEIGHT / 2 - PAUSE_SCREEN_HEIGHT / 2);
@@ -153,80 +203,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	return;
 }
 
-void ThreeChances::clearEntities() {
-	// Clear mv
-	std::vector<Entity*> mv;
-	std::queue<Entity*> aq;
-	gameControl->setGameState(GAME_STATE::player);
-	gameControl->setMonsterVec(mv);
-	gameControl->setAnimationQueue(aq);
-
-	// initialize entity grid
-	entityGrid = new EntityGrid;
-}
-
-void ThreeChances::restartGame() {
-	clearEntities();
-	stageNo = 1;
-
-	// initialize level grid
-	levelGrid = new LevelGrid;
-	levelGrid->initialize(gameMode);
-
-	levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE);
-	level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
-
-	player.setHealth(PLAYER_DATA.health);
-	player.setMovesLeft(PLAYER_DATA.moves);
-	player.setAnimating(false);
-	player.rotateEntity(DOWN);
-
-	level.setX(level.getStartX());
-	level.setY(level.getStartY());
-
-	hud->resetMovesHud();
-	hud->resetHealthHud();
-	this->initializeEntities();
-	
-	gameControl->setEnemyAiInitialized(false);
-}
-
-void ThreeChances::incrementStage() {
-	stageNo++;
-	clearEntities();
-
-	// switch layout
-	levelGrid->switchLayout(gameMode, stageNo);
-	if (gameMode == GAME_MODE::demo) {
-		switch (stageNo) {
-			case 2: {
-				levelTexture.initialize(graphics, DEMO_LVL_2_IMAGE);
-				level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
-			} break;
-		}
-	}
-
-	player.setMovesLeft(PLAYER_DATA.moves);
-	player.setAnimating(false);
-	player.rotateEntity(DOWN);
-
-	hud->resetMovesHud();
-	this->initializeEntities();
-
-	gameControl->setEnemyAiInitialized(false);
-}
-
-std::vector<Entity*> setInitPos(std::vector<Entity*> mv, EntityGrid* entityGrid,
-	Entity* entity, Coordinates currentTile, Coordinates startCoord) {
-
-	entityGrid->addEntity(startCoord, entity->getId());
-	Position startPos = entityGrid->getEntityPosition(entity->getId());
-	entity->setX(startPos.x);
-	entity->setY(startPos.y);
-	mv.push_back(entity);
-	return mv;
-}
-
 void ThreeChances::initializeEntities() {
 	// reset random seed
 	srand(time(NULL));
@@ -236,7 +212,11 @@ void ThreeChances::initializeEntities() {
 
 	std::vector<Entity*> mv = gameControl->getMonsterVec();
 	std::vector<std::vector<int>> gameGrid = levelGrid->getGrid();
-	
+
+	int startXCoord;
+	int startYCoord;
+	int endXCoord;
+	int endYCoord;
 	Entity *tempMonster;
 	int monsterCols;
 	TextureManager *monsterTexture;
@@ -244,6 +224,20 @@ void ThreeChances::initializeEntities() {
 
 	if (gameMode == GAME_MODE::demo) {
 		int gridSize = gameGrid.size();
+
+		// generate protection grid
+		std::vector<Coordinates> protectionTiles;
+		startXCoord = levelGrid->getStartTile().x - NO_OF_PROTECTION_TILES;
+		endXCoord = levelGrid->getStartTile().x + NO_OF_PROTECTION_TILES;
+		startYCoord = levelGrid->getStartTile().y - NO_OF_PROTECTION_TILES;
+		endYCoord = levelGrid->getStartTile().y + NO_OF_PROTECTION_TILES;
+
+		for (int i = startYCoord; i <= endYCoord; i++) {
+			for (int j = startXCoord; j <= endXCoord; j++) {
+				if (i > 0 && j > 0)
+					protectionTiles.push_back(Coordinates(j, i));
+			}
+		}
 
 		// initialize the 4 boxes
 		std::vector<std::vector<Coordinates>> coordSet;
@@ -255,14 +249,14 @@ void ThreeChances::initializeEntities() {
 		// Add coordinates to that 4 boxes
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
-				
+
 				if (i < gridSize / 2 && j < gridSize / 2)
 					coordSet[0].push_back(Coordinates(j, i));
 				else if (i < gridSize / 2 && j >= gridSize / 2)
 					coordSet[1].push_back(Coordinates(j, i));
 				else if (i >= gridSize / 2 && j < gridSize / 2)
 					coordSet[2].push_back(Coordinates(j, i));
-				else 
+				else
 					coordSet[3].push_back(Coordinates(j, i));
 			}
 		}
@@ -293,10 +287,10 @@ void ThreeChances::initializeEntities() {
 						monsterData = DUCK_DATA;
 					}
 					else if (levelGrid->getMapType() == MAP_TYPE::lava) {
-						 tempMonster = new Slug;
-						 monsterCols = slugNS::COLS;
-						 monsterTexture = &slugTexture;
-						 monsterData = SLUG_DATA;
+						tempMonster = new Slug;
+						monsterCols = slugNS::COLS;
+						monsterTexture = &slugTexture;
+						monsterData = SLUG_DATA;
 					}
 				}
 				else {
@@ -315,16 +309,17 @@ void ThreeChances::initializeEntities() {
 					}
 				}
 
-				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)) {
+				if (tempMonster->isValidSpawn(levelGrid, startCoord) && !entityGrid->isCoordOccupied(startCoord)
+					&& !isCoordInVec(protectionTiles, startCoord)) {
 					tempMonster->initialize(this, TILE_SIZE, TILE_SIZE, monsterCols, monsterTexture, monsterData);
 					mv = setInitPos(mv, entityGrid, tempMonster, entityGrid->getPlayerCoordinates(), startCoord);
 					monsterCounter++;
 				}
-			
+
 
 			} while (monsterCounter != MAX_NO_OF_MONSTERS_PER_SQUARE);
 		}
-		
+
 	}
 	else {
 		for (size_t i = 0; i < DUCK_START_COORDS.size(); i++) {
@@ -350,6 +345,118 @@ void ThreeChances::initializeEntities() {
 	gameControl->setMonsterVec(mv);
 }
 
+void ThreeChances::clearEntities() {
+	// Clear mv
+	std::vector<Entity*> mv;
+	std::queue<Entity*> aq;
+	gameControl->setGameState(GAME_STATE::player);
+	gameControl->setMonsterVec(mv);
+	gameControl->setAnimationQueue(aq);
+
+	// initialize entity grid
+	entityGrid = new EntityGrid;
+}
+
+void ThreeChances::incrementStage() {
+	stageNo++;
+	clearEntities();
+
+	// switch layout
+	levelGrid->switchLayout(gameMode, stageNo);
+	if (gameMode == GAME_MODE::demo) {
+		switch (stageNo) {
+		case 2: {
+			levelTexture.initialize(graphics, DEMO_LVL_2_IMAGE);
+			level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
+		} break;
+		}
+	}
+
+	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setAnimating(false);
+	player.rotateEntity(DOWN);
+
+	hud->resetMovesHud();
+	this->initializeEntities();
+
+	gameControl->setEnemyAiInitialized(false);
+}
+
+void ThreeChances::restartGame() {
+	clearEntities();
+	stageNo = 1;
+
+	// initialize level grid
+	levelGrid = new LevelGrid;
+	levelGrid->initialize(gameMode);
+
+	levelTexture.initialize(graphics, gameMode == GAME_MODE::demo ? DEMO_LVL_1_IMAGE : LEVEL_1_IMAGE);
+	level.initialize(this, levelSize, levelSize, levelCols, &levelTexture, levelGrid->getStartTile());
+
+	player.setHealth(PLAYER_DATA.health);
+	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setAnimating(false);
+	player.rotateEntity(DOWN);
+
+	level.setX(level.getStartX());
+	level.setY(level.getStartY());
+
+	hud->resetMovesHud();
+	hud->resetHealthHud();
+	this->initializeEntities();
+	
+	gameControl->setEnemyAiInitialized(false);
+}
+
+void ThreeChances::enemyAi() {
+	std::vector<Entity*> mv = gameControl->getMonsterVec();
+	std::queue<Entity*> aq = gameControl->getAnimationQueue();
+	Entity *entityPtr;
+
+	if (!gameControl->getEnemyAiInitialized() && mv.size() > 0) {
+		for (size_t i = 0; i < mv.size(); i++) {
+			aq.push(mv[i]);
+		}
+
+		gameControl->setEnemyAiInitialized(true);
+	}
+
+	if (gameControl->getEnemyAiInitialized()) {
+		entityPtr = aq.front();
+		if (entityPtr->getMovesLeft() > 0) {
+			if (!entityPtr->getAnimating()) {
+				entityPtr->initAi(entityGrid, levelGrid);
+
+				if (entityPtr->getAction() == ATTACK) {
+					gameControl->damagePlayer(entityPtr->getId());
+				}
+			}
+			else {
+				entityPtr->animateAi(frameTime, entityGrid);
+			}
+		}
+		else {
+			aq.pop();
+		}
+	}
+
+	if (gameControl->checkMonstersMovesCompleted()) {
+		// Reset moves
+		for (size_t i = 0; i < mv.size(); i++) {
+			mv[i]->resetMovesLeft();
+		}
+
+		player.resetMovesLeft();
+		hud->resetMovesHud();
+
+		// Update game state
+		gameControl->setGameState(GAME_STATE::player);
+		gameControl->setEnemyAiInitialized(false);
+	}
+
+	gameControl->setAnimationQueue(aq);
+}
+
 //=============================================================================
 // Update all game items
 //=============================================================================
@@ -365,10 +472,15 @@ void ThreeChances::update() {
 	switch (gs) {
 		case GENERAL_STATE::menu: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
-				screenKeysPressed[SPACE] = true;			
-				startBtnPressed = true;
-				startCue = audio->playCue(START_GAME_CUE);
+				audio->playCue(CLICK_CUE);
+				screenKeysPressed[SPACE] = true;
+				gameControl->setGeneralState(GENERAL_STATE::home);
 			}
+		} break;
+		case GENERAL_STATE::home: {
+			int homeCurrentFrame = homeScreen.getCurrentFrame();
+			int homeNextFrame = homeScreen.getCurrentFrame() + 1;
+			int homePreviousFrame = homeScreen.getCurrentFrame() - 1;
 
 			if (startBtnPressed) {
 				DWORD* tempCueState = new DWORD;
@@ -377,6 +489,51 @@ void ThreeChances::update() {
 				if (*tempCueState == XACT_CUESTATE_STOPPED || muted) {
 					gameControl->setGeneralState(GENERAL_STATE::game);
 				}
+			}
+
+			if (input->isKeyDown(DOWN_KEY) && !screenKeysPressed[DOWN]) {
+				screenKeysPressed[DOWN] = true;
+				if (homeNextFrame == 3)
+					homeNextFrame = 0;
+			
+				audio->playCue(CLICK_CUE);
+				homeScreen.setCurrentFrame(homeNextFrame);
+			}
+
+			if (input->isKeyDown(UP_KEY) && !screenKeysPressed[UP]) {
+				screenKeysPressed[UP] = true;
+				if (homePreviousFrame == -1)
+					homePreviousFrame = 2;
+
+				audio->playCue(CLICK_CUE);
+				homeScreen.setCurrentFrame(homePreviousFrame);
+			}
+
+			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
+				screenKeysPressed[SPACE] = true;
+				
+				switch (homeCurrentFrame) {
+					case 0: {
+						screenKeysPressed[SPACE] = true;
+						startBtnPressed = true;
+						startCue = audio->playCue(START_GAME_CUE);
+					} break;
+					case 1: {
+						audio->playCue(CLICK_CUE);
+						gameControl->setGeneralState(GENERAL_STATE::instructions);
+					} break;
+					case 2: {
+						audio->playCue(CLICK_CUE);
+						gameControl->setGeneralState(GENERAL_STATE::credits);
+					} break;
+				}	
+			}
+		} break;
+		case GENERAL_STATE::instructions: 
+		case GENERAL_STATE::credits: {
+			if (input->isKeyDown(ESC_KEY) && !screenKeysPressed[ESC]) {
+				audio->playCue(CLICK_CUE);
+				gameControl->setGeneralState(GENERAL_STATE::home);
 			}
 		} break;
 		case GENERAL_STATE::paused: {
@@ -518,11 +675,6 @@ void ThreeChances::update() {
 				}
 			}
 
-			/*if (gameMode != GAME_MODE::demo && gameControl->getMonstersLeft() == 0 && level.getPathBlocked()) {
-				level.removeBlockage();
-				levelGrid->removeBlockage();
-			}*/
-
 			// Update and reset
 			for (size_t i = 0; i < mv.size(); i++) {
 				mv[i]->update(frameTime);
@@ -535,54 +687,6 @@ void ThreeChances::update() {
 	}
 
 	resetScreenKeysPressedMap(input, &screenKeysPressed);
-}
-
-void ThreeChances::enemyAi() {
-	std::vector<Entity*> mv = gameControl->getMonsterVec();
-	std::queue<Entity*> aq = gameControl->getAnimationQueue();
-	Entity *entityPtr;
-
-	if (!gameControl->getEnemyAiInitialized() && mv.size() > 0) {
-		for (size_t i = 0; i < mv.size(); i++) {
-			aq.push(mv[i]);
-		}
-
-		gameControl->setEnemyAiInitialized(true);
-	}
-
-	if (gameControl->getEnemyAiInitialized()) {
-		entityPtr = aq.front();
-		if (entityPtr->getMovesLeft() > 0) {
-			if (!entityPtr->getAnimating()) {
-				entityPtr->initAi(entityGrid, levelGrid);
-
-				if (entityPtr->getAction() == ATTACK) {
-					gameControl->damagePlayer(entityPtr->getId());
-				}
-			}
-			else {
-				entityPtr->animateAi(frameTime, entityGrid);
-			}
-		} else {
-			aq.pop();
-		}
-	}
-
-	if (gameControl->checkMonstersMovesCompleted()) {
-		// Reset moves
-		for (size_t i = 0; i < mv.size(); i++) {
-			mv[i]->resetMovesLeft();
-		}
-
-		player.resetMovesLeft();
-		hud->resetMovesHud();
-
-		// Update game state
-		gameControl->setGameState(GAME_STATE::player);
-		gameControl->setEnemyAiInitialized(false);
-	}
-
-	gameControl->setAnimationQueue(aq);
 }
 
 void ThreeChances::ai() {}
@@ -599,6 +703,15 @@ void ThreeChances::render() {
 	switch (gameControl->getGeneralState()) {
 		case GENERAL_STATE::menu: {
 			startScreen.draw();
+		} break;
+		case GENERAL_STATE::home: {
+			homeScreen.draw();
+		} break;
+		case GENERAL_STATE::instructions: {
+			instructionsScreen.draw();
+		} break;
+		case GENERAL_STATE::credits: {
+			creditsScreen.draw();
 		} break;
 		case GENERAL_STATE::paused: {
 			pausedScreen.draw();
@@ -641,6 +754,14 @@ void ThreeChances::releaseAll() {
 	swordTexture.onLostDevice();
 	fontTexture.onLostDevice();
 
+	startScreenTexture.onLostDevice();
+	pauseScreenTexture.onLostDevice();
+	gameOverScreenTexture.onLostDevice();
+	gameClearScreenTexture.onLostDevice();
+	instructionsScreenTexture.onLostDevice();
+	creditsScreenTexture.onLostDevice();
+	homeScreenTexture.onLostDevice();
+
 	settings->releaseAll();
 	hud->releaseAll();
 	Game::releaseAll();
@@ -661,6 +782,14 @@ void ThreeChances::resetAll() {
 	sunTexture.onResetDevice();
 	swordTexture.onResetDevice();
 	fontTexture.onResetDevice();
+
+	startScreenTexture.onResetDevice();
+	pauseScreenTexture.onResetDevice();
+	gameOverScreenTexture.onResetDevice();
+	gameClearScreenTexture.onResetDevice();
+	instructionsScreenTexture.onResetDevice();
+	creditsScreenTexture.onResetDevice();
+	homeScreenTexture.onResetDevice();
 
 	settings->resetAll();
 	hud->resetAll();

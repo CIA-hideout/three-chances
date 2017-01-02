@@ -65,11 +65,17 @@ private:
 	TextureManager  pauseScreenTexture;
 	TextureManager	gameOverScreenTexture;
 	TextureManager	gameClearScreenTexture;
+	TextureManager	instructionsScreenTexture;
+	TextureManager	creditsScreenTexture;
+	TextureManager	homeScreenTexture;
 
 	Image startScreen;
 	Image pausedScreen;
 	Image gameOverScreen;
 	Image gameClearScreen;
+	Image instructionsScreen;
+	Image creditsScreen;
+	Image homeScreen;
 
 	// Sprites
 	Level	level;
@@ -94,18 +100,19 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+
+	void initializeEntities();
+	void clearEntities();
+	void incrementStage();
+	void restartGame();
+	void enemyAi();
+
 	void update();      // must override pure virtual from Game
 	void ai();          // "
 	void collisions();  // "
 	void render();      // "
 	void releaseAll();
 	void resetAll();
-
-	void clearEntities();
-	void enemyAi();
-	void restartGame();
-	void initializeEntities();
-	void incrementStage();
 };
 
 #endif

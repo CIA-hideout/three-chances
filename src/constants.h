@@ -45,6 +45,7 @@ namespace NORMAL_LEVEL {
 	const int NO_OF_STAGE = 1;
 }
 
+const int NO_OF_PROTECTION_TILES = 2;
 const int MAX_NO_OF_MONSTERS_PER_SQUARE = 4;
 const int PLAYER_ID = 1;
 
@@ -89,6 +90,7 @@ const int END = 6;
 const int ESC = 100;
 const int SPACE = 101;
 const int MUTE = 102;
+const int ENTER = 103;
 
 // Sprites
 const char DEMO_LVL_1_IMAGE[] = "sprites\\Demo_Level1.png";
@@ -126,6 +128,9 @@ const UINT PAUSE_SCREEN_WIDTH = 96 * SCALE;
 const UINT PAUSE_SCREEN_HEIGHT = 128 * SCALE;
 const char PAUSE_SCREEN_IMAGE[] = "resources\\Pause_Menu.png";
 const char START_SCREEN_IMAGE[] = "resources\\Start_Menu.png";
+const char HOME_SCREEN_IMAGE[] = "resources\\Home_Menu.png";
+const char CREDITS_SCREEN_IMAGE[] = "resources\\Credits.png";
+const char INSTRUCTIONS_SCREEN_IMAGE[] = "resources\\Instructions.png";
 const char GAME_OVER_SCREEN_IMAGE[] = "resources\\Game_Over.png";
 const char GAME_CLEAR_SCREEN_IMAGE[] = "resources\\Game_Clear.png";
 
