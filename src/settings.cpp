@@ -21,12 +21,12 @@ void Settings::initializeTexture(Graphics *graphics) {
 }
 
 void Settings::setInitialPosition(bool muted) {
-	mutedAudioImage.setScale(0.15);
-	mutedAudioImage.setX(GAME_WIDTH - mutedAudioImage.getWidth() * mutedAudioImage.getScale());
+	mutedAudioImage.setScale(SCALE_2X);
+	mutedAudioImage.setX(0);
 	mutedAudioImage.setY(0);
 
-	unmutedAudioImage.setScale(0.15);
-	unmutedAudioImage.setX(GAME_WIDTH - unmutedAudioImage.getWidth() * unmutedAudioImage.getScale());
+	unmutedAudioImage.setScale(SCALE_2X);
+	unmutedAudioImage.setX(0);
 	unmutedAudioImage.setY(0);
 
 	if (muted)

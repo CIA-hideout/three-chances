@@ -182,7 +182,7 @@ void Audio::run()
 //=============================================================================
 XACT_CUE* Audio::playCue(const char cue[])
 {
-	XACT_CUE* tempCue;
+	XACT_CUE* tempCue = NULL;
 	if (soundBank == NULL)
 		return tempCue;
 	cueI = soundBank->GetCueIndex(cue);       // get cue index from sound bank

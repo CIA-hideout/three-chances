@@ -187,9 +187,6 @@ void ThreeChances::initialize(HWND hwnd) {
 	creditsScreen.setScale(SCALE_2X);
 	homeScreen.setScale(SCALE_2X);
 
-	pausedScreen.setX(GAME_WIDTH / 2 - PAUSE_SCREEN_WIDTH / 2);
-	pausedScreen.setY(GAME_HEIGHT / 2 - PAUSE_SCREEN_HEIGHT / 2);
-
 	settings = new Settings;
 	settings->initializeTexture(graphics);
 
@@ -205,7 +202,7 @@ void ThreeChances::initialize(HWND hwnd) {
 
 void ThreeChances::initializeEntities() {
 	// reset random seed
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	// Add player to entity grid
 	entityGrid->addEntity(levelGrid->getStartTile(), PLAYER_ID);
