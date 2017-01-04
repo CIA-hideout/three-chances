@@ -29,4 +29,4 @@ public:
 	bool isValidSpawn(LevelGrid *levelGrid, Coordinates currCoord);
 };
 
-#endif
+#endif:

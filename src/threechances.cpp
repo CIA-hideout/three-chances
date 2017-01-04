@@ -71,7 +71,6 @@ ThreeChances::ThreeChances() {
 	screenKeysPressed[DOWN] = false;
 	screenKeysPressed[UP] = false;
 
-	startBtnPressed = false;
 	muted = false;
 
 	gameMode = GAME_MODE::demo;
@@ -382,7 +381,6 @@ void ThreeChances::incrementStage() {
 void ThreeChances::restartGame() {
 	clearEntities();
 	stageNo = 1;
-	startBtnPressed = false;
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -480,15 +478,6 @@ void ThreeChances::update() {
 			int homeNextFrame = homeScreen.getCurrentFrame() + 1;
 			int homePreviousFrame = homeScreen.getCurrentFrame() - 1;
 
-			if (startBtnPressed) {
-				DWORD* tempCueState = new DWORD;
-				startCue->GetState(tempCueState);
-
-				if (*tempCueState == XACT_CUESTATE_STOPPED || muted) {
-					gameControl->setGeneralState(GENERAL_STATE::game);
-				}
-			}
-
 			if (input->isKeyDown(DOWN_KEY) && !screenKeysPressed[DOWN]) {
 				screenKeysPressed[DOWN] = true;
 				if (homeNextFrame == 3)
@@ -513,8 +502,7 @@ void ThreeChances::update() {
 				switch (homeCurrentFrame) {
 					case 0: {
 						screenKeysPressed[SPACE] = true;
-						startBtnPressed = true;
-						startCue = audio->playCue(START_GAME_CUE);
+						audio->playCue(START_GAME_CUE);
 						gameControl->setGeneralState(GENERAL_STATE::game);
 					} break;
 					case 1: {
