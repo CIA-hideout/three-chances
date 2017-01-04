@@ -9,6 +9,7 @@
 
 class Audio;
 
+#include <iostream>
 #include <xact3.h>
 #include "constants.h"
 

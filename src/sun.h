@@ -11,7 +11,7 @@ namespace sunNS {
 	const int ATK_END_FRAME = 4;
 	const int HURT_FRAME = 5;
 	const int COLS = 6;
-	const float ANIMATION_DELAY = 2.0f;
+	const float ANIMATION_DELAY = 0.2f;
 }
 
 class Sun : public Entity {

@@ -186,7 +186,11 @@ XACT_CUE* Audio::playCue(const char cue[])
 	if (soundBank == NULL)
 		return tempCue;
 	cueI = soundBank->GetCueIndex(cue);       // get cue index from sound bank
-	soundBank->Play(cueI, 0, 0, &tempCue);
+	
+	// Speed up sound for start game
+	XACTTIME offset = strcmp(cue, START_GAME_CUE) == 0 ? 600 : 0;		// XACTTIME in milliseconds
+	soundBank->Play(cueI, 0, offset, &tempCue);
+	
 	return tempCue;
 }  
 

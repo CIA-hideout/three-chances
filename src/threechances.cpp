@@ -382,6 +382,7 @@ void ThreeChances::incrementStage() {
 void ThreeChances::restartGame() {
 	clearEntities();
 	stageNo = 1;
+	startBtnPressed = false;
 
 	// initialize level grid
 	levelGrid = new LevelGrid;
@@ -514,6 +515,7 @@ void ThreeChances::update() {
 						screenKeysPressed[SPACE] = true;
 						startBtnPressed = true;
 						startCue = audio->playCue(START_GAME_CUE);
+						gameControl->setGeneralState(GENERAL_STATE::game);
 					} break;
 					case 1: {
 						audio->playCue(CLICK_CUE);
@@ -549,7 +551,7 @@ void ThreeChances::update() {
 		} break;
 		case GENERAL_STATE::gameOver: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
-				gameControl->setGeneralState(GENERAL_STATE::menu);
+				gameControl->setGeneralState(GENERAL_STATE::home);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
 				audio->stopCue(GAME_OVER_CUE);
@@ -558,7 +560,7 @@ void ThreeChances::update() {
 		} break;
 		case GENERAL_STATE::gameClear: {
 			if (input->isKeyDown(SPACE_KEY) && !screenKeysPressed[SPACE]) {
-				gameControl->setGeneralState(GENERAL_STATE::menu);
+				gameControl->setGeneralState(GENERAL_STATE::home);
 				this->restartGame();
 				screenKeysPressed[SPACE] = true;
 				audio->playCue(CLICK_CUE);
