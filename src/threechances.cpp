@@ -369,10 +369,12 @@ void ThreeChances::incrementStage() {
 	}
 
 	player.setMovesLeft(PLAYER_DATA.moves);
+	player.setHealth(PLAYER_DATA.health);
 	player.setAnimating(false);
 	player.rotateEntity(DOWN);
 
 	hud->resetMovesHud();
+	hud->resetHealthHud();
 	this->initializeEntities();
 
 	gameControl->setEnemyAiInitialized(false);
